@@ -730,3 +730,94 @@ Stack trace:
 [29-Jul-2025 09:44:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
 [29-Jul-2025 09:44:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
 [29-Jul-2025 10:24:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[08-Aug-2025 01:01:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[11-Aug-2025 21:48:42 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:43 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:48 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:58 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:59 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:49:04 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:12 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:13 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:18 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[12-Aug-2025 00:20:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[14-Aug-2025 14:38:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:08:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:08:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:09:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:27:37 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:27:38 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:29 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:30 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:35 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:34:45 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[19-Aug-2025 22:34:46 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[19-Aug-2025 22:34:51 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60

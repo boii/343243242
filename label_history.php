@@ -40,9 +40,14 @@ $statusFilter = trim($_GET['status'] ?? '');
                     <h3 class="text-xl font-semibold text-gray-700">Daftar Label Tercatat</h3>
                     <p class="text-sm text-gray-600 mt-1">Filter akan berjalan otomatis setelah Anda berhenti berinteraksi.</p>
                 </div>
-                <button type="button" id="exportCsvBtn" class="btn btn-success w-full md:w-auto">
-                    <span class="material-icons mr-2">download</span>Ekspor ke CSV
-                </button>
+                <div class="flex space-x-2 w-full md:w-auto">
+                    <button type="button" id="exportExcelBtn" class="btn bg-green-600 text-white hover:bg-green-700 flex-grow md:flex-grow-0">
+                        <span class="material-icons mr-2">grid_on</span>Ekspor ke Excel
+                    </button>
+                    <button type="button" id="exportCsvBtn" class="btn btn-success flex-grow md:flex-grow-0">
+                        <span class="material-icons mr-2">download</span>Ekspor ke CSV
+                    </button>
+                </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end p-4 border bg-gray-50 rounded-lg">
                 <div class="lg:col-span-2">
@@ -105,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('labelsTableBody');
     const paginationContainer = document.getElementById('paginationContainer');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn'); // Tombol baru
     const resetFiltersBtn = document.getElementById('resetFilters');
 
     function getFilterValues() {
@@ -143,17 +149,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusBadge = `<span class="status-badge ${escapeHtml(label.status_class)}">${escapeHtml(label.status_text)}</span>`;
             const createdDate = new Date(label.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             const expiryDate = new Date(label.expiry_date).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-
-            // --- PERBAIKAN DIMULAI: Memetakan status dari data ke kelas CSS yang benar ---
+            
             const statusToClassMap = {
-                'active': 'tr-status-tersedia', // Hijau
-                'used': 'tr-status-sterilisasi',  // Biru
-                'expired': 'tr-status-gagal',    // Merah
-                'recalled': 'tr-status-gagal',   // Merah
-                'pending_validation': 'tr-status-menunggu_validasi' // Kuning
+                'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi',
+                'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal',
+                'pending_validation': 'tr-status-menunggu_validasi'
             };
             const rowStatusClass = statusToClassMap[label.status] || 'tr-status-default';
-            // --- PERBAIKAN SELESAI ---
 
             const row = `
                 <tr class="border-b border-gray-200 hover:bg-gray-100 table-status-indicator clickable-row ${rowStatusClass}" data-href="verify_label.php?uid=${label.label_unique_id}">
@@ -201,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); 
     }
 
-    // --- Event Listeners ---
     const inputs = filterForm.querySelectorAll('input, select');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
@@ -223,6 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = `php_scripts/export_labels_csv.php?${currentFilters}`;
     });
 
+    exportExcelBtn.addEventListener('click', function(e) { // Event listener baru
+        e.preventDefault();
+        const currentFilters = getFilterValues();
+        window.location.href = `php_scripts/export_labels_excel.php?${currentFilters}`;
+    });
+
     tableBody.addEventListener('click', function(e) {
         const row = e.target.closest('tr.clickable-row');
         if (row && !e.target.closest('a')) {
@@ -230,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Initial Load
     const urlParams = new URLSearchParams(window.location.search);
     const pageFromUrl = parseInt(urlParams.get('page')) || 1;
     fetchLabels(pageFromUrl);

@@ -98,8 +98,11 @@ $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT
                 <p class="text-sm text-gray-600 mt-1">Klik pada baris untuk melihat detail. Filter akan berjalan otomatis.</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
+                <button type="button" id="openImportModalBtn" class="btn bg-indigo-500 text-white hover:bg-indigo-600"><span class="material-icons mr-2">upload_file</span>Impor</button>
+                <button type="button" id="exportExcelBtn" class="btn bg-green-600 text-white hover:bg-green-700"><span class="material-icons mr-2">grid_on</span>Excel</button>
+                <button type="button" id="exportCsvBtn" class="btn btn-success"><span class="material-icons mr-2">download</span>CSV</button>
                 <button type="button" id="openAddInstrumentModalBtn" class="btn btn-primary flex-grow md:flex-grow-0">
-                    <span class="material-icons mr-2">add</span>Tambah Instrumen Baru
+                    <span class="material-icons mr-2">add</span>Tambah
                 </button>
             </div>
         </div>
@@ -229,6 +232,43 @@ $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT
     </div>
 </div>
 
+<div id="importInstrumentModal" class="modal-overlay">
+    <div class="modal-content max-w-lg text-left">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Impor Instrumen dari CSV</h3>
+        <form id="importInstrumentForm" action="php_scripts/import_instruments.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
+            
+            <div class="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                <h4 class="font-semibold text-blue-800">Petunjuk Penting:</h4>
+                <ol class="list-decimal list-inside text-sm text-blue-700 mt-2 space-y-1">
+                    <li>Unduh template CSV untuk memastikan format yang benar.</li>
+                    <li><strong class="text-red-600">Nama Tipe</strong> dan <strong class="text-red-600">Nama Departemen</strong> harus sama persis (case-insensitive) dengan yang ada di Master Data.</li>
+                    <li><strong class="text-red-600">Nama Instrumen</strong> harus unik dan tidak boleh ada yang sama di database.</li>
+                    <li>Kolom `instrument_code` bersifat <strong>opsional</strong>. Kosongkan untuk dibuat otomatis oleh sistem. Jika diisi, pastikan kodenya unik.</li>
+                    <li>Simpan file Anda dalam format CSV (Comma-Separated Values).</li>
+                </ol>
+                <div class="mt-4 text-center">
+                    <a href="php_scripts/download_instrument_template.php" class="btn btn-secondary">
+                        <span class="material-icons mr-2">file_download</span>Unduh Template CSV
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label for="csv_file" class="form-label">Pilih File CSV untuk Diunggah</label>
+                <input type="file" id="csv_file" name="csv_file" class="form-input" required accept=".csv">
+            </div>
+            
+            <div class="flex justify-end gap-3 mt-8">
+                <button type="button" id="cancelImportBtn" class="btn btn-secondary">Batal</button>
+                <button type="submit" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600">
+                    <span class="material-icons mr-2">upload</span>Mulai Proses Impor
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="deleteInstrumentModal" class="modal-overlay">
     <div class="modal-content">
         <h3 class="text-lg font-bold mb-2">Konfirmasi Penghapusan</h3>
@@ -258,6 +298,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     let itemToDelete = { id: null };
+
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+    const openImportModalBtn = document.getElementById('openImportModalBtn');
+    const importInstrumentModal = document.getElementById('importInstrumentModal');
+    const cancelImportBtn = document.getElementById('cancelImportBtn');
 
     function getFilterValues() {
         return new URLSearchParams(new FormData(filterForm)).toString();
@@ -333,22 +379,64 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPagination(pagination) {
         paginationContainer.innerHTML = '';
         if (!pagination || pagination.totalPages <= 1) return;
-        
-        const filterParams = getFilterValues();
-        for (let i = 1; i <= pagination.totalPages; i++) {
-            const pageLink = document.createElement('a');
-            pageLink.href = `?page=${i}&${filterParams}`;
-            pageLink.textContent = i;
-            if (i === pagination.currentPage) {
-                pageLink.classList.add('active');
-            }
-            pageLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                history.pushState(null, '', `?page=${i}&${filterParams}`);
-                fetchInstruments(i);
-            });
-            paginationContainer.appendChild(pageLink);
+
+        const { currentPage, totalPages } = pagination;
+        const pageNumbers = [];
+
+        const prevButton = document.createElement('a');
+        prevButton.href = '#';
+        prevButton.innerHTML = '&laquo;';
+        prevButton.classList.toggle('disabled', currentPage === 1);
+        prevButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage > 1) fetchInstruments(currentPage - 1);
+        });
+        paginationContainer.appendChild(prevButton);
+
+        const siblingCount = 1;
+        const totalPageNumbers = siblingCount * 2 + 5;
+
+        if (totalPages > totalPageNumbers) {
+            let startPage = Math.max(2, currentPage - siblingCount);
+            let endPage = Math.min(totalPages - 1, currentPage + siblingCount);
+
+            pageNumbers.push(1);
+            if (startPage > 2) pageNumbers.push('...');
+            for (let i = startPage; i <= endPage; i++) pageNumbers.push(i);
+            if (endPage < totalPages - 1) pageNumbers.push('...');
+            pageNumbers.push(totalPages);
+        } else {
+            for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
         }
+
+        pageNumbers.forEach(num => {
+            if (num === '...') {
+                const ellipsis = document.createElement('span');
+                ellipsis.textContent = '...';
+                ellipsis.className = 'pagination-ellipsis';
+                paginationContainer.appendChild(ellipsis);
+            } else {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = num;
+                pageLink.classList.toggle('active', num === currentPage);
+                pageLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (num !== currentPage) fetchInstruments(num);
+                });
+                paginationContainer.appendChild(pageLink);
+            }
+        });
+
+        const nextButton = document.createElement('a');
+        nextButton.href = '#';
+        nextButton.innerHTML = '&raquo;';
+        nextButton.classList.toggle('disabled', currentPage === totalPages);
+        nextButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (currentPage < totalPages) fetchInstruments(currentPage + 1);
+        });
+        paginationContainer.appendChild(nextButton);
     }
 
     function escapeHtml(str) { 
@@ -374,6 +462,30 @@ document.addEventListener('DOMContentLoaded', () => {
         history.pushState(null, '', newUrl);
         fetchInstruments(1);
     });
+    
+    exportCsvBtn.addEventListener('click', function() {
+        const currentFilters = getFilterValues();
+        window.location.href = `php_scripts/export_instruments_csv.php?${currentFilters}`;
+    });
+
+    exportExcelBtn.addEventListener('click', function() {
+        const currentFilters = getFilterValues();
+        window.location.href = `php_scripts/export_instruments_excel.php?${currentFilters}`;
+    });
+
+    openImportModalBtn.addEventListener('click', () => {
+        importInstrumentModal.classList.add('active');
+    });
+
+    cancelImportBtn.addEventListener('click', () => {
+        importInstrumentModal.classList.remove('active');
+    });
+
+    importInstrumentModal.addEventListener('click', e => {
+        if (e.target === importInstrumentModal) {
+            importInstrumentModal.classList.remove('active');
+        }
+    });
 
     tableBody.addEventListener('click', function(e) {
         const row = e.target.closest('tr.clickable-row');
@@ -392,7 +504,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     openAddInstrumentModalBtn.addEventListener('click', () => {
         addInstrumentForm.reset();
-        // --- Perubahan: Kode dibuat otomatis saat modal dibuka ---
         const timestamp = Date.now().toString();
         const uniquePart = timestamp.substring(timestamp.length - 8);
         instrumentCodeInput.value = `INST-${uniquePart}`;
