@@ -18,12 +18,30 @@ declare(strict_types=1);
 $pageTitle = "Riwayat Label";
 require_once 'header.php'; // Includes session check, CSRF token ($csrfToken), $app_settings etc.
 
+// --- Fetch Master Data for Filter Dropdowns ---
+$activeDepartments = [];
+$dbErrorMessage = '';
+$conn_filter = connectToDatabase();
+if ($conn_filter) {
+    $sqlDepts = "SELECT department_id, department_name FROM departments WHERE is_active = 1 ORDER BY department_name ASC";
+    if ($result = $conn_filter->query($sqlDepts)) {
+        while ($row = $result->fetch_assoc()) $activeDepartments[] = $row;
+    } else {
+        $dbErrorMessage = "Gagal memuat data departemen untuk filter.";
+    }
+    $conn_filter->close();
+} else {
+    $dbErrorMessage = "Koneksi database gagal.";
+}
+
 // Get filter values from URL for sticky form
 $searchQuery = trim($_GET['search_query'] ?? '');
 $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 $itemTypeFilter = trim($_GET['item_type'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+$departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT);
+
 ?>
 <main class="container mx-auto px-6 py-8">
     <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
@@ -32,6 +50,8 @@ $statusFilter = trim($_GET['status'] ?? '');
             <span class="material-icons mr-2">arrow_back</span>Dashboard
         </a>
     </div>
+
+    <?php if ($dbErrorMessage): ?><div class="alert alert-danger"><span class="material-icons">error</span><?php echo htmlspecialchars($dbErrorMessage); ?></div><?php endif; ?>
 
     <section id="label-list" class="card overflow-x-auto">
          <form id="filterForm" method="GET">
@@ -49,7 +69,7 @@ $statusFilter = trim($_GET['status'] ?? '');
                     </button>
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end p-4 border bg-gray-50 rounded-lg">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end p-4 border bg-gray-50 rounded-lg">
                 <div class="lg:col-span-2">
                     <label for="searchQuery" class="form-label text-sm">Cari (ID, Nama Label, Muatan)</label>
                     <input type="text" id="searchQuery" name="search_query" class="form-input" placeholder="Ketik kata kunci..." value="<?php echo htmlspecialchars($searchQuery); ?>">
@@ -73,7 +93,18 @@ $statusFilter = trim($_GET['status'] ?? '');
                         <option value="recalled" <?php echo ($statusFilter === 'recalled') ? 'selected' : ''; ?>>Ditarik Kembali</option>
                     </select>
                 </div>
-                <div class="lg:col-span-4">
+                 <div>
+                    <label for="departmentFilter" class="form-label text-sm">Tujuan</label>
+                    <select id="departmentFilter" name="department_id" class="form-select">
+                        <option value="">Semua Tujuan</option>
+                        <?php foreach ($activeDepartments as $dept): ?>
+                            <option value="<?php echo $dept['department_id']; ?>" <?php echo ($departmentFilter == $dept['department_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($dept['department_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="lg:col-span-full">
                      <label for="dateStart" class="form-label text-sm">Rentang Tanggal Dibuat</label>
                      <div class="flex flex-col sm:flex-row gap-4">
                          <input type="date" id="dateStart" name="date_start" class="form-input" title="Tanggal Mulai" value="<?php echo htmlspecialchars($dateStart); ?>">
@@ -91,6 +122,7 @@ $statusFilter = trim($_GET['status'] ?? '');
                         <th class="py-3 px-6 text-left">ID Label & Item</th>
                         <th class="py-3 px-6 text-left">Asal Muatan</th>
                         <th class="py-3 px-6 text-left">Dibuat & Kedaluwarsa</th>
+                        <th class="py-3 px-6 text-left">Tujuan Departemen</th>
                         <th class="py-3 px-6 text-center">Status</th>
                         <th class="py-3 px-6 text-center">Aksi</th>
                     </tr>
@@ -110,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('labelsTableBody');
     const paginationContainer = document.getElementById('paginationContainer');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
-    const exportExcelBtn = document.getElementById('exportExcelBtn'); // Tombol baru
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
     const resetFiltersBtn = document.getElementById('resetFilters');
 
     function getFilterValues() {
@@ -120,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function fetchLabels(page = 1) {
         const filters = getFilterValues();
         history.pushState(null, '', `?page=${page}&${filters}`);
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Memuat riwayat label...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Memuat riwayat label...</td></tr>';
 
         const url = `php_scripts/get_labels_data.php?page=${page}&${filters}`;
         fetch(url)
@@ -130,18 +162,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderTable(result.data);
                     renderPagination(result.pagination);
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
                 }
             })
             .catch(error => {
-                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
             });
     }
 
     function renderTable(labels) {
         tableBody.innerHTML = '';
         if (labels.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 px-6 text-gray-600">Tidak ada riwayat ditemukan untuk filter yang dipilih. <a href="label_history.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 px-6 text-gray-600">Tidak ada riwayat ditemukan untuk filter yang dipilih. <a href="label_history.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
             return;
         }
 
@@ -168,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div>Dibuat: ${createdDate}</div>
                         <div class="text-xs text-gray-500">Kedaluwarsa: ${expiryDate}</div>
                     </td>
+                    <td class="py-3 px-6 text-left">${escapeHtml(label.destination_department_name || 'Stok Umum')}</td>
                     <td class="py-3 px-6 text-center">${statusBadge}</td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center space-x-1">
@@ -224,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = `php_scripts/export_labels_csv.php?${currentFilters}`;
     });
 
-    exportExcelBtn.addEventListener('click', function(e) { // Event listener baru
+    exportExcelBtn.addEventListener('click', function(e) {
         e.preventDefault();
         const currentFilters = getFilterValues();
         window.location.href = `php_scripts/export_labels_excel.php?${currentFilters}`;

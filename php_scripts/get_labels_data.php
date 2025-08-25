@@ -36,6 +36,7 @@ $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 $itemTypeFilter = trim($_GET['item_type'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+$departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT); // Filter baru
 
 $response = ['success' => false, 'data' => [], 'pagination' => []];
 $conn = connectToDatabase();
@@ -46,7 +47,8 @@ if ($conn) {
 
     $baseJoins = "FROM sterilization_records sr
                   LEFT JOIN users u ON sr.created_by_user_id = u.user_id 
-                  LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id";
+                  LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id
+                  LEFT JOIN departments d ON sr.destination_department_id = d.department_id";
 
     $whereClause = " WHERE 1=1";
     $params = [];
@@ -62,6 +64,7 @@ if ($conn) {
     if (!empty($dateEnd)) { $whereClause .= " AND DATE(sr.created_at) <= ?"; $params[] = $dateEnd; $types .= "s"; }
     if (!empty($itemTypeFilter)) { $whereClause .= " AND sr.item_type = ?"; $params[] = $itemTypeFilter; $types .= "s"; }
     if (!empty($statusFilter)) { $whereClause .= " AND sr.status = ?"; $params[] = $statusFilter; $types .= "s"; }
+    if ($departmentFilter) { $whereClause .= " AND sr.destination_department_id = ?"; $params[] = $departmentFilter; $types .= "i"; } // Filter baru ditambahkan
     
     // Count total records
     $sqlCount = "SELECT COUNT(sr.record_id) as total " . $baseJoins . $whereClause;
@@ -78,7 +81,7 @@ if ($conn) {
     $labels = [];
     if ($totalRecords > 0) {
         $sqlData = "SELECT sr.record_id, sr.label_unique_id, sr.item_type, sr.label_title, sr.created_at, sr.expiry_date, sr.status, 
-                           u.full_name as creator_name, sl.load_name
+                           u.full_name as creator_name, sl.load_name, d.department_name as destination_department_name
                     {$baseJoins}
                     {$whereClause}
                     ORDER BY sr.created_at DESC
