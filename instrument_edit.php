@@ -178,7 +178,7 @@ unset($_SESSION['form_data_instrument_edit']);
                     </div>
                     <div>
                         <label for="expiry_in_days" class="form-label">Masa Kedaluwarsa Standar (Opsional)</label>
-                        <input type="number" id="expiry_in_days" name="expiry_in_days" class="form-input" placeholder="Hari (e.g., 30)" min="1" value="<?php echo htmlspecialchars($formData['expiry_in_days'] ?? ''); ?>">
+                        <input type="number" id="expiry_in_days" name="expiry_in_days" class="form-input" placeholder="Hari (e.g., 30)" min="1" value="<?php echo htmlspecialchars((string)($formData['expiry_in_days'] ?? '')); ?>">
                         <p class="text-xs text-gray-500 mt-1">Kosongkan untuk menggunakan pengaturan global.</p>
                     </div>
                     <div>
