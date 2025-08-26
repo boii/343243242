@@ -821,3 +821,13 @@ Stack trace:
 #0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
 #1 {main}
   thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[25-Aug-2025 14:06:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:07:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:07:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:14:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:36:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:37:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:41:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:26:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:27:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:49:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
