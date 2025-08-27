@@ -189,11 +189,17 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             const rowStatusClass = statusToClassMap[label.status] || 'tr-status-default';
 
+            // --- PERUBAHAN: Menambahkan ikon notifikasi jika set dimodifikasi ---
+            let modifiedIcon = '';
+            if (label.item_type === 'set' && label.is_modified) {
+                modifiedIcon = `<span class="material-icons text-indigo-500 text-base ml-1" title="Definisi set ini telah berubah sejak label dicetak. Klik untuk melihat detail perubahan.">drive_file_rename_outline</span>`;
+            }
+
             const row = `
                 <tr class="border-b border-gray-200 hover:bg-gray-100 table-status-indicator clickable-row ${rowStatusClass}" data-href="verify_label.php?uid=${label.label_unique_id}">
                     <td class="py-3 px-6 text-left">
                         <div class="font-mono font-semibold text-gray-800">${escapeHtml(label.label_unique_id)}</div>
-                        <div class="text-xs text-gray-500">${escapeHtml(label.label_title || 'N/A')}</div>
+                        <div class="text-xs text-gray-500 flex items-center">${escapeHtml(label.label_title || 'N/A')} ${modifiedIcon}</div>
                     </td>
                     <td class="py-3 px-6 text-left">${escapeHtml(label.load_name || '-')}</td>
                     <td class="py-3 px-6 text-left">

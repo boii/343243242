@@ -109,19 +109,25 @@ if ($conn_settings) {
 $app_settings = array_merge($default_settings, $app_settings_from_db);
 
 // Ensure thermal_fields_config is an array and structured correctly
+// --- PERBAIKAN: Memperbarui struktur default agar mencakup semua field ---
 $completeDefaultFieldStructure = [ 
-    'item_name' => ['visible' => true,  'order' => 1, 'label' => 'Nama Item',          'hide_label' => false, 'custom_label' => ''],
-    'label_title' => ['visible' => true,  'order' => 2, 'label' => 'Nama Label',         'hide_label' => false, 'custom_label' => ''],
-    'label_unique_id' => ['visible' => false, 'order' => 3, 'label' => 'ID Label Unik',      'hide_label' => false, 'custom_label' => ''],
-    'created_at' => ['visible' => true,  'order' => 4, 'label' => 'Tanggal Buat',       'hide_label' => false, 'custom_label' => ''],
-    'expiry_date' => ['visible' => true,  'order' => 5, 'label' => 'Tanggal Kedaluwarsa','hide_label' => false, 'custom_label' => ''],
-    'used_at' => ['visible' => false, 'order' => 6, 'label' => 'Tanggal Digunakan',  'hide_label' => false, 'custom_label' => ''],
-    'validated_at' => ['visible' => false, 'order' => 7, 'label' => 'Tanggal Divalidasi', 'hide_label' => false, 'custom_label' => ''],
-    'validator_username' => ['visible' => false, 'order' => 8, 'label' => 'Divalidasi Oleh',    'hide_label' => false, 'custom_label' => ''],
-    'creator_username' => ['visible' => false, 'order' => 9, 'label' => 'Dibuat Oleh',        'hide_label' => false, 'custom_label' => ''],
-    'notes' => ['visible' => false, 'order' => 10, 'label' => 'Catatan Tambahan',   'hide_label' => false, 'custom_label' => ''],
-    'custom_text_1' => ['visible' => false, 'order' => 11, 'label' => 'Teks Kustom 1',      'hide_label' => true,  'custom_label' => ''],
-    'custom_text_2' => ['visible' => false, 'order' => 12, 'label' => 'Teks Kustom 2',     'hide_label' => true,  'custom_label' => '']
+    'item_name'         => ['visible' => true,  'order' => 1, 'label' => 'Nama Item', 'hide_label' => false, 'custom_label' => ''],
+    'label_title'       => ['visible' => true,  'order' => 2, 'label' => 'Judul Label', 'hide_label' => false, 'custom_label' => ''],
+    'label_unique_id'   => ['visible' => false, 'order' => 3, 'label' => 'ID Label Unik', 'hide_label' => false, 'custom_label' => ''],
+    'created_at'        => ['visible' => true,  'order' => 4, 'label' => 'Tanggal Buat', 'hide_label' => false, 'custom_label' => ''],
+    'expiry_date'       => ['visible' => true,  'order' => 5, 'label' => 'Tanggal Kedaluwarsa', 'hide_label' => false, 'custom_label' => ''],
+    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_operator_name' => ['visible' => false, 'order' => 9, 'label' => 'Operator Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_date'        => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'load_creator_name'   => ['visible' => false, 'order' => 11, 'label' => 'Pembuat Muatan', 'hide_label' => false, 'custom_label' => ''],
+    'destination_department_name' => ['visible' => false, 'order' => 12, 'label' => 'Departemen Tujuan', 'hide_label' => false, 'custom_label' => ''],
+    'creator_username'  => ['visible' => false, 'order' => 13, 'label' => 'Dibuat Oleh (Label)', 'hide_label' => false, 'custom_label' => ''],
+    'used_at'           => ['visible' => false, 'order' => 14, 'label' => 'Tanggal Digunakan', 'hide_label' => false, 'custom_label' => ''],
+    'notes'             => ['visible' => false, 'order' => 15, 'label' => 'Catatan Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'custom_text_1'     => ['visible' => false, 'order' => 16, 'label' => 'Teks Kustom 1', 'hide_label' => true,  'custom_label' => ''],
+    'custom_text_2'     => ['visible' => false, 'order' => 17, 'label' => 'Teks Kustom 2', 'hide_label' => true,  'custom_label' => '']
 ];
 
 $decodedFieldsConfig = null;

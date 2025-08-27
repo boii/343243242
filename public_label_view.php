@@ -46,7 +46,7 @@ if (empty($labelUniqueIdFromGet)) {
             $stmtUpdate->close();
         }
 
-        // Enhanced SQL Query to fetch all lifecycle details
+        // Enhanced SQL Query to fetch all lifecycle details including image
         $sql = "SELECT 
                     sr.*, 
                     creator.full_name as creator_full_name, 
@@ -54,7 +54,8 @@ if (empty($labelUniqueIdFromGet)) {
                     sc.machine_name, sc.cycle_number, sc.cycle_date, sc.status as cycle_status,
                     cycle_operator.full_name as cycle_operator_name,
                     sl.load_name, sl.created_at as load_created_at, load_creator.full_name as load_creator_name,
-                    dest_dept.department_name as destination_department_name
+                    dest_dept.department_name as destination_department_name,
+                    i.image_filename
                 FROM sterilization_records sr
                 LEFT JOIN users creator ON sr.created_by_user_id = creator.user_id
                 LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id
@@ -63,6 +64,7 @@ if (empty($labelUniqueIdFromGet)) {
                 LEFT JOIN users cycle_operator ON sc.operator_user_id = cycle_operator.user_id
                 LEFT JOIN users validator ON sr.validated_by_user_id = validator.user_id
                 LEFT JOIN departments dest_dept ON sl.destination_department_id = dest_dept.department_id
+                LEFT JOIN instruments i ON sr.item_type = 'instrument' AND sr.item_id = i.instrument_id
                 WHERE sr.label_unique_id = ?";
         
         if ($stmt = $conn->prepare($sql)) {
@@ -83,7 +85,7 @@ if (empty($labelUniqueIdFromGet)) {
                         $instrumentIds = array_column($snapshotData, 'instrument_id');
                         if (!empty($instrumentIds)) {
                             $placeholders = implode(',', array_fill(0, count($instrumentIds), '?'));
-                            $sqlSnapshotDetails = "SELECT instrument_id, instrument_name, instrument_code FROM instruments WHERE instrument_id IN ($placeholders)";
+                            $sqlSnapshotDetails = "SELECT instrument_id, instrument_name, instrument_code, image_filename FROM instruments WHERE instrument_id IN ($placeholders)";
                             if($stmtSnapshot = $conn->prepare($sqlSnapshotDetails)){
                                 $stmtSnapshot->bind_param(str_repeat('i', count($instrumentIds)), ...$instrumentIds);
                                 $stmtSnapshot->execute();
@@ -93,7 +95,12 @@ if (empty($labelUniqueIdFromGet)) {
                                 $stmtSnapshot->close();
                                 
                                 foreach($snapshotData as $item){ 
-                                    $setInstrumentsList[] = [ 'instrument_name' => $instrumentDetailsMap[$item['instrument_id']]['instrument_name'] ?? 'Instrumen Dihapus', 'instrument_code' => $instrumentDetailsMap[$item['instrument_id']]['instrument_code'] ?? '-', 'quantity' => $item['quantity'] ];
+                                    $setInstrumentsList[] = [ 
+                                        'instrument_name' => $instrumentDetailsMap[$item['instrument_id']]['instrument_name'] ?? 'Instrumen Dihapus', 
+                                        'instrument_code' => $instrumentDetailsMap[$item['instrument_id']]['instrument_code'] ?? '-', 
+                                        'quantity' => $item['quantity'],
+                                        'image_filename' => $instrumentDetailsMap[$item['instrument_id']]['image_filename'] ?? null
+                                    ];
                                 }
                             }
                         }
@@ -129,6 +136,28 @@ if (empty($labelUniqueIdFromGet)) {
         .timeline-item { position: relative; padding: 1rem 0 1rem 2.5rem; }
         .timeline-icon { position: absolute; left: -1.25rem; top: 1rem; display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; background-color: white; border: 3px solid #e5e7eb; }
         .timeline-item-final .timeline-icon { border-color: #3b82f6; }
+        
+        .item-thumbnail {
+            width: 64px; height: 64px; border-radius: 50%; background-color: #f3f4f6;
+            border: 2px solid #e5e7eb; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; cursor: pointer; transition: all 0.2s ease; overflow: hidden;
+        }
+        .item-thumbnail:hover {
+            border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        .item-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+        .item-thumbnail .material-icons { font-size: 32px; color: #9ca3af; }
+
+        .instrument-list-thumbnail { cursor: pointer; transition: all 0.2s ease; }
+        .instrument-list-thumbnail:hover { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+
+        #imageModal.active { opacity: 1; visibility: visible; }
+        #imageModal .modal-content {
+            max-width: 90vw; max-height: 90vh; width: auto; height: auto; padding: 0.5rem;
+        }
+        #imageModal img { max-width: 100%; max-height: calc(90vh - 4rem); border-radius: 0.25rem; }
+        #imageModal .no-image-placeholder { padding: 4rem; text-align: center; color: #6b7280; }
+        #imageModal .no-image-placeholder .material-icons { font-size: 4rem; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -139,10 +168,33 @@ if (empty($labelUniqueIdFromGet)) {
             <div class="card p-0">
                 <div class="p-6 border-b">
                      <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($labelDetails['label_title']); ?></h2>
-                            <p class="font-mono text-sm text-gray-500">ID Label: <?php echo htmlspecialchars($labelDetails['label_unique_id']); ?></p>
+                        <div class="flex items-start gap-4">
+                            <div id="itemThumbnail" class="item-thumbnail"
+                                data-image-src="<?php 
+                                    if ($labelDetails['item_type'] === 'instrument' && !empty($labelDetails['image_filename']) && file_exists('uploads/instruments/' . $labelDetails['image_filename'])) {
+                                        echo 'uploads/instruments/' . htmlspecialchars($labelDetails['image_filename']);
+                                    } else { echo ''; }
+                                ?>"
+                                data-item-type="<?php echo htmlspecialchars($labelDetails['item_type']); ?>">
+                                <?php
+                                $hasImage = !empty($labelDetails['image_filename']) && file_exists('uploads/instruments/' . $labelDetails['image_filename']);
+                                if ($labelDetails['item_type'] === 'instrument') {
+                                    if ($hasImage) {
+                                        echo '<img src="uploads/instruments/' . htmlspecialchars($labelDetails['image_filename']) . '" alt="Gambar Instrumen">';
+                                    } else {
+                                        echo '<span class="material-icons">build</span>';
+                                    }
+                                } else {
+                                    echo '<span class="material-icons">inventory_2</span>';
+                                }
+                                ?>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($labelDetails['label_title']); ?></h2>
+                                <p class="font-mono text-sm text-gray-500">ID Label: <?php echo htmlspecialchars($labelDetails['label_unique_id']); ?></p>
+                            </div>
                         </div>
+
                         <?php if ($showStatusBlock): ?>
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
                             <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', default => 'hourglass_top' }; ?></span>
@@ -215,8 +267,31 @@ if (empty($labelUniqueIdFromGet)) {
                         <h3 class="text-lg font-semibold text-gray-700 mb-3">Rincian Instrumen dalam Set</h3>
                         <div class="overflow-x-auto">
                             <table class="instrument-list-table">
-                                <thead><tr><th>Nama</th><th>Kode</th><th class="text-center">Kuantitas</th></tr></thead>
-                                <tbody><?php foreach ($setInstrumentsList as $instrument): ?><tr><td><?php echo htmlspecialchars($instrument['instrument_name']); ?></td><td><?php echo htmlspecialchars($instrument['instrument_code'] ?? '-'); ?></td><td class="text-center"><?php echo htmlspecialchars((string)$instrument['quantity']); ?></td></tr><?php endforeach; ?></tbody>
+                                <thead><tr><th class="w-16">Gambar</th><th>Nama</th><th>Kode</th><th class="text-center">Kuantitas</th></tr></thead>
+                                <tbody>
+                                    <?php foreach ($setInstrumentsList as $instrument): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="instrument-list-thumbnail"
+                                                data-image-src="<?php 
+                                                    if (!empty($instrument['image_filename']) && file_exists('uploads/instruments/' . $instrument['image_filename'])) {
+                                                        echo 'uploads/instruments/' . htmlspecialchars($instrument['image_filename']);
+                                                    } else { echo ''; }
+                                                ?>"
+                                                data-item-type="instrument">
+                                                <?php if (!empty($instrument['image_filename']) && file_exists('uploads/instruments/' . $instrument['image_filename'])): ?>
+                                                    <img src="uploads/instruments/<?php echo htmlspecialchars($instrument['image_filename']); ?>" alt="Gambar Instrumen">
+                                                <?php else: ?>
+                                                    <span class="material-icons">build</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($instrument['instrument_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($instrument['instrument_code'] ?? '-'); ?></td>
+                                        <td class="text-center"><?php echo htmlspecialchars((string)$instrument['quantity']); ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -247,6 +322,16 @@ if (empty($labelUniqueIdFromGet)) {
     </div>
     <div id="issueModal" class="modal-overlay"><div class="modal-content"><h3 class="text-lg font-bold mb-2">Laporkan Masalah</h3><p class="text-sm text-gray-600 mb-4">Item akan ditandai sebagai "Ditarik Kembali". Jelaskan masalahnya.</p><form id="issueForm"><div class="mb-4"><label for="issueReason" class="block text-left text-sm font-medium text-gray-700 mb-1">Alasan (Contoh: Kemasan sobek)</label><textarea id="issueReason" class="form-input form-textarea w-full" required></textarea></div><div class="flex justify-center gap-4"><button type="button" class="btn-cancel-modal btn bg-gray-200 text-gray-800 hover:bg-gray-300">Batal</button><button type="submit" class="btn bg-yellow-500 text-white hover:bg-yellow-600">Kirim Laporan</button></div></form></div></div>
 
+    <div id="imageModal" class="modal-overlay">
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Gambar Instrumen Diperbesar" class="hidden">
+            <div id="noImagePlaceholder" class="no-image-placeholder hidden">
+                <span class="material-icons"></span>
+                <p class="mt-2 font-semibold"></p>
+            </div>
+        </div>
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const markUsedBtn = document.getElementById('markUsedBtn');
@@ -259,6 +344,52 @@ if (empty($labelUniqueIdFromGet)) {
         const statusBlock = document.querySelector('.label-status-banner');
         const actionContainer = document.querySelector('.label-action-container');
 
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const noImagePlaceholder = document.getElementById('noImagePlaceholder');
+        const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
+        const noImageText = noImagePlaceholder.querySelector('p');
+
+        function showImageModal(imageSrc, itemType) {
+            if (imageSrc) {
+                modalImage.src = imageSrc;
+                modalImage.classList.remove('hidden');
+                noImagePlaceholder.classList.add('hidden');
+            } else {
+                modalImage.classList.add('hidden');
+                noImagePlaceholder.classList.remove('hidden');
+                noImageIcon.textContent = itemType === 'instrument' ? 'build' : 'inventory_2';
+                noImageText.textContent = 'Tidak ada gambar untuk item ini.';
+            }
+            imageModal.classList.add('active');
+        }
+
+        const itemThumbnail = document.getElementById('itemThumbnail');
+        if (itemThumbnail) {
+            itemThumbnail.addEventListener('click', () => {
+                const imageSrc = itemThumbnail.dataset.imageSrc;
+                const itemType = itemThumbnail.dataset.itemType;
+                showImageModal(imageSrc, itemType);
+            });
+        }
+        
+        const instrumentThumbnails = document.querySelectorAll('.instrument-list-thumbnail');
+        instrumentThumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                const imageSrc = thumbnail.dataset.imageSrc;
+                const itemType = thumbnail.dataset.itemType;
+                showImageModal(imageSrc, itemType);
+            });
+        });
+
+        if (imageModal) {
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    imageModal.classList.remove('active');
+                }
+            });
+        }
+        
         const allModals = document.querySelectorAll('.modal-overlay');
         allModals.forEach(modal => { modal.addEventListener('click', function(e) { if (e.target === modal || e.target.closest('.btn-cancel-modal')) { modal.classList.remove('active'); } }); });
 

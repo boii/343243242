@@ -52,15 +52,20 @@ $defaultThermalFieldsStructure = [
     'expiry_date'       => ['visible' => true,  'order' => 4, 'label' => 'Tanggal Kedaluwarsa','group' => 'Informasi Esensial', 'hide_label' => false, 'custom_label' => ''],
     'label_unique_id'   => ['visible' => false, 'order' => 5, 'label' => 'ID Unik Label',      'group' => 'Informasi Esensial', 'hide_label' => false, 'custom_label' => ''],
     
-    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan',        'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus',       'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin',         'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'creator_username'  => ['visible' => false, 'order' => 9, 'label' => 'Dibuat Oleh',        'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'used_at'           => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Digunakan', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'notes'             => ['visible' => false, 'order' => 11, 'label' => 'Catatan Tambahan',  'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan',        'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus',       'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin',         'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_operator_name' => ['visible' => false, 'order' => 9, 'label' => 'Operator Siklus',  'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_date'        => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Siklus',     'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'load_creator_name'   => ['visible' => false, 'order' => 11, 'label' => 'Pembuat Muatan',   'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'destination_department_name' => ['visible' => false, 'order' => 12, 'label' => 'Departemen Tujuan','group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+
+    'creator_username'  => ['visible' => false, 'order' => 13, 'label' => 'Dibuat Oleh (Label)', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'used_at'           => ['visible' => false, 'order' => 14, 'label' => 'Tanggal Digunakan', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'notes'             => ['visible' => false, 'order' => 15, 'label' => 'Catatan Tambahan',  'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
     
-    'custom_text_1'     => ['visible' => false, 'order' => 12, 'label' => 'Teks Kustom 1',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => ''],
-    'custom_text_2'     => ['visible' => false, 'order' => 13, 'label' => 'Teks Kustom 2',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => '']
+    'custom_text_1'     => ['visible' => false, 'order' => 16, 'label' => 'Teks Kustom 1',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => ''],
+    'custom_text_2'     => ['visible' => false, 'order' => 17, 'label' => 'Teks Kustom 2',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => '']
 ];
 
 $currentThermalFieldsConfig = [];
@@ -77,7 +82,7 @@ foreach ($defaultThermalFieldsStructure as $key => $defaultValues) {
 }
 
 uasort($currentThermalFieldsConfig, function($a, $b) {
-    $groupOrder = ['Informasi Esensial' => 1, 'Informasi Tambahan' => 2, 'Teks Kustom' => 3];
+    $groupOrder = ['Informasi Esensial' => 1, 'Informasi Pelacakan' => 2, 'Informasi Tambahan' => 3, 'Teks Kustom' => 4];
     $groupComparison = ($groupOrder[$a['group']] ?? 99) <=> ($groupOrder[$b['group']] ?? 99);
     if ($groupComparison !== 0) {
         return $groupComparison;

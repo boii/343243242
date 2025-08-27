@@ -122,11 +122,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($thermalPaperHeight === false) { $thermalPaperHeight = 40; }
 
     $processedThermalFieldsConfig = [];
-    // --- PERUBAHAN: Memperbarui daftar field yang valid ---
     $validFieldKeys = [
         'item_name', 'label_title', 'created_at', 'expiry_date', 'label_unique_id',
         'load_name', 'cycle_number', 'machine_name', 'creator_username', 'used_at', 'notes',
-        'custom_text_1', 'custom_text_2'
+        'custom_text_1', 'custom_text_2', 'cycle_operator_name', 'cycle_date', 'load_creator_name', 'destination_department_name'
     ];
     foreach ($validFieldKeys as $key) {
         $fieldInputData = $thermalFieldsConfigInput[$key] ?? [];
