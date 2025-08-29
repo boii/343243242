@@ -27,7 +27,7 @@ function handleGetLoadList(mysqli $conn): void
     $stmt->close();
 
     http_response_code(200);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['status' => 'success', 'data' => $data]);
 }
 
 /**
@@ -56,11 +56,29 @@ function handleGetLoadDetails(mysqli $conn, int $loadId): void
         $loadData['items'] = $resultItems->fetch_all(MYSQLI_ASSOC);
         $stmtItems->close();
 
+        // --- PENAMBAHAN HATEOAS DIMULAI DI SINI ---
+        $loadData['_links'] = [
+            'self' => ['href' => "/api/v1/loads/{$loadId}"]
+        ];
+
+        if (!empty($loadData['cycle_id'])) {
+            $loadData['_links']['cycle'] = ['href' => "/api/v1/cycles/{$loadData['cycle_id']}"];
+        }
+        
+        if ($loadData['status'] === 'persiapan') {
+            $loadData['_links']['add_item'] = [
+                'href' => "/api/v1/loads/{$loadId}/items",
+                'method' => 'POST',
+                'description' => 'Tambahkan instrumen atau set ke dalam muatan ini.'
+            ];
+        }
+        // --- PENAMBAHAN HATEOAS SELESAI ---
+
         http_response_code(200);
-        echo json_encode(['success' => true, 'data' => $loadData]);
+        echo json_encode(['status' => 'success', 'data' => $loadData]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Muatan tidak ditemukan.']);
+        echo json_encode(['status' => 'fail', 'data' => ['load' => 'Muatan tidak ditemukan.']]);
     }
     $stmtLoad->close();
 }
@@ -77,7 +95,7 @@ function handleCreateLoad(mysqli $conn): void
     $machineId = filter_var($input['machine_id'] ?? null, FILTER_VALIDATE_INT);
     if (!$machineId) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'machine_id (integer) wajib diisi.']);
+        echo json_encode(['status' => 'fail', 'data' => ['machine_id' => 'machine_id (integer) wajib diisi.']]);
         return;
     }
 
@@ -108,14 +126,14 @@ function handleCreateLoad(mysqli $conn): void
             $newLoadData = $stmtGet->get_result()->fetch_assoc();
 
             http_response_code(201);
-            echo json_encode(['success' => true, 'message' => 'Muatan berhasil dibuat.', 'data' => $newLoadData]);
+            echo json_encode(['status' => 'success', 'data' => $newLoadData]);
         } else {
             throw new Exception("Eksekusi database gagal: " . $stmt->error);
         }
         $stmt->close();
     } catch (Exception $e) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
 
@@ -134,7 +152,7 @@ function handleAddItemToLoad(mysqli $conn, int $loadId): void
     $itemType = trim($input['item_type'] ?? '');
     if (!$itemId || !in_array($itemType, ['instrument', 'set'])) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'item_id (integer) dan item_type (string: "instrument" atau "set") wajib diisi.']);
+        echo json_encode(['status' => 'fail', 'data' => ['fields' => 'item_id (integer) dan item_type (string: "instrument" atau "set") wajib diisi.']]);
         return;
     }
 
@@ -170,16 +188,19 @@ function handleAddItemToLoad(mysqli $conn, int $loadId): void
 
         if ($stmtInsert->execute()) {
             http_response_code(201); // Created
-            echo json_encode(['success' => true, 'message' => 'Item berhasil ditambahkan ke muatan.']);
+            echo json_encode(['status' => 'success', 'data' => ['message' => 'Item berhasil ditambahkan ke muatan.']]);
         } else {
             throw new Exception('Gagal menambahkan item: ' . $stmtInsert->error);
         }
         $stmtInsert->close();
 
     } catch (Exception $e) {
-        if (http_response_code() === 200) {
-            http_response_code(500);
+        if (http_response_code() === 200) http_response_code(500);
+
+        if(http_response_code() >= 500) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } else {
+            echo json_encode(['status' => 'fail', 'data' => ['general' => $e->getMessage()]]);
         }
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }

@@ -30,7 +30,7 @@ function handleGetCycleList(mysqli $conn): void
     $stmt->close();
 
     http_response_code(200);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['status' => 'success', 'data' => $data]);
 }
 
 /**
@@ -54,14 +54,30 @@ function handleGetCycleDetails(mysqli $conn, int $cycleId): void
         $stmtLoads->bind_param("i", $cycleId);
         $stmtLoads->execute();
         $resultLoads = $stmtLoads->get_result();
-        $cycleData['loads'] = $resultLoads->fetch_all(MYSQLI_ASSOC);
+        $loads = $resultLoads->fetch_all(MYSQLI_ASSOC);
         $stmtLoads->close();
 
+        // --- PENAMBAHAN HATEOAS ---
+        $cycleData['_links'] = [
+            'self' => ['href' => "/api/v1/cycles/{$cycleId}"]
+        ];
+        
+        // Tambahkan links untuk setiap item muatan
+        foreach ($loads as &$load) {
+            $load['_links'] = [
+                'self' => ['href' => "/api/v1/loads/{$load['load_id']}"]
+            ];
+        }
+        unset($load); // Hapus referensi
+        
+        $cycleData['loads'] = $loads;
+        // --- AKHIR HATEOAS ---
+
         http_response_code(200);
-        echo json_encode(['success' => true, 'data' => $cycleData]);
+        echo json_encode(['status' => 'success', 'data' => $cycleData]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Siklus tidak ditemukan.']);
+        echo json_encode(['status' => 'fail', 'data' => ['cycle' => 'Siklus tidak ditemukan.']]);
     }
     $stmtCycle->close();
 }

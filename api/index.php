@@ -9,15 +9,24 @@ require_once 'utils.php';
 
 $conn = connectToDatabase();
 if (!$conn) {
-    http_response_code(503);
-    echo json_encode(['success' => false, 'error' => 'Tidak dapat terhubung ke layanan.']);
+    http_response_code(503); // Service Unavailable
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Tidak dapat terhubung ke layanan database.'
+    ]);
     exit;
 }
 
 $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-if (!validateApiKey($conn, $apiKey)) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Akses ditolak. Kunci API tidak valid atau tidak diberikan.']);
+// Panggil fungsi baru untuk mendapatkan detail kunci API
+$apiKeyDetails = getApiKeyDetails($conn, $apiKey);
+
+if (!$apiKeyDetails) {
+    http_response_code(401); // Unauthorized
+    echo json_encode([
+        'status' => 'fail',
+        'data' => ['authorization' => 'Akses ditolak. Kunci API tidak valid atau tidak diberikan.']
+    ]);
     $conn->close();
     exit;
 }
@@ -38,6 +47,12 @@ if ($apiVersion === 'v1') {
             if ($method === 'GET' && !empty($param1)) {
                 handleGetLabelDetails($conn, $param1);
             } elseif ($method === 'POST' && !empty($param1) && $param2 === 'mark-used') {
+                // Contoh pengecekan izin untuk aksi tulis (POST)
+                if ($apiKeyDetails['permissions'] !== 'read_write') {
+                    http_response_code(403); // Forbidden
+                    echo json_encode(['status' => 'fail', 'data' => ['authorization' => 'Kunci API ini tidak memiliki izin untuk menulis data.']]);
+                    exit;
+                }
                 handleMarkLabelUsed($conn, $param1);
             }
             break;
@@ -84,11 +99,15 @@ if ($apiVersion === 'v1') {
                     handleGetLoadList($conn);
                 }
             } elseif ($method === 'POST') {
+                // Pengecekan izin untuk semua aksi POST di resource 'loads'
+                if ($apiKeyDetails['permissions'] !== 'read_write') {
+                    http_response_code(403); // Forbidden
+                    echo json_encode(['status' => 'fail', 'data' => ['authorization' => 'Kunci API ini tidak memiliki izin untuk menulis data.']]);
+                    exit;
+                }
                 if (!empty($param1) && is_numeric($param1) && $param2 === 'items') {
-                    // Rute baru: POST /loads/{id}/items
                     handleAddItemToLoad($conn, (int)$param1);
                 } else {
-                    // Rute lama: POST /loads
                     handleCreateLoad($conn);
                 }
             }
@@ -121,7 +140,10 @@ if ($apiVersion === 'v1') {
 
         default:
             http_response_code(404);
-            echo json_encode(['success' => false, 'error' => 'Resource tidak ditemukan.']);
+            echo json_encode([
+                'status' => 'fail',
+                'data' => ['resource' => 'Resource tidak ditemukan.']
+            ]);
             break;
     }
 
@@ -132,9 +154,11 @@ if ($apiVersion === 'v1') {
 // Fallback
 http_response_code(404);
 echo json_encode([
-    'success' => false,
-    'error' => 'Endpoint tidak ditemukan atau versi API tidak didukung.',
-    'requested_path' => $requestPath
+    'status' => 'fail',
+    'data' => [
+        'endpoint' => 'Endpoint tidak ditemukan atau versi API tidak didukung.',
+        'requested_path' => $requestPath
+    ]
 ]);
 
 $conn->close();

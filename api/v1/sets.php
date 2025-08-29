@@ -25,7 +25,7 @@ function handleGetSetList(mysqli $conn): void
     $stmt->close();
 
     http_response_code(200);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['status' => 'success', 'data' => $data]);
 }
 
 /**
@@ -54,14 +54,29 @@ function handleGetSetDetails(mysqli $conn, int $setId): void
         $stmtItems->bind_param("i", $setId);
         $stmtItems->execute();
         $resultItems = $stmtItems->get_result();
-        $setData['instruments'] = $resultItems->fetch_all(MYSQLI_ASSOC);
+        $instruments = $resultItems->fetch_all(MYSQLI_ASSOC);
         $stmtItems->close();
 
+        // --- PENAMBAHAN HATEOAS ---
+        $setData['_links'] = [
+            'self' => ['href' => "/api/v1/sets/{$setId}"]
+        ];
+        
+        foreach ($instruments as &$instrument) {
+            $instrument['_links'] = [
+                'self' => ['href' => "/api/v1/instruments/{$instrument['instrument_id']}"]
+            ];
+        }
+        unset($instrument);
+
+        $setData['instruments'] = $instruments;
+        // --- AKHIR HATEOAS ---
+
         http_response_code(200);
-        echo json_encode(['success' => true, 'data' => $setData]);
+        echo json_encode(['status' => 'success', 'data' => $setData]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Set tidak ditemukan.']);
+        echo json_encode(['status' => 'fail', 'data' => ['set' => 'Set tidak ditemukan.']]);
     }
     $stmtSet->close();
 }

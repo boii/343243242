@@ -14,7 +14,7 @@ function handleGetLabelDetails(mysqli $conn, string $labelUid): void
 {
     if (empty($labelUid)) {
         http_response_code(400); // Bad Request
-        echo json_encode(['success' => false, 'error' => 'ID Label (UID) tidak boleh kosong.']);
+        echo json_encode(['status' => 'fail', 'data' => ['uid' => 'ID Label (UID) tidak boleh kosong.']]);
         exit;
     }
 
@@ -29,6 +29,8 @@ function handleGetLabelDetails(mysqli $conn, string $labelUid): void
                 sr.label_unique_id, 
                 sr.label_title,
                 sr.item_type,
+                sr.load_id, 
+                sl.cycle_id,
                 CASE sr.item_type 
                     WHEN 'instrument' THEN i.instrument_name 
                     WHEN 'set' THEN s.set_name 
@@ -53,7 +55,7 @@ function handleGetLabelDetails(mysqli $conn, string $labelUid): void
     if (!$stmt) {
         http_response_code(500);
         error_log("API Error (get_label_details): Failed to prepare statement - " . $conn->error);
-        echo json_encode(['success' => false, 'error' => 'Terjadi kesalahan pada server.']);
+        echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan pada server.']);
         exit;
     }
 
@@ -66,11 +68,29 @@ function handleGetLabelDetails(mysqli $conn, string $labelUid): void
         $statusInfo = getUniversalStatusBadge($data['status']);
         $data['status_display'] = $statusInfo['text'];
 
+        // --- PENAMBAHAN HATEOAS ---
+        $data['_links'] = [
+            'self' => ['href' => "/api/v1/labels/{$labelUid}"]
+        ];
+        if (!empty($data['load_id'])) {
+            $data['_links']['load'] = ['href' => "/api/v1/loads/{$data['load_id']}"];
+        }
+        if (!empty($data['cycle_id'])) {
+            $data['_links']['cycle'] = ['href' => "/api/v1/cycles/{$data['cycle_id']}"];
+        }
+        if ($data['status'] === 'active') {
+            $data['_links']['mark_used'] = [
+                'href' => "/api/v1/labels/{$labelUid}/mark-used",
+                'method' => 'POST'
+            ];
+        }
+        // --- AKHIR HATEOAS ---
+
         http_response_code(200); // OK
-        echo json_encode(['success' => true, 'data' => $data]);
+        echo json_encode(['status' => 'success', 'data' => $data]);
     } else {
         http_response_code(404); // Not Found
-        echo json_encode(['success' => false, 'error' => 'Label dengan ID tersebut tidak ditemukan.']);
+        echo json_encode(['status' => 'fail', 'data' => ['uid' => 'Label dengan ID tersebut tidak ditemukan.']]);
     }
 
     $stmt->close();
@@ -139,7 +159,7 @@ function handleMarkLabelUsed(mysqli $conn, string $labelUid): void
         $conn->commit();
 
         http_response_code(200); // OK
-        echo json_encode(['success' => true, 'message' => 'Status item berhasil diperbarui menjadi "Telah Digunakan".']);
+        echo json_encode(['status' => 'success', 'data' => ['message' => 'Status item berhasil diperbarui menjadi "Telah Digunakan".']]);
 
     } catch (Exception $e) {
         if ($conn->inTransaction) {
@@ -149,7 +169,14 @@ function handleMarkLabelUsed(mysqli $conn, string $labelUid): void
         if (http_response_code() === 200) {
             http_response_code(500); // Default ke Internal Server Error jika belum diatur
         }
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        
+        // Sesuaikan dengan JSend
+        if(http_response_code() >= 500){
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } else {
+            echo json_encode(['status' => 'fail', 'data' => ['general' => $e->getMessage()]]);
+        }
+        
     } finally {
         if (isset($stmtGet)) $stmtGet->close();
         if (isset($stmtUpdate)) $stmtUpdate->close();

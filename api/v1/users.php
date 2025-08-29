@@ -18,7 +18,7 @@ function handleGetUserList(mysqli $conn): void
     $data = $result->fetch_all(MYSQLI_ASSOC);
 
     http_response_code(200);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['status' => 'success', 'data' => $data]);
 }
 
 /**
@@ -36,11 +36,17 @@ function handleGetUserDetails(mysqli $conn, int $userId): void
     $result = $stmt->get_result();
 
     if ($data = $result->fetch_assoc()) {
+        // --- PENAMBAHAN HATEOAS ---
+        $data['_links'] = [
+            'self' => ['href' => "/api/v1/users/{$userId}"]
+        ];
+        // --- AKHIR HATEOAS ---
+
         http_response_code(200);
-        echo json_encode(['success' => true, 'data' => $data]);
+        echo json_encode(['status' => 'success', 'data' => $data]);
     } else {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Pengguna tidak ditemukan.']);
+        echo json_encode(['status' => 'fail', 'data' => ['user' => 'Pengguna tidak ditemukan.']]);
     }
     $stmt->close();
 }

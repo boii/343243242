@@ -20,7 +20,7 @@ function handleGetMasterData(mysqli $conn, string $masterType): void
 
     if (!array_key_exists($masterType, $allowedTypes)) {
         http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Tipe master data tidak valid.']);
+        echo json_encode(['status' => 'fail', 'data' => ['type' => 'Tipe master data tidak valid.']]);
         exit;
     }
 
@@ -31,5 +31,5 @@ function handleGetMasterData(mysqli $conn, string $masterType): void
     $data = $result->fetch_all(MYSQLI_ASSOC);
 
     http_response_code(200);
-    echo json_encode(['success' => true, 'data' => $data]);
+    echo json_encode(['status' => 'success', 'data' => $data]);
 }
