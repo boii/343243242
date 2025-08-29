@@ -1,0 +1,10 @@
+# /api/.htaccess
+
+RewriteEngine On
+
+# Aturan agar file atau direktori yang benar-benar ada tidak dialihkan
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Alihkan semua permintaan lainnya ke index.php
+RewriteRule ^(.*)$ index.php?request=$1 [QSA,L]
