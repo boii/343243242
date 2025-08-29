@@ -15,10 +15,14 @@ if ($conn) {
     $conn->close();
 }
 
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https://" : "http") . "://" . $_SERVER['HTTP_HOST'];
+// --- PERBAIKAN: Logika URL yang lebih elegan dan tangguh ---
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'] ?? 'steril.rejiva.my.id'; // Fallback ke host yang diketahui jika tidak terdeteksi
 $api_base_path = dirname($_SERVER['SCRIPT_NAME']);
-$full_api_url = rtrim($base_url . $api_base_path, '/');
+$full_api_url = rtrim($protocol . $host . $api_base_path, '/');
 $api_v1_url = $full_api_url . '/v1';
+// --- AKHIR PERBAIKAN ---
+
 $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
 
 ?>
