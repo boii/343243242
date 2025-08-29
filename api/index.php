@@ -18,7 +18,6 @@ if (!$conn) {
 }
 
 $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-// Panggil fungsi baru untuk mendapatkan detail kunci API
 $apiKeyDetails = getApiKeyDetails($conn, $apiKey);
 
 if (!$apiKeyDetails) {
@@ -44,18 +43,48 @@ if ($apiVersion === 'v1') {
     switch ($resource) {
         case 'labels':
             require_once 'v1/labels.php';
-            if ($method === 'GET' && !empty($param1)) {
+            if ($method === 'GET' && !empty($param1) && $param2 === 'print') {
+                handleGetLabelPrintHtml($conn, $param1);
+            } elseif ($method === 'GET' && !empty($param1)) {
                 handleGetLabelDetails($conn, $param1);
             } elseif ($method === 'POST' && !empty($param1) && $param2 === 'mark-used') {
-                // Contoh pengecekan izin untuk aksi tulis (POST)
                 if ($apiKeyDetails['permissions'] !== 'read_write') {
-                    http_response_code(403); // Forbidden
+                    http_response_code(403);
                     echo json_encode(['status' => 'fail', 'data' => ['authorization' => 'Kunci API ini tidak memiliki izin untuk menulis data.']]);
                     exit;
                 }
                 handleMarkLabelUsed($conn, $param1);
             }
             break;
+
+        case 'loads':
+            require_once 'v1/loads.php';
+            require_once 'v1/process.php'; // Muat file proses yang baru
+            if ($method === 'GET') {
+                if (!empty($param1) && is_numeric($param1)) {
+                    handleGetLoadDetails($conn, (int)$param1);
+                } else {
+                    handleGetLoadList($conn);
+                }
+            } elseif ($method === 'POST') {
+                if ($apiKeyDetails['permissions'] !== 'read_write') {
+                    http_response_code(403);
+                    echo json_encode(['status' => 'fail', 'data' => ['authorization' => 'Kunci API ini tidak memiliki izin untuk menulis data.']]);
+                    exit;
+                }
+                if (!empty($param1) && is_numeric($param1) && $param2 === 'items') {
+                    handleAddItemToLoad($conn, (int)$param1);
+                } elseif (!empty($param1) && is_numeric($param1) && $param2 === 'process') {
+                    handleProcessLoad($conn, (int)$param1);
+                } elseif (!empty($param1) && is_numeric($param1) && $param2 === 'generate-labels') {
+                    handleGenerateLabels($conn, (int)$param1);
+                } else {
+                    handleCreateLoad($conn);
+                }
+            }
+            break;
+            
+        // ... case lainnya (instruments, sets, dll) tetap sama ...
 
         case 'instruments':
             if ($method === 'GET') {
@@ -86,29 +115,6 @@ if ($apiVersion === 'v1') {
                     handleGetCycleDetails($conn, (int)$param1);
                 } else {
                     handleGetCycleList($conn);
-                }
-            }
-            break;
-
-        case 'loads':
-            require_once 'v1/loads.php';
-            if ($method === 'GET') {
-                if (!empty($param1) && is_numeric($param1)) {
-                    handleGetLoadDetails($conn, (int)$param1);
-                } else {
-                    handleGetLoadList($conn);
-                }
-            } elseif ($method === 'POST') {
-                // Pengecekan izin untuk semua aksi POST di resource 'loads'
-                if ($apiKeyDetails['permissions'] !== 'read_write') {
-                    http_response_code(403); // Forbidden
-                    echo json_encode(['status' => 'fail', 'data' => ['authorization' => 'Kunci API ini tidak memiliki izin untuk menulis data.']]);
-                    exit;
-                }
-                if (!empty($param1) && is_numeric($param1) && $param2 === 'items') {
-                    handleAddItemToLoad($conn, (int)$param1);
-                } else {
-                    handleCreateLoad($conn);
                 }
             }
             break;

@@ -70,7 +70,8 @@ function handleGetLabelDetails(mysqli $conn, string $labelUid): void
 
         // --- PENAMBAHAN HATEOAS ---
         $data['_links'] = [
-            'self' => ['href' => "/api/v1/labels/{$labelUid}"]
+            'self' => ['href' => "/api/v1/labels/{$labelUid}"],
+            'print' => ['href' => "/api/v1/labels/{$labelUid}/print", 'method' => 'GET']
         ];
         if (!empty($data['load_id'])) {
             $data['_links']['load'] = ['href' => "/api/v1/loads/{$data['load_id']}"];
@@ -180,5 +181,62 @@ function handleMarkLabelUsed(mysqli $conn, string $labelUid): void
     } finally {
         if (isset($stmtGet)) $stmtGet->close();
         if (isset($stmtUpdate)) $stmtUpdate->close();
+    }
+}
+
+/**
+ * Menangani permintaan GET untuk mendapatkan hasil cetak (HTML) dari sebuah label.
+ *
+ * @param mysqli $conn Koneksi database.
+ * @param string $labelUid ID unik label yang akan dicetak.
+ * @return void
+ */
+function handleGetLabelPrintHtml(mysqli $conn, string $labelUid): void
+{
+    global $app_settings;
+
+    try {
+        // 1. Naikkan print_count untuk watermark
+        $stmtIncrement = $conn->prepare("UPDATE sterilization_records SET print_count = print_count + 1 WHERE label_unique_id = ?");
+        $stmtIncrement->bind_param("s", $labelUid);
+        $stmtIncrement->execute();
+        $stmtIncrement->close();
+        
+        // 2. Tentukan template mana yang akan digunakan
+        $templateFile = match ($app_settings['print_template'] ?? 'normal') {
+            'half' => '../../print_thermal_half.php',
+            default => '../../print_thermal.php',
+        };
+        $templatePath = __DIR__ . '/' . $templateFile;
+
+        if (!file_exists($templatePath)) {
+            throw new Exception("File template cetak tidak ditemukan.");
+        }
+
+        // 3. Tangkap output dari file template
+        ob_start();
+        // Variabel $_GET['label_uid'] dibutuhkan oleh skrip template
+        $_GET['label_uid'] = $labelUid;
+        include $templatePath;
+        $htmlOutput = ob_get_clean();
+        
+        // Hapus tag HTML, body, dan script yang tidak perlu untuk respons API
+        $htmlOutput = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $htmlOutput);
+        $htmlOutput = preg_replace('/<title\b[^>]*>(.*?)<\/title>/is', "", $htmlOutput);
+        
+        http_response_code(200);
+        echo json_encode([
+            'status' => 'success',
+            'data' => [
+                'label_uid' => $labelUid,
+                'template_used' => $app_settings['print_template'],
+                'html_content' => $htmlOutput
+            ]
+        ]);
+
+    } catch (Exception $e) {
+        if (ob_get_level() > 0) { ob_end_clean(); }
+        http_response_code(500);
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
 }
