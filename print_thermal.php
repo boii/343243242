@@ -17,11 +17,8 @@
 declare(strict_types=1);
 
 require_once 'config.php'; 
-if (file_exists('libs/phpqrcode/qrlib.php')) {
-    require_once 'libs/phpqrcode/qrlib.php';
-}
+require_once __DIR__ . '/libs/phpqrcode/qrlib.php';
 $qrLibMissing = !class_exists('QRcode');
-
 
 $labelDetails = null; $itemDetails = null; $errorMessage = ''; $labelUniqueId = null;
 $conn_print_thermal = null; 

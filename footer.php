@@ -41,6 +41,8 @@ $memory_usage = round(memory_get_peak_usage(true) / (1024 * 1024), 2); // in MB
                     <span>Load: <strong><?php echo $load_time; ?>s</strong></span>
                     <span class="mx-2">|</span>
                     <span>Memory: <strong><?php echo $memory_usage; ?>MB</strong></span>
+                    <span class="mx-2">|</span>
+                    <a href="api/docs.php" target="_blank" class="font-semibold text-blue-600 hover:underline">API Docs</a>
                 </div>
 
                 <div class="text-gray-500">

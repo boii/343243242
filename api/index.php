@@ -3,6 +3,27 @@
 
 declare(strict_types=1);
 
+// --- PENANGANAN CORS DIMULAI DI SINI ---
+
+// Tentukan domain frontend Anda yang diizinkan. 
+// Untuk pengembangan, '*' bisa digunakan, tapi untuk produksi, ganti dengan domain spesifik.
+$allowed_origin = '*'; 
+// Contoh untuk produksi: $allowed_origin = 'https://aplikasi-frontend-anda.com';
+
+header("Access-Control-Allow-Origin: " . $allowed_origin);
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, X-API-Key, Authorization");
+
+// Browser akan mengirim request pre-flight dengan method OPTIONS
+// untuk request yang kompleks (seperti POST dengan body JSON).
+// Kita harus menanggapinya dengan status 200 OK agar request sebenarnya bisa dilanjutkan.
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+// --- PENANGANAN CORS SELESAI ---
+
+
 header('Content-Type: application/json');
 require_once '../config.php';
 require_once 'utils.php';

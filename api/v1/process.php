@@ -127,7 +127,6 @@ function handleGenerateLabels(mysqli $conn, int $loadId): void
 
     $conn->begin_transaction();
     try {
-        // Ambil info muatan, pastikan status 'selesai'
         $stmtLoadInfo = $conn->prepare("SELECT cycle_id, destination_department_id FROM sterilization_loads WHERE load_id = ? AND status = 'selesai'");
         $stmtLoadInfo->bind_param("i", $loadId);
         $stmtLoadInfo->execute();
@@ -140,11 +139,6 @@ function handleGenerateLabels(mysqli $conn, int $loadId): void
         $destinationDepartmentId = $loadInfo['destination_department_id'];
         $stmtLoadInfo->close();
 
-        // (Logika expiry cerdas disalin dari prepare_print_queue.php)
-        // ... (seluruh blok logika untuk mengambil item, snapshot, dan data master) ...
-        // Karena kodenya sangat panjang dan duplikatif, untuk keringkasan kita asumsikan logikanya sama persis
-        // Mulai dari "Ambil semua item dari muatan" sampai "Loop untuk membuat label"
-        
         $stmtItems = $conn->prepare("SELECT item_id, item_type, item_snapshot FROM sterilization_load_items WHERE load_id = ?");
         $stmtItems->bind_param("i", $loadId);
         $stmtItems->execute();
@@ -155,31 +149,100 @@ function handleGenerateLabels(mysqli $conn, int $loadId): void
             throw new Exception("Tidak ada item di dalam muatan ini untuk dibuatkan label.");
         }
 
-        // (Kode pre-fetching data master yang dioptimalkan ada di sini)
-        // ...
+        $instrumentIds = [];
+        $setIds = [];
+        foreach ($itemsToProcess as $item) {
+            if ($item['item_type'] === 'set') {
+                 $setIds[] = $item['item_id'];
+                 if (!empty($item['item_snapshot'])) {
+                    $snapshot = json_decode($item['item_snapshot'], true);
+                    if (is_array($snapshot)) {
+                        $instrumentIds = array_merge($instrumentIds, array_column($snapshot, 'instrument_id'));
+                    }
+                 }
+            } else {
+                $instrumentIds[] = $item['item_id'];
+            }
+        }
+        $instrumentIds = array_unique(array_filter($instrumentIds));
+        $setIds = array_unique(array_filter($setIds));
+
+        $masterData = ['instrument' => [], 'set' => []];
+        if (!empty($instrumentIds)) {
+            $placeholders = implode(',', array_fill(0, count($instrumentIds), '?'));
+            $stmtMasterInst = $conn->prepare("SELECT instrument_id, instrument_name, expiry_in_days FROM instruments WHERE instrument_id IN ($placeholders)");
+            $stmtMasterInst->bind_param(str_repeat('i', count($instrumentIds)), ...$instrumentIds);
+            $stmtMasterInst->execute();
+            $resInst = $stmtMasterInst->get_result();
+            while ($row = $resInst->fetch_assoc()) $masterData['instrument'][$row['instrument_id']] = $row;
+            $stmtMasterInst->close();
+        }
+        if (!empty($setIds)) {
+            $placeholders = implode(',', array_fill(0, count($setIds), '?'));
+            $stmtMasterSet = $conn->prepare("SELECT set_id, set_name, expiry_in_days FROM instrument_sets WHERE set_id IN ($placeholders)");
+            $stmtMasterSet->bind_param(str_repeat('i', count($setIds)), ...$setIds);
+            $stmtMasterSet->execute();
+            $resSet = $stmtMasterSet->get_result();
+            while ($row = $resSet->fetch_assoc()) $masterData['set'][$row['set_id']] = $row;
+            $stmtMasterSet->close();
+        }
         
         $sqlInsertLabel = "INSERT INTO sterilization_records (label_unique_id, load_id, cycle_id, item_id, item_type, label_title, created_by_user_id, expiry_date, status, label_items_snapshot, print_status, destination_department_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, 'pending', ?)";
         $stmtInsert = $conn->prepare($sqlInsertLabel);
         
         $generatedUids = [];
         
-        // Loop pembuatan label (disingkat, logikanya sama persis dengan `load_generate_labels.php`)
         foreach ($itemsToProcess as $item) {
-            // (Logika kalkulasi expiry date ada di sini)
-            // ...
-            $expiryDate = (new DateTime())->modify("+" . $globalDefaultExpiryDays . " days")->format('Y-m-d H:i:s');
+            $itemId = (int)$item['item_id'];
+            $itemType = $item['item_type'];
+            $itemSnapshotJson = $item['item_snapshot'] ?? null;
             
-            // Dummy title & unique ID for example
-            $labelTitle = "Item " . $item['item_id'];
-            $labelUniqueId = strtoupper(bin2hex(random_bytes(4)));
+            $itemMaster = $masterData[$itemType][$itemId] ?? null;
+            if (!$itemMaster) continue;
+            
+            $labelTitle = $itemMaster[$itemType . '_name'] ?? 'Item tidak dikenal';
+            $daysUntilExpiry = $globalDefaultExpiryDays;
 
-            $stmtInsert->bind_param("siiississi", $labelUniqueId, $loadId, $cycleId, $item['item_id'], $item['item_type'], $labelTitle, $userId, $expiryDate, $item['item_snapshot'], $destinationDepartmentId);
+            if ($itemType === 'instrument') {
+                $daysUntilExpiry = (int)($itemMaster['expiry_in_days'] ?? $globalDefaultExpiryDays);
+            } elseif ($itemType === 'set') {
+                if (isset($itemMaster['expiry_in_days']) && (int)$itemMaster['expiry_in_days'] > 0) {
+                    $daysUntilExpiry = (int)$itemMaster['expiry_in_days'];
+                } else {
+                    if (!empty($itemSnapshotJson)) {
+                        $snapshot = json_decode($itemSnapshotJson, true);
+                        if (is_array($snapshot) && !empty($snapshot)) {
+                            $expiryValues = [];
+                            foreach ($snapshot as $snapItem) {
+                                $instrumentInSet = $masterData['instrument'][(int)$snapItem['instrument_id']] ?? null;
+                                $expiryValues[] = (int)($instrumentInSet['expiry_in_days'] ?? $globalDefaultExpiryDays);
+                            }
+                            if (!empty($expiryValues)) {
+                                $daysUntilExpiry = min($expiryValues);
+                            }
+                        }
+                    }
+                }
+            }
             
-            if ($stmtInsert->execute()) {
-                $generatedUids[] = $labelUniqueId;
-            } else {
-                if ($conn->errno !== 1062) { // Abaikan error duplikat dan coba lagi
-                    throw new Exception("Gagal membuat label untuk item ID {$item['item_id']}: " . $stmtInsert->error);
+            $expiryDate = (new DateTime())->modify("+" . $daysUntilExpiry . " days")->format('Y-m-d H:i:s');
+            
+            $maxAttempts = 5;
+            for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
+                $labelUniqueId = strtoupper(bin2hex(random_bytes(4)));
+                
+                $stmtInsert->bind_param("siiississi", $labelUniqueId, $loadId, $cycleId, $itemId, $itemType, $labelTitle, $userId, $expiryDate, $itemSnapshotJson, $destinationDepartmentId);
+                
+                if ($stmtInsert->execute()) {
+                    $generatedUids[] = $labelUniqueId;
+                    break; 
+                } else {
+                    if ($conn->errno !== 1062) {
+                        throw new Exception("Gagal membuat label untuk item ID {$itemId}: " . $stmtInsert->error);
+                    }
+                    if ($attempt === $maxAttempts - 1) {
+                         throw new Exception("Gagal menghasilkan ID label unik setelah $maxAttempts percobaan.");
+                    }
                 }
             }
         }

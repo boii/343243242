@@ -18,9 +18,7 @@ declare(strict_types=1);
 
 // Logika PHP sama persis dengan print_multiple_labels.php
 require_once 'config.php';
-if (file_exists('libs/phpqrcode/qrlib.php')) {
-    require_once 'libs/phpqrcode/qrlib.php';
-}
+require_once __DIR__ . '/libs/phpqrcode/qrlib.php';
 $qrLibMissing = !class_exists('QRcode');
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {

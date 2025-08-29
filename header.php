@@ -17,7 +17,7 @@
 declare(strict_types=1);
 
 // --- TANDAI WAKTU MULAI & VERSI APLIKASI ---
-define('APP_VERSION', '1.4.0');
+define('APP_VERSION', '2.0.0'); // <--- VERSI DIPERBARUI DI SINI
 $page_load_start = microtime(true);
 
 if (file_exists('config.php')) {

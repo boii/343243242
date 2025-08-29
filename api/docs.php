@@ -148,6 +148,48 @@ $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
         }
         .code-viewer { display: none; }
         .code-viewer.active { display: block; }
+
+        .workflow-list {
+            list-style: none;
+            padding-left: 0;
+            counter-reset: workflow-counter;
+        }
+        .workflow-list li {
+            counter-increment: workflow-counter;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 3rem;
+        }
+        .workflow-list li::before {
+            content: counter(workflow-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+        }
+        .workflow-list li strong {
+            font-weight: 700;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .feedback-box {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -175,6 +217,10 @@ $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
                 <p>Selamat datang di dokumentasi API Sterilabel versi 1. API ini memungkinkan Anda untuk berinteraksi secara programatik dengan data sterilisasi, inventaris, dan proses yang ada di dalam aplikasi.</p>
                 <p>API ini didesain mengikuti prinsip REST dan mengembalikan respons dalam format JSON. Semua endpoint berada di bawah base URL berikut:</p>
                 <pre><code><?php echo htmlspecialchars($api_v1_url); ?></code></pre>
+                <div class="feedback-box">
+                    <p style="margin-bottom: 0.5rem;"><strong>Punya Feedback atau Permintaan Fitur?</strong></p>
+                    <p style="margin: 0;">Kami selalu terbuka untuk masukan. Silakan kirim email ke <a href="mailto:fscking@icloud.com" style="color: var(--accent-blue); font-weight: 600;">fscking@icloud.com</a>.</p>
+                </div>
             </section>
 
             <section id="otentikasi">
@@ -186,13 +232,13 @@ $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
             <section id="workflow">
                 <h2>Alur Kerja Umum</h2>
                 <p>Berikut adalah contoh alur kerja lengkap dari persiapan hingga pencetakan label menggunakan API:</p>
-                <ul>
-                    <li><strong>1. Buat Muatan:</strong> Panggil <code>POST /loads</code> untuk membuat "keranjang" sterilisasi baru. Anda akan mendapatkan `load_id` sebagai respons.</li>
-                    <li><strong>2. Tambah Item:</strong> Untuk setiap instrumen atau set, panggil <code>POST /loads/{id}/items</code> menggunakan `load_id` dari langkah sebelumnya.</li>
-                    <li><strong>3. Proses Muatan:</strong> Setelah semua item ditambahkan, panggil <code>POST /loads/{id}/process</code>. Ini akan membuat siklus sterilisasi dan mengubah status muatan menjadi 'selesai'.</li>
-                    <li><strong>4. Generate Label:</strong> Panggil <code>POST /loads/{id}/generate-labels</code> untuk membuat semua catatan label di database. Responsnya akan berisi daftar UID dari semua label baru.</li>
-                    <li><strong>5. Cetak Label:</strong> Untuk setiap UID yang diterima, panggil <code>GET /labels/{uid}/print</code> untuk mendapatkan HTML label yang siap dicetak oleh sistem Anda.</li>
-                </ul>
+                <ol class="workflow-list">
+                    <li><strong>Buat Muatan:</strong> Panggil <code>POST /loads</code> untuk membuat "keranjang" sterilisasi baru. Anda akan mendapatkan `load_id` sebagai respons.</li>
+                    <li><strong>Tambah Item:</strong> Untuk setiap instrumen atau set, panggil <code>POST /loads/{id}/items</code> menggunakan `load_id` dari langkah sebelumnya.</li>
+                    <li><strong>Proses Muatan:</strong> Setelah semua item ditambahkan, panggil <code>POST /loads/{id}/process</code>. Ini akan membuat siklus sterilisasi dan mengubah status muatan menjadi 'selesai'.</li>
+                    <li><strong>Generate Label:</strong> Panggil <code>POST /loads/{id}/generate-labels</code> untuk membuat semua catatan label di database. Responsnya akan berisi daftar UID dari semua label baru.</li>
+                    <li><strong>Cetak Label:</strong> Untuk setiap UID yang diterima, panggil <code>GET /labels/{uid}/print</code> untuk mendapatkan HTML label yang siap dicetak oleh sistem Anda.</li>
+                </ol>
             </section>
 
             <section id="labels">
@@ -207,7 +253,7 @@ $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
                 
                 <h3 data-endpoint="get-label-print">Mendapatkan Hasil Cetak Label</h3>
                 <div class="endpoint-header"><span class="method get">GET</span><code>/labels/{uid}/print</code></div>
-                <p>Mengembalikan konten HTML dari label yang siap cetak dan menaikkan `print_count`.</p>
+                <p>Mengembalikan konten HTML dari label yang siap dicetak dan menaikkan `print_count`.</p>
             </section>
 
             <section id="inventaris">
