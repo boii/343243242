@@ -1,9 +1,8 @@
 <?php
 /**
- * Public Label View Page - Enriched Timeline UI/UX Revamp v11 (FINAL with Issue Image Upload)
+ * Public Label View Page - Enriched Timeline UI/UX Revamp v13
  *
- * This version adds an elegant image upload to the "Report Issue" modal,
- * and displays the proof image in the timeline for recalled items.
+ * This version uses the new notes parser for a structured and filtered history log.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -193,7 +192,7 @@ if (empty($labelUniqueIdFromGet)) {
                         </div>
                         <?php if ($showStatusBlock): ?>
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
-                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', default => 'hourglass_top' }; ?></span>
+                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', default => 'hourglass_top' }; ?></span>
                             <span>Status: <?php echo htmlspecialchars($labelDetails['status_display']); ?></span>
                         </div>
                         <?php endif; ?>
@@ -260,12 +259,36 @@ if (empty($labelUniqueIdFromGet)) {
                                         <img src="uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>" alt="Bukti Masalah" class="proof-thumbnail" onclick="showImageModal('uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>', 'instrument')">
                                     </div>
                                 <?php endif; ?>
+                            <?php elseif($labelDetails['status'] === 'voided'): ?>
+                                <p class="text-sm text-gray-600 font-medium">Dibatalkan secara administratif dan tidak valid untuk digunakan.</p>
                             <?php else: ?>
                                 <p class="text-sm text-gray-600">Label masih aktif dan siap digunakan hingga <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
+                <?php 
+                $notesToParse = $labelDetails['notes'] ?? '';
+                $hasPublicNotes = false;
+                if (!empty($notesToParse)) {
+                    $lines = explode("\n", $notesToParse);
+                    foreach($lines as $line) {
+                        if (!empty(trim($line)) && strpos($line, 'CATATAN INTERNAL') === false && strpos($line, '-----------------') === false) {
+                            $hasPublicNotes = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if ($hasPublicNotes):
+                ?>
+                <div class="p-6 border-t">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Riwayat Catatan</h3>
+                    <div class="note-history-container">
+                        <?php parseAndDisplayNotes($labelDetails['notes'], true); ?>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <?php if (!empty($setInstrumentsList)): ?>
                     <div class="p-6 border-t">
                         <h3 class="text-lg font-semibold text-gray-700 mb-3">Rincian Instrumen dalam Set</h3>
@@ -375,6 +398,26 @@ if (empty($labelUniqueIdFromGet)) {
     </div>
 
     <script>
+    // Fungsi ini sekarang berada di lingkup global
+    function showImageModal(imageSrc, itemType) {
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const noImagePlaceholder = document.getElementById('noImagePlaceholder');
+        const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
+        const noImageText = noImagePlaceholder.querySelector('p');
+        if (imageSrc) {
+            modalImage.src = imageSrc;
+            modalImage.classList.remove('hidden');
+            noImagePlaceholder.classList.add('hidden');
+        } else {
+            modalImage.classList.add('hidden');
+            noImagePlaceholder.classList.remove('hidden');
+            noImageIcon.textContent = itemType === 'instrument' ? 'build' : 'inventory_2';
+            noImageText.textContent = 'Tidak ada gambar untuk item ini.';
+        }
+        imageModal.classList.add('active');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const markUsedBtn = document.getElementById('markUsedBtn');
         const reportIssueBtn = document.getElementById('reportIssueBtn');
@@ -386,26 +429,13 @@ if (empty($labelUniqueIdFromGet)) {
         const statusBlock = document.querySelector('.label-status-banner');
         const actionContainer = document.querySelector('.label-action-container');
         const imageModal = document.getElementById('imageModal');
-        const modalImage = document.getElementById('modalImage');
-        const noImagePlaceholder = document.getElementById('noImagePlaceholder');
-        const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
-        const noImageText = noImagePlaceholder.querySelector('p');
 
-        function showImageModal(imageSrc, itemType) {
-            if (imageSrc) {
-                modalImage.src = imageSrc;
-                modalImage.classList.remove('hidden');
-                noImagePlaceholder.classList.add('hidden');
-            } else {
-                modalImage.classList.add('hidden');
-                noImagePlaceholder.classList.remove('hidden');
-                noImageIcon.textContent = itemType === 'instrument' ? 'build' : 'inventory_2';
-                noImageText.textContent = 'Tidak ada gambar untuk item ini.';
-            }
-            imageModal.classList.add('active');
+        const itemThumbnail = document.getElementById('itemThumbnail');
+
+        if(itemThumbnail) {
+            itemThumbnail.addEventListener('click', () => showImageModal(itemThumbnail.dataset.imageSrc, itemThumbnail.dataset.itemType));
         }
-
-        [itemThumbnail, ...document.querySelectorAll('.instrument-list-thumbnail')].forEach(thumb => {
+        document.querySelectorAll('.instrument-list-thumbnail').forEach(thumb => {
             if(thumb) thumb.addEventListener('click', () => showImageModal(thumb.dataset.imageSrc, thumb.dataset.itemType));
         });
 

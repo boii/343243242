@@ -1,9 +1,9 @@
 <?php
 /**
- * Verify Label Page (Internal) - Enriched Timeline & Internal Notes UI/UX Revamp v9
+ * Verify Label Page (Internal) - Enriched Timeline & Internal Notes UI/UX Revamp v12
  *
- * This version adds the display of proof-of-use and proof-of-issue images
- * directly into the timeline for complete visual auditing.
+ * This version disables the print button for non-printable statuses (e.g., voided, recalled, expired)
+ * for a better user experience and to prevent errors.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -263,16 +263,33 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                         </div>
 
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
-                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', default => 'hourglass_top' }; ?></span>
+                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', default => 'hourglass_top' }; ?></span>
                             <span>Status: <?php echo htmlspecialchars($labelDetails['status_display']); ?></span>
                         </div>
                     </div>
                     <div class="label-action-container !justify-start !text-left !p-0 !border-0 mt-4">
                         <?php if ($labelDetails['status'] === 'active'): ?>
                             <button type="button" id="openConfirmUsedModalBtn" class="btn bg-blue-500 text-white hover:bg-blue-600"><span class="material-icons">check_box</span>Tandai Digunakan</button>
+                            <?php if ($userRole === 'admin' || $userRole === 'supervisor'): ?>
+                                <button type="button" id="openVoidModalBtn" class="btn bg-red-600 text-white hover:bg-red-700"><span class="material-icons">cancel</span>Batalkan Label</button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($labelDetails['status'] === 'used' && ($userRole === 'admin' || $userRole === 'supervisor')): ?>
+                            <button type="button" id="openRevertUsageModalBtn" class="btn bg-yellow-500 text-white hover:bg-yellow-600"><span class="material-icons">undo</span>Batalkan Penggunaan</button>
                         <?php endif; ?>
                         <button type="button" id="showQrBtn" class="btn btn-secondary"><span class="material-icons">qr_code_2</span>Tampilkan QR</button>
-                        <a href="print_router.php?label_uid=<?php echo htmlspecialchars($labelDetails['label_unique_id']); ?>" target="_blank" class="btn bg-gray-600 text-white hover:bg-gray-700"><span class="material-icons">print</span>Cetak Label</a>
+                        <?php 
+                            $isPrintable = in_array($labelDetails['status'], ['active', 'used']);
+                            $printBtnClass = $isPrintable ? 'bg-gray-600 text-white hover:bg-gray-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed';
+                            $printBtnTitle = $isPrintable ? 'Cetak Ulang Label' : 'Label dengan status ini tidak dapat dicetak';
+                        ?>
+                        <a href="<?php echo $isPrintable ? 'print_router.php?label_uid=' . htmlspecialchars($labelDetails['label_unique_id']) : '#'; ?>" 
+                           target="<?php echo $isPrintable ? '_blank' : '_self'; ?>" 
+                           class="btn <?php echo $printBtnClass; ?>" 
+                           title="<?php echo $printBtnTitle; ?>"
+                           <?php if (!$isPrintable) echo 'onclick="event.preventDefault();"'; ?>>
+                           <span class="material-icons">print</span>Cetak Label
+                        </a>
                     </div>
                 </div>
 
@@ -312,6 +329,8 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                                         <img src="uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>" alt="Bukti Masalah" class="proof-thumbnail" onclick="showImageModal('uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>', 'instrument')">
                                     </div>
                                 <?php endif; ?>
+                            <?php elseif($labelDetails['status'] === 'voided'): ?>
+                                <p class="text-sm text-gray-600 font-medium">Dibatalkan secara administratif.</p>
                             <?php else: ?>
                                 <p class="text-sm text-gray-600">Label masih aktif dan siap digunakan hingga <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php endif; ?>
@@ -357,12 +376,12 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                 <?php endif; ?>
 
                 <div class="p-6 border-t">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Riwayat & Catatan Internal</h3>
-                    <div class="notes-display">
-                        <?php echo !empty($labelDetails['notes']) ? htmlspecialchars($labelDetails['notes']) : '<span class="text-gray-500 italic">Belum ada catatan.</span>'; ?>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Riwayat & Catatan Internal</h3>
+                    <div class="note-history-container">
+                        <?php parseAndDisplayNotes($labelDetails['notes'], false); ?>
                     </div>
                     <?php if (in_array($userRole, ['admin', 'supervisor'])): ?>
-                        <form action="php_scripts/label_add_note.php" method="POST" class="mt-4">
+                        <form action="php_scripts/label_add_note.php" method="POST" class="mt-6 border-t pt-4">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                             <input type="hidden" name="record_id" value="<?php echo $labelDetails['record_id']; ?>">
                             <input type="hidden" name="label_unique_id" value="<?php echo $labelDetails['label_unique_id']; ?>">
@@ -386,6 +405,51 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
         <input type="hidden" name="label_unique_id_for_redirect" value="<?php echo $labelDetails['label_unique_id'] ?? ''; ?>">
         <input type="hidden" name="action_type" value="mark_as_used">
     </form>
+    
+    <div id="revertUsageModal" class="modal-overlay">
+        <div class="modal-content text-left">
+            <h3 class="text-lg font-bold mb-2">Batalkan Status Penggunaan</h3>
+            <p class="text-sm text-gray-600 mb-4">Status label akan dikembalikan menjadi "Aktif". Mohon berikan alasan pembatalan untuk tujuan audit.</p>
+            <form id="revertUsageForm" action="php_scripts/revert_label_status.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
+                <input type="hidden" name="record_id" value="<?php echo $labelDetails['record_id'] ?? ''; ?>">
+                <input type="hidden" name="label_unique_id" value="<?php echo $labelDetails['label_unique_id'] ?? ''; ?>">
+                <div>
+                    <label for="revert_reason" class="form-label">Alasan Pembatalan <span class="text-red-500">*</span></label>
+                    <textarea name="reason" id="revert_reason" rows="3" class="form-input" placeholder="Contoh: Salah klik, item tidak jadi digunakan." required></textarea>
+                </div>
+                <div class="flex justify-end gap-4 mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('revertUsageModal').classList.remove('active')">Batal</button>
+                    <button type="submit" class="btn bg-yellow-500 text-white hover:bg-yellow-600">
+                        <span class="material-icons mr-2">undo</span>Konfirmasi Pembatalan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="voidLabelModal" class="modal-overlay">
+        <div class="modal-content text-left">
+            <h3 class="text-lg font-bold mb-2">Batalkan Label Aktif</h3>
+            <p class="text-sm text-gray-600 mb-4">Status label akan diubah menjadi "Dibatalkan" dan tidak dapat digunakan lagi. Tindakan ini final. Mohon berikan alasan pembatalan.</p>
+            <form id="voidLabelForm" action="php_scripts/void_label.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
+                <input type="hidden" name="record_id" value="<?php echo $labelDetails['record_id'] ?? ''; ?>">
+                <input type="hidden" name="label_unique_id" value="<?php echo $labelDetails['label_unique_id'] ?? ''; ?>">
+                <div>
+                    <label for="void_reason" class="form-label">Alasan Pembatalan <span class="text-red-500">*</span></label>
+                    <textarea name="reason" id="void_reason" rows="3" class="form-input" placeholder="Contoh: Item terkontaminasi sebelum digunakan." required></textarea>
+                </div>
+                <div class="flex justify-end gap-4 mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('voidLabelModal').classList.remove('active')">Tutup</button>
+                    <button type="submit" class="btn bg-red-600 text-white hover:bg-red-700">
+                        <span class="material-icons mr-2">cancel</span>Konfirmasi Pembatalan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <div id="confirmUsedModal" class="modal-overlay">
         <div class="modal-content">
@@ -412,24 +476,14 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
 </main>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const showQrBtn = document.getElementById('showQrBtn');
-    const qrModal = document.getElementById('qrCodeModal');
-    const closeQrModalBtn = document.getElementById('closeQrModalBtn');
-
-    const openConfirmUsedModalBtn = document.getElementById('openConfirmUsedModalBtn');
-    const confirmUsedModal = document.getElementById('confirmUsedModal');
-    const cancelConfirmUsedBtn = document.getElementById('cancelConfirmUsedBtn');
-    const submitConfirmUsedBtn = document.getElementById('submitConfirmUsedBtn');
-    const markAsUsedForm = document.getElementById('markAsUsedForm');
-
-    const imageModal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    const noImagePlaceholder = document.getElementById('noImagePlaceholder');
-    const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
-    const noImageText = noImagePlaceholder.querySelector('p');
-
+    // Fungsi ini sekarang berada di lingkup global
     function showImageModal(imageSrc, itemType) {
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const noImagePlaceholder = document.getElementById('noImagePlaceholder');
+        const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
+        const noImageText = noImagePlaceholder.querySelector('p');
+
         if (imageSrc) {
             modalImage.src = imageSrc;
             modalImage.classList.remove('hidden');
@@ -443,21 +497,36 @@ document.addEventListener('DOMContentLoaded', function() {
         imageModal.classList.add('active');
     }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const showQrBtn = document.getElementById('showQrBtn');
+    const qrModal = document.getElementById('qrCodeModal');
+    const closeQrModalBtn = document.getElementById('closeQrModalBtn');
+
+    const openConfirmUsedModalBtn = document.getElementById('openConfirmUsedModalBtn');
+    const confirmUsedModal = document.getElementById('confirmUsedModal');
+    const cancelConfirmUsedBtn = document.getElementById('cancelConfirmUsedBtn');
+    const submitConfirmUsedBtn = document.getElementById('submitConfirmUsedBtn');
+    const markAsUsedForm = document.getElementById('markAsUsedForm');
+
+    const openRevertUsageModalBtn = document.getElementById('openRevertUsageModalBtn');
+    const revertUsageModal = document.getElementById('revertUsageModal');
+
+    const openVoidModalBtn = document.getElementById('openVoidModalBtn');
+    const voidLabelModal = document.getElementById('voidLabelModal');
+
+    const imageModal = document.getElementById('imageModal');
+    
     const itemThumbnail = document.getElementById('itemThumbnail');
     if (itemThumbnail) {
         itemThumbnail.addEventListener('click', () => {
-            const imageSrc = itemThumbnail.dataset.imageSrc;
-            const itemType = itemThumbnail.dataset.itemType;
-            showImageModal(imageSrc, itemType);
+            showImageModal(itemThumbnail.dataset.imageSrc, itemThumbnail.dataset.itemType);
         });
     }
 
     const instrumentThumbnails = document.querySelectorAll('.instrument-list-thumbnail');
     instrumentThumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('click', () => {
-            const imageSrc = thumbnail.dataset.imageSrc;
-            const itemType = thumbnail.dataset.itemType;
-            showImageModal(imageSrc, itemType);
+            showImageModal(thumbnail.dataset.imageSrc, thumbnail.dataset.itemType);
         });
     });
 
@@ -474,27 +543,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if(qrModal) { qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.classList.remove('active'); }); }
 
     if (openConfirmUsedModalBtn && confirmUsedModal) {
-        openConfirmUsedModalBtn.addEventListener('click', () => {
-            confirmUsedModal.classList.add('active');
-        });
+        openConfirmUsedModalBtn.addEventListener('click', () => confirmUsedModal.classList.add('active'));
     }
     if (cancelConfirmUsedBtn && confirmUsedModal) {
-        cancelConfirmUsedBtn.addEventListener('click', () => {
-            confirmUsedModal.classList.remove('active');
-        });
+        cancelConfirmUsedBtn.addEventListener('click', () => confirmUsedModal.classList.remove('active'));
     }
     if (submitConfirmUsedBtn && markAsUsedForm) {
-        submitConfirmUsedBtn.addEventListener('click', () => {
-            markAsUsedForm.submit();
-        });
+        submitConfirmUsedBtn.addEventListener('click', () => markAsUsedForm.submit());
     }
     if(confirmUsedModal) {
         confirmUsedModal.addEventListener('click', (e) => {
-            if (e.target === confirmUsedModal) {
-                confirmUsedModal.classList.remove('active');
-            }
+            if (e.target === confirmUsedModal) confirmUsedModal.classList.remove('active');
         });
     }
+    if (openRevertUsageModalBtn && revertUsageModal) {
+        openRevertUsageModalBtn.addEventListener('click', () => revertUsageModal.classList.add('active'));
+    }
+    if(revertUsageModal) {
+        revertUsageModal.addEventListener('click', (e) => {
+            if (e.target === revertUsageModal) revertUsageModal.classList.remove('active');
+        });
+    }
+
+    if (openVoidModalBtn && voidLabelModal) {
+        openVoidModalBtn.addEventListener('click', () => voidLabelModal.classList.add('active'));
+    }
+    if(voidLabelModal) {
+        voidLabelModal.addEventListener('click', (e) => {
+            if (e.target === voidLabelModal) voidLabelModal.classList.remove('active');
+        });
+    }
+
 });
 </script>
 

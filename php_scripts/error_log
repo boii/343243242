@@ -1,0 +1,853 @@
+[29-May-2025 16:49:33 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:111
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(111): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 111
+[29-May-2025 16:59:16 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:111
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(111): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 111
+[29-May-2025 17:10:50 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:111
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(111): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 111
+[29-May-2025 17:21:21 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:111
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(111): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 111
+[29-May-2025 17:25:31 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:111
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(111): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 111
+[29-May-2025 17:28:15 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php:115
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php(115): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/instrument_add.php on line 115
+[29-May-2025 17:35:10 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input: 2025-06-28T17:35
+[29-May-2025 17:35:10 Asia/Jakarta] [Sterilabel DEBUG] Parsed expiry_date for DB: 2025-06-28 17:35:00
+[29-May-2025 17:35:10 Asia/Jakarta] [Sterilabel DEBUG] Binding values: label_unique_id=STLBL-6838385ECD5E20.43347818, item_id=1, item_type=instrument, temp=NULL, duration=NULL, pressure=, cycle_id=wq, user_id=1, expiry_date_for_db='2025-06-28 17:35:00', status=active, notes=wqe
+[29-May-2025 17:35:10 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Incorrect datetime value: '2025' for column `edfamgc1_lmalabel`.`sterilization_records`.`expiry_date` at row 1
+[29-May-2025 18:19:23 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input: 2025-06-28T18:19
+[29-May-2025 18:19:23 Asia/Jakarta] [Sterilabel DEBUG] Parsed expiry_date for DB: 2025-06-28 18:19:00
+[29-May-2025 18:19:23 Asia/Jakarta] [Sterilabel DEBUG] Binding values: label_unique_id=STLBL-683842BB161C34.44017802, item_id=1, item_type=instrument, temp=NULL, duration=NULL, pressure=, cycle_id=213, user_id=1, expiry_date_for_db='2025-06-28 18:19:00', status=active, notes=213321
+[29-May-2025 18:19:23 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Incorrect datetime value: '2025' for column `edfamgc1_lmalabel`.`sterilization_records`.`expiry_date` at row 1
+[29-May-2025 18:30:29 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input: 2025-06-28T18:30
+[29-May-2025 18:30:29 Asia/Jakarta] [Sterilabel DEBUG] Parsed expiry_date for DB: 2025-06-28 18:30:00
+[29-May-2025 18:30:29 Asia/Jakarta] [Sterilabel DEBUG] Binding values: label_unique_id=STLBL-683845554B95F9.99900057, item_id=1, item_type=set, temp=132.0, duration=11, pressure=213, cycle_id=312, user_id=1, expiry_date_for_db='2025-06-28 18:30:00', status=active, notes=1231
+[29-May-2025 18:30:29 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Incorrect datetime value: '2025' for column `edfamgc1_lmalabel`.`sterilization_records`.`expiry_date` at row 1
+[29-May-2025 18:35:07 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input: 2025-05-31T18:34
+[29-May-2025 18:35:07 Asia/Jakarta] [Sterilabel DEBUG] Parsed expiry_date for DB: 2025-05-31 18:34:00
+[29-May-2025 18:35:07 Asia/Jakarta] [Sterilabel DEBUG] Binding values: label_unique_id=STLBL-6838466B09A7A4.79339941, item_id=1, item_type=instrument, temp=NULL, duration=NULL, pressure=, cycle_id=213, user_id=1, expiry_date_for_db='2025-05-31 18:34:00', status=active, notes=adsa
+[29-May-2025 18:35:07 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Incorrect datetime value: '2025' for column `edfamgc1_lmalabel`.`sterilization_records`.`expiry_date` at row 1
+[29-May-2025 18:37:42 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input: 2025-06-28T18:37
+[29-May-2025 18:37:42 Asia/Jakarta] [Sterilabel DEBUG] Parsed (original) expiry_date for DB: 2025-06-28 18:37:00
+[29-May-2025 18:37:42 Asia/Jakarta] [Sterilabel TEST] Using HARDCODED expiry_date_for_db: 2025-07-10 14:30:00
+[29-May-2025 18:37:42 Asia/Jakarta] [Sterilabel TEST] Original expiry_date_for_db from input was: '2025-06-28 18:37:00'
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $itemId in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 90
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $itemTypeForDb in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 91
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $sterilizationTemp in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 92
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $sterilizationDuration in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 93
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $sterilizationPressure in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 94
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $loggedInUserId in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 96
+[29-May-2025 18:37:42 Asia/Jakarta] PHP Warning:  Undefined variable $notes in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 99
+[29-May-2025 18:37:42 Asia/Jakarta] [Sterilabel DEBUG] Binding values: label_unique_id=STLBL-68384706C61A95.38270116, item_id=NULL, item_type=, temp=NULL, duration=NULL, pressure=, cycle_id=213, user_id=NULL, expiry_date_for_db='2025-07-10 14:30:00', status=active, notes=
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] label_type from POST: instrument
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] itemId after type check: 1
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] itemTypeForDb after type check: instrument
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] sterilizationTemp from POST: NULL
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] sterilizationDuration from POST: NULL
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] sterilizationPressure from POST: 
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] autoclaveCycleId from POST: 213
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] expiryDateInput from POST: 2025-06-28T18:42
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] notes from POST: 
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel VAR] loggedInUserId from SESSION: 1
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel DEBUG] Raw expiry_date input for parsing: 2025-06-28T18:42
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel DEBUG] Parsed expiry_date for DB: 2025-06-28 18:42:00
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values: label_unique_id=STLBL-683848287E9276.12573429, item_id=1, item_type=instrument, temp=NULL, duration=NULL, pressure=, cycle_id=213, user_id=1, expiry_date_for_db='2025-06-28 18:42:00', status=active, notes=
+[29-May-2025 18:42:32 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Incorrect datetime value: '2025' for column `edfamgc1_lmalabel`.`sterilization_records`.`expiry_date` at row 1
+[29-May-2025 18:45:29 Asia/Jakarta] [Sterilabel TEST] expiryDateSqlValue for direct SQL: '2025-06-28 18:45:00'
+[29-May-2025 18:45:29 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values (expiry_date in SQL): label_unique_id=STLBL-683848D9E23E63.24067706, item_id=1, item_type=set, temp=123.0, duration=312, pressure=123, cycle_id=213, user_id=1, (value for expiry_date in SQL)='2025-06-28 18:45:00', status=active, notes=123123
+[29-May-2025 18:45:29 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php:130
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php(130): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 130
+[29-May-2025 18:47:09 Asia/Jakarta] [Sterilabel TEST] expiryDateSqlValue for direct SQL: '2025-06-28 18:47:00'
+[29-May-2025 18:47:09 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values (expiry_date in SQL): label_unique_id=STLBL-6838493D09EC21.26382130, item_id=1, item_type=set, temp=213.0, duration=321, pressure=21, cycle_id=3213, user_id=1, (value for expiry_date in SQL)='2025-06-28 18:47:00', status=active, notes=231
+[29-May-2025 18:47:09 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Data truncated for column 'item_type' at row 1
+[29-May-2025 18:47:27 Asia/Jakarta] [Sterilabel TEST] expiryDateSqlValue for direct SQL: '2025-06-28 18:47:00'
+[29-May-2025 18:47:27 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values (expiry_date in SQL): label_unique_id=STLBL-6838494F7BC667.49396777, item_id=1, item_type=instrument, temp=231.0, duration=231, pressure=231, cycle_id=3213, user_id=1, (value for expiry_date in SQL)='2025-06-28 18:47:00', status=active, notes=231
+[29-May-2025 18:47:27 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Data truncated for column 'item_type' at row 1
+[29-May-2025 18:50:20 Asia/Jakarta] [Sterilabel TEST] expiryDateSqlValue for direct SQL: '2025-06-28 18:50:00'
+[29-May-2025 18:50:20 Asia/Jakarta] [Sterilabel TEST] itemTypeSqlValue for direct SQL: 'instrument'
+[29-May-2025 18:50:20 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values (item_type & expiry_date in SQL): label_unique_id=STLBL-683849FC1C7216.04946304, item_id=1, (value for item_type in SQL)='instrument', temp=432.0, duration=342, pressure=342, cycle_id=3424, user_id=1, (value for expiry_date in SQL)='2025-06-28 18:50:00', status=active, notes=234
+[29-May-2025 18:50:20 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php:140
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php(140): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 140
+[29-May-2025 18:53:33 Asia/Jakarta] [Sterilabel TEST] expiryDateSqlValue for direct SQL: '2025-06-28 18:53:00'
+[29-May-2025 18:53:33 Asia/Jakarta] [Sterilabel TEST] itemTypeSqlValue for direct SQL: 'set'
+[29-May-2025 18:53:33 Asia/Jakarta] [Sterilabel DEBUG] FINAL Binding values (item_type & expiry_date in SQL): label_unique_id=STLBL-68384ABD249495.19696596, item_id=1, (value for item_type in SQL)='set', temp=123.0, duration=213, pressure=33, cycle_id=324, user_id=1, (value for expiry_date in SQL)='2025-06-28 18:53:00', status=active, notes=
+[29-May-2025 18:53:33 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php:140
+Stack trace:
+#0 /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php(140): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/label_create_process.php on line 140
+[29-May-2025 18:56:53 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Data truncated for column 'status' at row 1
+[29-May-2025 19:00:03 Asia/Jakarta] [Sterilabel DEBUG] Value of active variable just before bind_param: 'active' (Length: 6)
+[29-May-2025 19:00:03 Asia/Jakarta] [Sterilabel EXCEPTION] Server error: Data truncated for column 'status' at row 1
+[29-May-2025 23:28:06 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 103
+[29-May-2025 23:33:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 111
+[29-May-2025 23:38:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 111
+[29-May-2025 23:39:16 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 111
+[29-May-2025 23:39:38 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 111
+[29-May-2025 23:40:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 111
+[29-May-2025 23:41:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 103
+[29-May-2025 23:41:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 104
+[29-May-2025 23:47:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:47:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:47:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:50:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:51:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:52:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[29-May-2025 23:53:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:13:31 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:15:06 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:15:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:19:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:42:16 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:42:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:43:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:44:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:44:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:48:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:49:30 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:49:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 00:52:40 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:01:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:08:30 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:10:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:19:10 Asia/Jakarta] [Sterilabel IDGEN] Attempt #1: Generated label_unique_id = 95590692
+[30-May-2025 01:21:41 Asia/Jakarta] [Sterilabel IDGEN] Attempt #1: Generated label_unique_id = F1459C90
+[30-May-2025 01:28:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:57:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 01:58:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 02:06:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 152
+[30-May-2025 02:18:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 152
+[30-May-2025 02:51:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 152
+[30-May-2025 02:51:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 152
+[30-May-2025 03:00:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 152
+[30-May-2025 03:30:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[30-May-2025 03:40:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[30-May-2025 09:52:38 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 109
+[30-May-2025 09:54:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 118
+[30-May-2025 09:55:27 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 118
+[30-May-2025 10:27:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 118
+[30-May-2025 10:28:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:42:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:42:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:42:38 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:43:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:52:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:54:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:56:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:59:16 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 10:59:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:03:33 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:07:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:07:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:08:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:08:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:08:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:08:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:09:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:09:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:09:42 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:09:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:10:06 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 125
+[30-May-2025 11:14:09 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 121
+[30-May-2025 11:20:47 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:20:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:21:10 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:24:28 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:24:42 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:24:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:27:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:27:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:28:12 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:30:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:34:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:34:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:35:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:36:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:40:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 114
+[30-May-2025 11:51:47 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 123
+[30-May-2025 12:26:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 12:26:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 13:22:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 13:55:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[30-May-2025 14:12:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[30-May-2025 14:19:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 14:24:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 14:25:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 14:25:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 14:26:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 14:26:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 139
+[30-May-2025 18:38:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 149
+[30-May-2025 18:48:53 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 154
+[30-May-2025 18:50:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 154
+[30-May-2025 18:50:44 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 154
+[30-May-2025 19:19:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 154
+[30-May-2025 22:47:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 154
+[30-May-2025 22:56:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 22:59:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:15:42 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:16:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:21:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:24:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:41:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:43:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:45:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[30-May-2025 23:46:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 06:15:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/label.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 07:01:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:01:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 07:12:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:12:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 07:13:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:13:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 07:13:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:13:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 07:13:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:13:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 07:15:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 222
+[31-May-2025 07:15:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/label_create_process.php on line 227
+[31-May-2025 10:52:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[31-May-2025 11:16:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 11:20:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 11:28:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 11:28:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:03:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:19:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:19:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:19:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:19:24 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:38:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 16:39:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:07:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:08:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:08:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:10:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:18:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:18:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:19:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:19:33 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:24:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:24:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:24:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:32:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:33:47 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:34:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:34:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:34:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:35:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:41:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 160
+[31-May-2025 18:44:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:44:33 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:44:44 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:45:33 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:45:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:48:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:53:47 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:54:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:54:35 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:54:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:57:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:58:09 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:58:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 18:58:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:04:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:05:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:05:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:08:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:09:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:09:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:10:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:11:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:11:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:14:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:14:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:21:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:21:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:21:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:22:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:22:10 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:22:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:29:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:35:24 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:35:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:35:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:36:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:41:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:43:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:43:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:44:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:45:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:46:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 19:51:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 20:17:28 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 20:18:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 20:20:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[31-May-2025 20:20:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 135
+[02-Jun-2025 01:09:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 170
+[02-Jun-2025 01:10:38 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 170
+[02-Jun-2025 01:12:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 170
+[02-Jun-2025 01:25:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 169
+[02-Jun-2025 21:04:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 169
+[03-Jun-2025 01:53:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 169
+[03-Jun-2025 01:58:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 173
+[03-Jun-2025 01:59:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 173
+[04-Jun-2025 14:24:35 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 163
+[04-Jun-2025 14:24:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 163
+[04-Jun-2025 23:11:16 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 166
+[04-Jun-2025 23:15:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 166
+[04-Jun-2025 23:15:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 166
+[09-Jun-2025 21:26:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 182
+[09-Jun-2025 22:00:53 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 182
+[09-Jun-2025 22:01:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 182
+[09-Jun-2025 22:46:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:47:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:47:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:48:12 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:48:35 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:48:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 22:50:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 23:02:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[09-Jun-2025 23:03:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/dev.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[11-Jun-2025 07:04:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[11-Jun-2025 07:09:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[11-Jun-2025 12:28:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 12:32:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 12:34:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 12:41:19 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 12:49:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 13:01:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[11-Jun-2025 13:05:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 170
+[11-Jun-2025 13:05:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 174
+[11-Jun-2025 13:37:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 13:37:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 15:10:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[11-Jun-2025 15:24:07 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[14-Jun-2025 12:02:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[15-Jun-2025 12:51:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[15-Jun-2025 12:57:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[17-Jun-2025 09:27:35 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[17-Jun-2025 09:27:53 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[17-Jun-2025 10:20:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[17-Jun-2025 14:55:09 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[17-Jun-2025 14:57:24 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 170
+[17-Jun-2025 14:57:24 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 174
+[17-Jun-2025 14:57:30 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 170
+[17-Jun-2025 14:57:30 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_update.php on line 174
+[18-Jun-2025 08:58:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 09:08:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 11:47:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 12:02:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 12:11:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 12:18:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 12:26:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[18-Jun-2025 12:38:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 17:46:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 17:52:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:48:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:49:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:53:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:54:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:55:08 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:56:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:56:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:57:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 18:58:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 19:00:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[19-Jun-2025 19:01:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[20-Jun-2025 09:41:07 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[20-Jun-2025 09:45:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoeroto.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[25-Jun-2025 09:19:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[25-Jun-2025 09:26:12 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[25-Jun-2025 09:27:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/settings_update.php on line 178
+[25-Jun-2025 11:44:40 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[25-Jun-2025 12:02:33 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[25-Jun-2025 12:13:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfamgc1/drsoedono.lifiramitraabadi.com/php_scripts/set_add.php on line 160
+[25-Jun-2025 22:30:37 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php:74
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php(74): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php on line 74
+[25-Jun-2025 22:31:49 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php:74
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php(74): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php on line 74
+[25-Jun-2025 22:32:57 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php:74
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php(74): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php on line 74
+[25-Jun-2025 22:33:34 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php:74
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php(74): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php on line 74
+[25-Jun-2025 22:37:30 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php:74
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php(74): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_add.php on line 74
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:22 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:31:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[26-Jun-2025 13:42:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:52:06 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 07:57:44 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 08:38:41 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:12:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 178
+[27-Jun-2025 09:18:56 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:18:58 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:38 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:21:54 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of elements in the type definition string must match the number of bind variables in /home/edfa6624/steril.rejiva.my.id/php_scripts/label_create_process.php:115
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/label_create_process.php(115): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/label_create_process.php on line 115
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:17 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:23:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/label_create_process.php on line 157
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:25:24 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:29:33 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:31:09 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:34:42 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:35:46 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:14 Asia/Jakarta] PHP Warning:  Undefined array key "set_code" in /home/edfa6624/steril.rejiva.my.id/php_scripts/search_items.php on line 59
+[27-Jun-2025 09:41:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/label_create_process.php on line 158
+[27-Jun-2025 09:43:07 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 178
+[27-Jun-2025 20:12:40 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[28-Jun-2025 06:44:35 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 153
+[28-Jun-2025 06:44:35 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 153
+[28-Jun-2025 06:44:35 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 154
+[28-Jun-2025 06:45:04 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 153
+[28-Jun-2025 06:45:04 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 153
+[28-Jun-2025 06:45:04 Asia/Jakarta] PHP Warning:  Undefined variable $formData in /home/edfa6624/steril.rejiva.my.id/php_scripts/user_add.php on line 154
+[28-Jun-2025 10:22:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[28-Jun-2025 12:51:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[28-Jun-2025 23:36:43 Asia/Jakarta] PHP Warning:  Undefined variable $userRole in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_validate_process.php on line 26
+[28-Jun-2025 23:36:43 Asia/Jakarta] PHP Warning:  Undefined variable $userRole in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_validate_process.php on line 26
+[28-Jun-2025 23:36:43 Asia/Jakarta] PHP Warning:  Undefined variable $userRole in /home/edfa6624/steril.rejiva.my.id/php_scripts/cycle_validate_process.php on line 26
+[29-Jun-2025 03:37:30 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:37:30 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[29-Jun-2025 03:37:37 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:37:37 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[29-Jun-2025 03:37:47 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:37:47 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[29-Jun-2025 03:37:53 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:37:53 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[29-Jun-2025 03:39:11 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:39:11 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[29-Jun-2025 03:39:26 Asia/Jakarta] PHP Warning:  Undefined array key "log_action" in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110
+[29-Jun-2025 03:39:26 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: log_activity(): Argument #1 ($actionType) must be of type string, null given, called in /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php on line 110 and defined in /home/edfa6624/steril.rejiva.my.id/config.php:210
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/master_data_toggle_status.php(110): log_activity()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/config.php on line 210
+[01-Jul-2025 23:08:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[01-Jul-2025 23:08:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[01-Jul-2025 23:08:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[03-Jul-2025 14:20:30 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/load_generate_labels.php on line 236
+[03-Jul-2025 14:20:37 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/load_generate_labels.php on line 236
+[03-Jul-2025 14:20:58 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/load_generate_labels.php on line 236
+[03-Jul-2025 14:21:01 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/load_generate_labels.php on line 236
+[03-Jul-2025 14:21:07 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/load_generate_labels.php on line 236
+[03-Jul-2025 23:57:47 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[03-Jul-2025 23:58:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[04-Jul-2025 00:03:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[04-Jul-2025 00:04:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[04-Jul-2025 00:46:44 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 00:46:49 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 00:46:53 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 00:47:19 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 00:48:03 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 00:48:50 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:77
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(77): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 77
+[04-Jul-2025 00:48:53 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:77
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(77): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 77
+[04-Jul-2025 00:48:54 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:77
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(77): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 77
+[04-Jul-2025 00:49:49 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:77
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(77): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 77
+[04-Jul-2025 00:50:35 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:77
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(77): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 77
+[04-Jul-2025 00:51:59 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'li.item_name' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php:78
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php(78): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_load_details.php on line 78
+[04-Jul-2025 18:22:41 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/set_update.php on line 146
+[05-Jul-2025 03:06:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[05-Jul-2025 09:12:03 Asia/Jakarta] PHP Fatal error:  Uncaught ArgumentCountError: The number of variables must match the number of parameters in the prepared statement in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_report_data.php:62
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_report_data.php(62): mysqli_stmt->bind_param()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_report_data.php on line 62
+[06-Jul-2025 04:32:07 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'sc.sterilization_method' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php:122
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php(122): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php on line 122
+[06-Jul-2025 04:32:09 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'sc.sterilization_method' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php:122
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php(122): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php on line 122
+[06-Jul-2025 04:50:31 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'sc.sterilization_method' in 'SELECT' in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php:122
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php(122): mysqli->prepare()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/get_cycles_data.php on line 122
+[06-Jul-2025 05:20:02 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:21:32 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:21:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:24:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:25:38 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:25:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 192
+[06-Jul-2025 05:27:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 05:27:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 05:29:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 05:29:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 05:39:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 05:40:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:22:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:22:12 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:22:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:29:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:29:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:39:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:39:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:39:46 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 08:39:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:26:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:27:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:30:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:31:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:31:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:31:55 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:31:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[06-Jul-2025 10:35:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[07-Jul-2025 06:36:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 179
+[07-Jul-2025 09:01:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 179
+[07-Jul-2025 09:01:21 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 179
+[07-Jul-2025 09:01:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 179
+[07-Jul-2025 13:05:00 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 180
+[13-Jul-2025 11:36:22 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 185
+[13-Jul-2025 05:02:13 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 201
+[13-Jul-2025 12:02:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:03:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:15:11 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:15:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:39:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:41:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:41:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:45:09 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 12:45:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 18:39:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 18:44:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 18:46:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[13-Jul-2025 18:46:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 186
+[14-Jul-2025 14:47:32 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 14:47:37 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:49:06 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:49:15 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:49:33 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:50:26 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:50:32 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:50:43 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:50:56 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 15:52:13 UTC] PHP Parse error:  Unmatched '}' in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 203
+[14-Jul-2025 23:00:50 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[14-Jul-2025 23:01:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[14-Jul-2025 23:12:54 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 09:31:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 09:32:06 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 09:36:14 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 09:37:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 09:38:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 10:16:35 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 10:16:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Jul-2025 10:17:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[21-Jul-2025 13:01:44 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[21-Jul-2025 19:09:27 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[21-Jul-2025 19:09:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[22-Jul-2025 19:41:09 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[22-Jul-2025 19:41:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[23-Jul-2025 07:20:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[24-Jul-2025 09:23:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[24-Jul-2025 10:17:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[24-Jul-2025 12:40:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[29-Jul-2025 09:44:25 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[29-Jul-2025 09:44:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[29-Jul-2025 10:24:57 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[08-Aug-2025 01:01:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[11-Aug-2025 21:48:42 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:43 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:48 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:58 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:48:59 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:49:04 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:12 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:13 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[11-Aug-2025 21:50:18 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, null given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php:119
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php(119): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_labels_excel.php on line 119
+[12-Aug-2025 00:20:15 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[14-Aug-2025 14:38:37 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:08:20 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:08:59 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:09:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[19-Aug-2025 22:27:37 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:27:38 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:29 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:30 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:32:35 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:55
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(55): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 55
+[19-Aug-2025 22:34:45 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[19-Aug-2025 22:34:46 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[19-Aug-2025 22:34:51 Asia/Jakarta] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, int given in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php:60
+Stack trace:
+#0 /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php(60): htmlspecialchars()
+#1 {main}
+  thrown in /home/edfa6624/steril.rejiva.my.id/php_scripts/export_instruments_excel.php on line 60
+[25-Aug-2025 14:06:48 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:07:18 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:07:29 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:14:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:36:05 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:37:34 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 14:41:49 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:26:03 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:27:04 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[25-Aug-2025 15:49:51 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 189
+[27-Aug-2025 18:40:30 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:40:45 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:40:58 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:42:52 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:44:10 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:52:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:54:26 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 18:59:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 19:00:27 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 188
+[27-Aug-2025 19:07:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:07:41 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:19:23 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:22:36 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:23:39 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:24:13 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:24:43 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[27-Aug-2025 19:27:56 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[29-Aug-2025 20:22:01 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[29-Aug-2025 20:22:06 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187
+[29-Aug-2025 20:22:17 Asia/Jakarta] PHP Warning:  Undefined property: mysqli::$inTransaction in /home/edfa6624/steril.rejiva.my.id/php_scripts/settings_update.php on line 187

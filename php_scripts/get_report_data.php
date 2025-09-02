@@ -4,6 +4,7 @@
  *
  * Fetches comprehensive, aggregated data for the main reports dashboard,
  * including KPIs, chart data, and a detailed expiry report.
+ * This version now correctly queries for the 'voided' status.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher

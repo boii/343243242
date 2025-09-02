@@ -4,6 +4,7 @@
  *
  * This version is a complete refactor to use an AJAX-powered table for a modern,
  * responsive, and consistent user experience, matching other management pages.
+ * It now handles the 'voided' status and provides contextual action icons.
  *
  * PHP version 7.4 or higher
  *
@@ -91,6 +92,7 @@ $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT
                         <option value="expired" <?php echo ($statusFilter === 'expired') ? 'selected' : ''; ?>>Kedaluwarsa</option>
                         <option value="pending_validation" <?php echo ($statusFilter === 'pending_validation') ? 'selected' : ''; ?>>Pending Validasi</option>
                         <option value="recalled" <?php echo ($statusFilter === 'recalled') ? 'selected' : ''; ?>>Ditarik Kembali</option>
+                        <option value="voided" <?php echo ($statusFilter === 'voided') ? 'selected' : ''; ?>>Dibatalkan</option>
                     </select>
                 </div>
                  <div>
@@ -184,15 +186,29 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const statusToClassMap = {
                 'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi',
-                'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal',
+                'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal', 'voided': 'tr-status-gagal',
                 'pending_validation': 'tr-status-menunggu_validasi'
             };
             const rowStatusClass = statusToClassMap[label.status] || 'tr-status-default';
-
-            // --- PERUBAHAN: Menambahkan ikon notifikasi jika set dimodifikasi ---
+            
             let modifiedIcon = '';
             if (label.item_type === 'set' && label.is_modified) {
                 modifiedIcon = `<span class="material-icons text-indigo-500 text-base ml-1" title="Definisi set ini telah berubah sejak label dicetak. Klik untuk melihat detail perubahan.">drive_file_rename_outline</span>`;
+            }
+
+            const isPrintable = ['active', 'used'].includes(label.status);
+            let actionButton = '';
+
+            if (isPrintable) {
+                actionButton = `
+                    <a href="print_router.php?label_uid=${label.label_unique_id}" target="_blank" class="btn-icon btn-icon-action" title="Cetak Ulang Label">
+                        <span class="material-icons">print</span>
+                    </a>`;
+            } else {
+                actionButton = `
+                    <div class="btn-icon opacity-50 cursor-not-allowed" title="Label dengan status ini tidak dapat dicetak">
+                        <span class="material-icons">block</span>
+                    </div>`;
             }
 
             const row = `
@@ -210,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="py-3 px-6 text-center">${statusBadge}</td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center space-x-1">
-                            <a href="print_router.php?label_uid=${label.label_unique_id}" target="_blank" class="btn-icon btn-icon-action" title="Cetak Label"><span class="material-icons">print</span></a>
+                            ${actionButton}
                         </div>
                     </td>
                 </tr>`;
@@ -271,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     tableBody.addEventListener('click', function(e) {
         const row = e.target.closest('tr.clickable-row');
-        if (row && !e.target.closest('a')) {
+        if (row && !e.target.closest('a, div.btn-icon')) {
             window.location.href = row.dataset.href;
         }
     });

@@ -4,7 +4,7 @@
  *
  * This version transforms the page into an intelligent dashboard featuring
  * KPI stat cards, richer data visualizations, and an actionable, filterable
- * expiry report table.
+ * expiry report table. It now supports the 'voided' status in charts.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -173,17 +173,27 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!chartContexts.instrumentStatus) return;
         if (chartInstances.instrumentStatus) chartInstances.instrumentStatus.destroy();
         
+        const statusMap = {
+            'tersedia': { label: 'Tersedia', color: '#22c55e' },
+            'perbaikan': { label: 'Perbaikan', color: '#f59e0b' },
+            'rusak': { label: 'Rusak', color: '#ef4444' },
+            'sterilisasi': { label: 'Sterilisasi', color: '#3b82f6' },
+            'voided': { label: 'Dibatalkan', color: '#6b7280' }
+        };
+
+        const chartData = {
+            labels: data.map(d => statusMap[d.status]?.label || d.status),
+            datasets: [{
+                data: data.map(d => d.count),
+                backgroundColor: data.map(d => statusMap[d.status]?.color || '#a0aec0'),
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        };
+
         chartInstances.instrumentStatus = new Chart(chartContexts.instrumentStatus, {
             type: 'doughnut',
-            data: {
-                labels: data.map(d => d.status.charAt(0).toUpperCase() + d.status.slice(1)),
-                datasets: [{
-                    data: data.map(d => d.count),
-                    backgroundColor: ['#22c55e', '#f59e0b', '#ef4444', '#3b82f6'],
-                    borderColor: '#ffffff',
-                    borderWidth: 2
-                }]
-            },
+            data: chartData,
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
         });
     }
@@ -254,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
             expirySortState.direction = 'asc';
         }
         
-        // Update icons
         document.querySelectorAll('#expiryTable thead th span').forEach(span => span.textContent = 'unfold_more');
         const icon = header.querySelector('span');
         icon.textContent = expirySortState.direction === 'asc' ? 'expand_less' : 'expand_more';

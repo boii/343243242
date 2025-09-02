@@ -220,6 +220,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             'expired' => ['text' => 'Kedaluwarsa', 'class' => 'bg-red-100 text-red-800'],
             'pending_validation' => ['text' => 'Pending Validasi', 'class' => 'bg-yellow-100 text-yellow-800'],
             'recalled' => ['text' => 'Ditarik Kembali', 'class' => 'bg-purple-100 text-purple-700'],
+            'voided' => ['text' => 'Dibatalkan', 'class' => 'bg-gray-400 text-white'],
 
             // Load & Cycle Statuses
             'persiapan' => ['text' => 'Persiapan', 'class' => 'bg-gray-200 text-gray-800'],
@@ -355,5 +356,107 @@ if (!function_exists('formatActivityMessage')) {
         }
         
         return ['message' => $message, 'icon' => $icon, 'iconColor' => $iconColor];
+    }
+}
+
+if (!function_exists('parseAndDisplayNotes')) {
+    /**
+     * Parses the 'notes' field and displays it as a structured history log.
+     *
+     * @param string|null $notes The raw notes string from the database.
+     * @param bool $isPublicView If true, filters out internal-only notes.
+     * @return void
+     */
+    function parseAndDisplayNotes(?string $notes, bool $isPublicView = false): void
+    {
+        if (empty(trim((string)$notes))) {
+            echo '<p class="text-gray-500 italic">Belum ada catatan.</p>';
+            return;
+        }
+
+        $lines = explode("\n", $notes);
+        $entries = [];
+        $currentEntry = [];
+
+        foreach ($lines as $line) {
+            if (strpos($line, '-----------------') !== false) {
+                if (!empty($currentEntry)) {
+                    $entries[] = implode("\n", $currentEntry);
+                    $currentEntry = [];
+                }
+            } else {
+                $currentEntry[] = $line;
+            }
+        }
+        if (!empty($currentEntry)) {
+            $entries[] = implode("\n", $currentEntry);
+        }
+
+        $entries = array_reverse(array_filter($entries));
+
+        echo '<ul class="space-y-4">';
+
+        foreach ($entries as $entry) {
+            $entry = trim($entry);
+            $icon = 'comment';
+            $bgColor = 'bg-gray-100';
+            $iconColor = 'text-gray-500';
+            $title = 'Catatan';
+            $details = '';
+            $meta = '';
+
+            // Check for internal notes and skip if public view
+            if ($isPublicView && str_starts_with($entry, 'CATATAN INTERNAL')) {
+                continue;
+            }
+
+            if (preg_match('/^CATATAN INTERNAL \((.*?)\) oleh (.*?): (.*)/s', $entry, $matches)) {
+                $icon = 'admin_panel_settings'; $bgColor = 'bg-indigo-50'; $iconColor = 'text-indigo-500';
+                $title = 'Catatan Internal';
+                $meta = 'oleh <strong>' . htmlspecialchars($matches[2]) . '</strong> pada ' . htmlspecialchars($matches[1]);
+                $details = htmlspecialchars(trim($matches[3]));
+            } elseif (preg_match('/^PEMBATALAN PENGGUNAAN \((.*?)\) oleh (.*?): (.*)/s', $entry, $matches)) {
+                $icon = 'undo'; $bgColor = 'bg-yellow-50'; $iconColor = 'text-yellow-600';
+                $title = 'Penggunaan Dibatalkan';
+                $meta = 'oleh <strong>' . htmlspecialchars($matches[2]) . '</strong> pada ' . htmlspecialchars($matches[1]);
+                $details = 'Alasan: ' . htmlspecialchars(trim($matches[3]));
+            } elseif (preg_match('/^LABEL DIBATALKAN \((.*?)\) oleh (.*?): (.*)/s', $entry, $matches)) {
+                $icon = 'cancel'; $bgColor = 'bg-red-50'; $iconColor = 'text-red-600';
+                $title = 'Label Dibatalkan';
+                $meta = 'oleh <strong>' . htmlspecialchars($matches[2]) . '</strong> pada ' . htmlspecialchars($matches[1]);
+                $details = 'Alasan: ' . htmlspecialchars(trim($matches[3]));
+            } elseif (preg_match('/^RECALLED \(public\): (.*?) - Alasan: (.*)/s', $entry, $matches)) {
+                $icon = 'report'; $bgColor = 'bg-purple-50'; $iconColor = 'text-purple-600';
+                $title = 'Masalah Dilaporkan (Publik)';
+                $meta = 'pada ' . htmlspecialchars($matches[1]);
+                $details = 'Alasan: ' . htmlspecialchars(trim($matches[2]));
+            } elseif (preg_match('/^USED: (.*?) - Oleh: (.*)/s', $entry, $matches)) {
+                $icon = 'check_circle'; $bgColor = 'bg-green-50'; $iconColor = 'text-green-600';
+                $title = 'Ditandai Digunakan';
+                $meta = 'pada ' . htmlspecialchars($matches[1]);
+                $details = 'Catatan: ' . htmlspecialchars(trim($matches[2]));
+            } else {
+                 // Fallback for older, unstructured notes
+                $details = nl2br(htmlspecialchars($entry));
+            }
+            
+            echo <<<HTML
+            <li class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                    <div class="h-10 w-10 rounded-full flex items-center justify-center {$bgColor}">
+                        <span class="material-icons {$iconColor}">{$icon}</span>
+                    </div>
+                </div>
+                <div class="flex-grow">
+                    <p class="text-sm font-semibold text-gray-800">{$title}</p>
+                    <p class="text-xs text-gray-500">{$meta}</p>
+                    <div class="mt-1 text-sm text-gray-700">
+                        {$details}
+                    </div>
+                </div>
+            </li>
+            HTML;
+        }
+        echo '</ul>';
     }
 }
