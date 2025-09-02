@@ -18,12 +18,30 @@ declare(strict_types=1);
 $pageTitle = "Riwayat Label";
 require_once 'header.php'; // Includes session check, CSRF token ($csrfToken), $app_settings etc.
 
+// --- Fetch Master Data for Filter Dropdowns ---
+$activeDepartments = [];
+$dbErrorMessage = '';
+$conn_filter = connectToDatabase();
+if ($conn_filter) {
+    $sqlDepts = "SELECT department_id, department_name FROM departments WHERE is_active = 1 ORDER BY department_name ASC";
+    if ($result = $conn_filter->query($sqlDepts)) {
+        while ($row = $result->fetch_assoc()) $activeDepartments[] = $row;
+    } else {
+        $dbErrorMessage = "Gagal memuat data departemen untuk filter.";
+    }
+    $conn_filter->close();
+} else {
+    $dbErrorMessage = "Koneksi database gagal.";
+}
+
 // Get filter values from URL for sticky form
 $searchQuery = trim($_GET['search_query'] ?? '');
 $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 $itemTypeFilter = trim($_GET['item_type'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+$departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT);
+
 ?>
 <main class="container mx-auto px-6 py-8">
     <div class="flex flex-col md:flex-row justify-between md:items-center mb-6 gap-4">
@@ -33,6 +51,8 @@ $statusFilter = trim($_GET['status'] ?? '');
         </a>
     </div>
 
+    <?php if ($dbErrorMessage): ?><div class="alert alert-danger"><span class="material-icons">error</span><?php echo htmlspecialchars($dbErrorMessage); ?></div><?php endif; ?>
+
     <section id="label-list" class="card overflow-x-auto">
          <form id="filterForm" method="GET">
             <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
@@ -40,11 +60,16 @@ $statusFilter = trim($_GET['status'] ?? '');
                     <h3 class="text-xl font-semibold text-gray-700">Daftar Label Tercatat</h3>
                     <p class="text-sm text-gray-600 mt-1">Filter akan berjalan otomatis setelah Anda berhenti berinteraksi.</p>
                 </div>
-                <button type="button" id="exportCsvBtn" class="btn btn-success w-full md:w-auto">
-                    <span class="material-icons mr-2">download</span>Ekspor ke CSV
-                </button>
+                <div class="flex space-x-2 w-full md:w-auto">
+                    <button type="button" id="exportExcelBtn" class="btn bg-green-600 text-white hover:bg-green-700 flex-grow md:flex-grow-0">
+                        <span class="material-icons mr-2">grid_on</span>Ekspor ke Excel
+                    </button>
+                    <button type="button" id="exportCsvBtn" class="btn btn-success flex-grow md:flex-grow-0">
+                        <span class="material-icons mr-2">download</span>Ekspor ke CSV
+                    </button>
+                </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end p-4 border bg-gray-50 rounded-lg">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end p-4 border bg-gray-50 rounded-lg">
                 <div class="lg:col-span-2">
                     <label for="searchQuery" class="form-label text-sm">Cari (ID, Nama Label, Muatan)</label>
                     <input type="text" id="searchQuery" name="search_query" class="form-input" placeholder="Ketik kata kunci..." value="<?php echo htmlspecialchars($searchQuery); ?>">
@@ -68,7 +93,18 @@ $statusFilter = trim($_GET['status'] ?? '');
                         <option value="recalled" <?php echo ($statusFilter === 'recalled') ? 'selected' : ''; ?>>Ditarik Kembali</option>
                     </select>
                 </div>
-                <div class="lg:col-span-4">
+                 <div>
+                    <label for="departmentFilter" class="form-label text-sm">Tujuan</label>
+                    <select id="departmentFilter" name="department_id" class="form-select">
+                        <option value="">Semua Tujuan</option>
+                        <?php foreach ($activeDepartments as $dept): ?>
+                            <option value="<?php echo $dept['department_id']; ?>" <?php echo ($departmentFilter == $dept['department_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($dept['department_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="lg:col-span-full">
                      <label for="dateStart" class="form-label text-sm">Rentang Tanggal Dibuat</label>
                      <div class="flex flex-col sm:flex-row gap-4">
                          <input type="date" id="dateStart" name="date_start" class="form-input" title="Tanggal Mulai" value="<?php echo htmlspecialchars($dateStart); ?>">
@@ -86,6 +122,7 @@ $statusFilter = trim($_GET['status'] ?? '');
                         <th class="py-3 px-6 text-left">ID Label & Item</th>
                         <th class="py-3 px-6 text-left">Asal Muatan</th>
                         <th class="py-3 px-6 text-left">Dibuat & Kedaluwarsa</th>
+                        <th class="py-3 px-6 text-left">Tujuan Departemen</th>
                         <th class="py-3 px-6 text-center">Status</th>
                         <th class="py-3 px-6 text-center">Aksi</th>
                     </tr>
@@ -105,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('labelsTableBody');
     const paginationContainer = document.getElementById('paginationContainer');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
     const resetFiltersBtn = document.getElementById('resetFilters');
 
     function getFilterValues() {
@@ -114,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function fetchLabels(page = 1) {
         const filters = getFilterValues();
         history.pushState(null, '', `?page=${page}&${filters}`);
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Memuat riwayat label...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Memuat riwayat label...</td></tr>';
 
         const url = `php_scripts/get_labels_data.php?page=${page}&${filters}`;
         fetch(url)
@@ -124,18 +162,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderTable(result.data);
                     renderPagination(result.pagination);
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
                 }
             })
             .catch(error => {
-                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
             });
     }
 
     function renderTable(labels) {
         tableBody.innerHTML = '';
         if (labels.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-6 px-6 text-gray-600">Tidak ada riwayat ditemukan untuk filter yang dipilih. <a href="label_history.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 px-6 text-gray-600">Tidak ada riwayat ditemukan untuk filter yang dipilih. <a href="label_history.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
             return;
         }
 
@@ -143,29 +181,32 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusBadge = `<span class="status-badge ${escapeHtml(label.status_class)}">${escapeHtml(label.status_text)}</span>`;
             const createdDate = new Date(label.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             const expiryDate = new Date(label.expiry_date).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-
-            // --- PERBAIKAN DIMULAI: Memetakan status dari data ke kelas CSS yang benar ---
+            
             const statusToClassMap = {
-                'active': 'tr-status-tersedia', // Hijau
-                'used': 'tr-status-sterilisasi',  // Biru
-                'expired': 'tr-status-gagal',    // Merah
-                'recalled': 'tr-status-gagal',   // Merah
-                'pending_validation': 'tr-status-menunggu_validasi' // Kuning
+                'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi',
+                'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal',
+                'pending_validation': 'tr-status-menunggu_validasi'
             };
             const rowStatusClass = statusToClassMap[label.status] || 'tr-status-default';
-            // --- PERBAIKAN SELESAI ---
+
+            // --- PERUBAHAN: Menambahkan ikon notifikasi jika set dimodifikasi ---
+            let modifiedIcon = '';
+            if (label.item_type === 'set' && label.is_modified) {
+                modifiedIcon = `<span class="material-icons text-indigo-500 text-base ml-1" title="Definisi set ini telah berubah sejak label dicetak. Klik untuk melihat detail perubahan.">drive_file_rename_outline</span>`;
+            }
 
             const row = `
                 <tr class="border-b border-gray-200 hover:bg-gray-100 table-status-indicator clickable-row ${rowStatusClass}" data-href="verify_label.php?uid=${label.label_unique_id}">
                     <td class="py-3 px-6 text-left">
                         <div class="font-mono font-semibold text-gray-800">${escapeHtml(label.label_unique_id)}</div>
-                        <div class="text-xs text-gray-500">${escapeHtml(label.label_title || 'N/A')}</div>
+                        <div class="text-xs text-gray-500 flex items-center">${escapeHtml(label.label_title || 'N/A')} ${modifiedIcon}</div>
                     </td>
                     <td class="py-3 px-6 text-left">${escapeHtml(label.load_name || '-')}</td>
                     <td class="py-3 px-6 text-left">
                         <div>Dibuat: ${createdDate}</div>
                         <div class="text-xs text-gray-500">Kedaluwarsa: ${expiryDate}</div>
                     </td>
+                    <td class="py-3 px-6 text-left">${escapeHtml(label.destination_department_name || 'Stok Umum')}</td>
                     <td class="py-3 px-6 text-center">${statusBadge}</td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center space-x-1">
@@ -201,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); 
     }
 
-    // --- Event Listeners ---
     const inputs = filterForm.querySelectorAll('input, select');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
@@ -223,6 +263,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = `php_scripts/export_labels_csv.php?${currentFilters}`;
     });
 
+    exportExcelBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentFilters = getFilterValues();
+        window.location.href = `php_scripts/export_labels_excel.php?${currentFilters}`;
+    });
+
     tableBody.addEventListener('click', function(e) {
         const row = e.target.closest('tr.clickable-row');
         if (row && !e.target.closest('a')) {
@@ -230,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Initial Load
     const urlParams = new URLSearchParams(window.location.search);
     const pageFromUrl = parseInt(urlParams.get('page')) || 1;
     fetchLabels(pageFromUrl);

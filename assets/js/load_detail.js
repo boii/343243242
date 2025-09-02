@@ -494,17 +494,58 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // --- PERUBAHAN UTAMA: FUNGSI BARU UNTUK MENAMPILKAN PERBANDINGAN ---
     function loadSetContentsIntoRow(loadItemId, targetElement) {
         const itemData = currentLoadData.items.find(i => i.load_item_id == loadItemId);
-        if (!itemData || !itemData.item_snapshot) { targetElement.innerHTML = '<li>Data isi set tidak tersedia.</li>'; return; }
+        if (!itemData || !itemData.item_snapshot) {
+            targetElement.innerHTML = 'Data isi set tidak tersedia.';
+            return;
+        }
+
         const snapshot = JSON.parse(itemData.item_snapshot);
-        if (snapshot.length === 0) { targetElement.innerHTML = '<li>Set ini (sesuai snapshot) kosong.</li>'; return; }
-        const instrumentNames = snapshot.map(snapItem => {
-            const instrumentDetail = allInstrumentsData.find(inst => inst.instrument_id == snapItem.instrument_id);
-            return `<li>${escapeHtml(instrumentDetail ? instrumentDetail.instrument_name : 'N/A')} (x${snapItem.quantity})</li>`;
+        const masterSet = allMasterSetsData[itemData.item_id] || [];
+        
+        const snapshotMap = new Map(snapshot.map(item => [String(item.instrument_id), item.quantity]));
+        const masterMap = new Map(masterSet.map(item => [String(item.instrument_id), item.quantity]));
+        
+        const allInstrumentIds = new Set([...snapshotMap.keys(), ...masterMap.keys()]);
+
+        if (allInstrumentIds.size === 0) {
+            targetElement.innerHTML = 'Set ini (sesuai snapshot) kosong.';
+            return;
+        }
+
+        let html = '<ul class="snapshot-comparison-list">';
+        
+        allInstrumentIds.forEach(id => {
+            const instrumentDetail = allInstrumentsData.find(inst => String(inst.instrument_id) === id);
+            const name = instrumentDetail ? escapeHtml(instrumentDetail.instrument_name) : `ID Instrumen ${id} (telah dihapus)`;
+            const inSnapshot = snapshotMap.has(id);
+            const inMaster = masterMap.has(id);
+            const qtySnapshot = inSnapshot ? snapshotMap.get(id) : 0;
+            const qtyMaster = inMaster ? masterMap.get(id) : 0;
+
+            if (inSnapshot && !inMaster) {
+                // Ditambahkan
+                html += `<li class="item-added"><span class="material-icons">add_circle_outline</span> <span class="item-name">${name} (x${qtySnapshot})</span></li>`;
+            } else if (!inSnapshot && inMaster) {
+                // Dihapus
+                html += `<li class="item-removed"><span class="material-icons">remove_circle_outline</span> <span class="item-name">${name} (x${qtyMaster})</span></li>`;
+            } else if (inSnapshot && inMaster) {
+                if (qtySnapshot !== qtyMaster) {
+                    // Kuantitas diubah
+                    html += `<li class="item-modified"><span class="material-icons">edit</span> <span class="item-name">${name}</span> <span class="quantity-change">(x${qtyMaster} &rarr; x${qtySnapshot})</span></li>`;
+                } else {
+                    // Tidak berubah
+                    html += `<li class="item-unchanged"><span class="material-icons">radio_button_unchecked</span> <span class="item-name">${name} (x${qtySnapshot})</span></li>`;
+                }
+            }
         });
-        targetElement.innerHTML = `<ul class="instrument-list-in-set">${instrumentNames.join('')}</ul>`;
+
+        html += '</ul>';
+        targetElement.innerHTML = html;
     }
+
 
     function openSetEditor(loadItemId, setName) {
         const itemData = currentLoadData.items.find(i => i.load_item_id == loadItemId);

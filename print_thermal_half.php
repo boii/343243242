@@ -18,11 +18,8 @@ declare(strict_types=1);
 
 // Logika PHP untuk mengambil data sama persis dengan print_thermal.php
 require_once 'config.php'; 
-if (file_exists('libs/phpqrcode/qrlib.php')) {
-    require_once 'libs/phpqrcode/qrlib.php';
-}
+require_once __DIR__ . '/libs/phpqrcode/qrlib.php';
 $qrLibMissing = !class_exists('QRcode');
-
 
 $labelDetails = null; $itemDetails = null; $errorMessage = ''; $labelUniqueId = null;
 $conn_print_thermal = null; 
@@ -36,32 +33,38 @@ $thermalPaperWidthMM = (int)($app_settings['thermal_paper_width_mm'] ?? 70);
 $thermalPaperHeightMM = (int)($app_settings['thermal_paper_height_mm'] ?? 70); 
 $labelInternalPadding = '2mm'; 
 
-$thermalFieldsConfig = [ 
-    'item_name' => ['visible' => true, 'order' => 1, 'label' => 'Nama Item', 'hide_label' => false, 'custom_label' => ''],
-    'created_at' => ['visible' => true, 'order' => 3, 'label' => 'Tanggal Buat', 'hide_label' => false, 'custom_label' => ''],
-    'expiry_date' => ['visible' => true, 'order' => 2, 'label' => 'Tanggal Kedaluwarsa', 'hide_label' => false, 'custom_label' => ''],
-    'label_unique_id' => ['visible' => false, 'order' => 4, 'label' => 'ID Label Unik', 'hide_label' => false, 'custom_label' => ''],
-    'label_title' => ['visible' => true, 'order' => 5, 'label' => 'Nama Label', 'hide_label' => false, 'custom_label' => ''],
-    'used_at'           => ['visible' => false, 'order' => 6, 'label' => 'Tanggal Digunakan',  'hide_label' => false, 'custom_label' => ''],
-    'validated_at'      => ['visible' => false, 'order' => 7, 'label' => 'Tanggal Divalidasi', 'hide_label' => false, 'custom_label' => ''],
-    'validator_username'=> ['visible' => false, 'order' => 8, 'label' => 'Divalidasi Oleh',    'hide_label' => false, 'custom_label' => ''],
-    'creator_username'  => ['visible' => false, 'order' => 9, 'label' => 'Dibuat Oleh',        'hide_label' => false, 'custom_label' => ''],
-    'notes'             => ['visible' => false, 'order' => 10, 'label' => 'Catatan Tambahan',   'hide_label' => false, 'custom_label' => ''],
-    'custom_text_1'     => ['visible' => false, 'order' => 11, 'label' => 'Info Kustom 1',      'hide_label' => true,  'custom_label' => ''], 
-    'custom_text_2'     => ['visible' => false, 'order' => 12, 'label' => 'Info Kustom 2',     'hide_label' => true,  'custom_label' => '']  
+// Duplikasi struktur default dari config.php untuk keamanan
+$defaultThermalFieldsStructure = [ 
+    'item_name'         => ['visible' => true,  'order' => 1, 'label' => 'Nama Item', 'hide_label' => false, 'custom_label' => ''],
+    'label_title'       => ['visible' => true,  'order' => 2, 'label' => 'Judul Label', 'hide_label' => false, 'custom_label' => ''],
+    'label_unique_id'   => ['visible' => false, 'order' => 3, 'label' => 'ID Label Unik', 'hide_label' => false, 'custom_label' => ''],
+    'created_at'        => ['visible' => true,  'order' => 4, 'label' => 'Tanggal Buat', 'hide_label' => false, 'custom_label' => ''],
+    'expiry_date'       => ['visible' => true,  'order' => 5, 'label' => 'Tanggal Kedaluwarsa', 'hide_label' => false, 'custom_label' => ''],
+    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_operator_name' => ['visible' => false, 'order' => 9, 'label' => 'Operator Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_date'        => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Siklus', 'hide_label' => false, 'custom_label' => ''],
+    'load_creator_name'   => ['visible' => false, 'order' => 11, 'label' => 'Pembuat Muatan', 'hide_label' => false, 'custom_label' => ''],
+    'destination_department_name' => ['visible' => false, 'order' => 12, 'label' => 'Departemen Tujuan', 'hide_label' => false, 'custom_label' => ''],
+    'creator_username'  => ['visible' => false, 'order' => 13, 'label' => 'Dibuat Oleh (Label)', 'hide_label' => false, 'custom_label' => ''],
+    'used_at'           => ['visible' => false, 'order' => 14, 'label' => 'Tanggal Digunakan', 'hide_label' => false, 'custom_label' => ''],
+    'notes'             => ['visible' => false, 'order' => 15, 'label' => 'Catatan Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'custom_text_1'     => ['visible' => false, 'order' => 16, 'label' => 'Teks Kustom 1', 'hide_label' => true,  'custom_label' => ''],
+    'custom_text_2'     => ['visible' => false, 'order' => 17, 'label' => 'Teks Kustom 2', 'hide_label' => true,  'custom_label' => '']
 ];
-
-if (is_array($thermalFieldsConfigFromDB)) {
-    foreach ($thermalFieldsConfig as $key => &$defaultConfig) { 
-        if (isset($thermalFieldsConfigFromDB[$key])) {
-            $defaultConfig['visible'] = (bool)($thermalFieldsConfigFromDB[$key]['visible'] ?? $defaultConfig['visible']);
-            $defaultConfig['order'] = (int)($thermalFieldsConfigFromDB[$key]['order'] ?? $defaultConfig['order']);
-            $defaultConfig['hide_label'] = (bool)($thermalFieldsConfigFromDB[$key]['hide_label'] ?? $defaultConfig['hide_label']);
-            $defaultConfig['custom_label'] = (string)($thermalFieldsConfigFromDB[$key]['custom_label'] ?? $defaultConfig['custom_label']);
-        }
-    }
-    unset($defaultConfig); 
+$thermalFieldsConfig = [];
+foreach ($defaultThermalFieldsStructure as $key => $defaultValues) {
+    $loadedConfig = $thermalFieldsConfigFromDB[$key] ?? [];
+    $thermalFieldsConfig[$key] = [
+        'visible'    => (bool)($loadedConfig['visible'] ?? $defaultValues['visible']),
+        'order'      => (int)($loadedConfig['order'] ?? $defaultValues['order']),
+        'label'      => $defaultValues['label'],
+        'hide_label' => (bool)($loadedConfig['hide_label'] ?? $defaultValues['hide_label']),
+        'custom_label' => (string)($loadedConfig['custom_label'] ?? $defaultValues['custom_label']) 
+    ];
 }
+
 
 if (isset($_GET['label_uid'])) {
     $labelUniqueId = trim($_GET['label_uid']);
@@ -94,7 +97,26 @@ if ($labelUniqueId && empty($errorMessage)) {
     }
 
     if ($conn_print_thermal) {
-        $sql = "SELECT sr.record_id, sr.label_unique_id, sr.item_id, sr.item_type, sr.label_title, sr.created_by_user_id, sr.created_at, sr.expiry_date, sr.status, sr.notes, sr.used_at, sr.validated_at, u.username as creator_username, u.full_name as creator_full_name, val.username as validator_username, val.full_name as validator_full_name FROM sterilization_records sr LEFT JOIN users u ON sr.created_by_user_id = u.user_id LEFT JOIN users val ON sr.validated_by_user_id = val.user_id WHERE sr.label_unique_id = ?";
+        $sql = "SELECT 
+                    sr.record_id, sr.label_unique_id, sr.item_id, sr.item_type, sr.label_title, 
+                    sr.created_by_user_id, sr.created_at, sr.expiry_date, sr.status, sr.notes, 
+                    sr.used_at, sr.validated_at, 
+                    u.username as creator_username, u.full_name as creator_full_name, 
+                    val.username as validator_username, val.full_name as validator_full_name,
+                    sl.load_name,
+                    sl_creator.full_name as load_creator_name,
+                    sc.cycle_number, sc.machine_name, sc.cycle_date,
+                    sc_operator.full_name as cycle_operator_name,
+                    dept.department_name as destination_department_name
+                FROM sterilization_records sr 
+                LEFT JOIN users u ON sr.created_by_user_id = u.user_id 
+                LEFT JOIN users val ON sr.validated_by_user_id = val.user_id
+                LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id
+                LEFT JOIN users sl_creator ON sl.created_by_user_id = sl_creator.user_id
+                LEFT JOIN sterilization_cycles sc ON sl.cycle_id = sc.cycle_id
+                LEFT JOIN users sc_operator ON sc.operator_user_id = sc_operator.user_id
+                LEFT JOIN departments dept ON sr.destination_department_id = dept.department_id
+                WHERE sr.label_unique_id = ?";
         if ($stmt = $conn_print_thermal->prepare($sql)) {
             $stmt->bind_param("s", $labelUniqueId); $stmt->execute(); $result = $stmt->get_result();
             if ($result && $result->num_rows === 1) {
@@ -142,53 +164,6 @@ $qrPixelSize = 6;
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh; padding: 20px; box-sizing: border-box; 
         }
-        .label-print-container-thermal {
-            width: <?php echo $thermalPaperWidthMM; ?>mm; height: <?php echo $thermalPaperHeightMM; ?>mm; 
-            padding: 0; box-sizing: border-box; display: flex;
-            overflow: hidden; background-color: #fff !important; margin: 0; 
-            border: 2px dashed #555; position: relative;
-        }
-        .cutting-line {
-            position: absolute; left: 50%; top: 0; bottom: 0;
-            border-left: 1px dashed #9ca3af;
-        }
-        .layout-half {
-            width: 50%; height: 100%; padding: <?php echo $labelInternalPadding; ?>;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            font-size: 6pt; line-height: 1.2; overflow: hidden;
-        }
-        .layout-half.empty { background-color: transparent; }
-        .top-custom-text-area { text-align: center; margin-bottom: 0.5mm; flex-shrink: 0; }
-        .custom-text-line-print { font-size: 7pt; font-weight: bold; line-height: 1.1; }
-        .separator-line {
-            width: 90%; height: 0.5px; background-color: #6b7280;
-            margin: 0.5mm auto; flex-shrink: 0;
-        }
-        /* PERUBAHAN UTAMA: Kontainer utama tidak lagi flex-grow */
-        .main-content-area {
-            display: flex; flex-direction: column;
-            width: 100%; overflow: hidden;
-        }
-        .qr-code-container-thermal {
-            text-align: center; margin-bottom: 1mm;
-            width: 100%; /* Lebar penuh dari kontainer .layout-half */
-            flex-shrink: 0; /* QR code tidak menyusut */
-        }
-        .qr-code-container-thermal img {
-            max-width: 100%;
-            /* Tentukan tinggi maksimum agar tidak terlalu besar */
-            max-height: calc(<?php echo $thermalPaperHeightMM/2; ?>mm); 
-            height: auto; object-fit: contain; display: block; margin: 0 auto;
-        }
-        .label-thermal-content { 
-            overflow: hidden; display: flex; flex-direction: column;
-            justify-content: flex-start; text-align: left;
-            flex-shrink: 0;
-        }
-        .item-name-value-thermal { font-size: 7pt; font-weight: bold; margin-bottom: 1mm; line-height: 1.1; display: block; text-align: left; }
-        .label-thermal-section { margin-bottom: 0.5mm; display: flex; justify-content: flex-start; align-items: baseline; }
-        .label-thermal-section strong { margin-right: 1mm; flex-shrink: 0; }
-        .label-thermal-section span.value { word-break: break-all; text-align: left; }
         .no-print-on-labelpage { display: none !important; }
         @media print {
             body { margin: 0 !important; padding: 0 !important; background-color: transparent !important; display: block !important; min-height: auto !important; }
@@ -199,28 +174,39 @@ $qrPixelSize = 6;
 </head>
 <body onload="window.print(); setTimeout(window.close, 1000);">
     <?php if ($labelDetails && ($itemDetails || ($labelDetails['item_type'] !== 'set' && $labelDetails['item_type'] !== 'instrument' ))): ?>
-        <div class="label-print-container-thermal">
-            <div class="layout-half">
-                <div class="top-custom-text-area">
-                    <?php if (isset($thermalFieldsConfig['custom_text_1']['visible']) && $thermalFieldsConfig['custom_text_1']['visible'] && !empty(trim($thermalCustomText1Value))): ?>
-                        <div class="custom-text-line-print"><?php echo htmlspecialchars($thermalCustomText1Value); ?></div>
+        <div class="label-print-container-thermal" style="
+            width: <?php echo $thermalPaperWidthMM; ?>mm; 
+            height: <?php echo $thermalPaperHeightMM; ?>mm; 
+            padding: 0; 
+            box-sizing: border-box; 
+            display: flex;
+            overflow: hidden; 
+            background-color: #fff !important; 
+            margin: 0; 
+            border: 2px dashed #555; 
+            position: relative;">
+
+            <div style="width: 50%; height: 100%; padding: <?php echo $labelInternalPadding; ?>; box-sizing: border-box; display: flex; flex-direction: column; font-size: 6pt; line-height: 1.2; overflow: hidden;">
+                 <?php
+                    $hasCustomText1 = isset($thermalFieldsConfig['custom_text_1']['visible']) && $thermalFieldsConfig['custom_text_1']['visible'] && !empty(trim($thermalCustomText1Value));
+                    $hasCustomText2 = isset($thermalFieldsConfig['custom_text_2']['visible']) && $thermalFieldsConfig['custom_text_2']['visible'] && !empty(trim($thermalCustomText2Value));
+                ?>
+                <?php if ($hasCustomText1 || $hasCustomText2): ?>
+                <div style="text-align: center; margin-bottom: 0.5mm; flex-shrink: 0;">
+                    <?php if ($hasCustomText1): ?>
+                        <div style="font-size: 7pt; font-weight: bold; line-height: 1.1;"><?php echo htmlspecialchars($thermalCustomText1Value); ?></div>
                     <?php endif; ?>
-                    <?php if (isset($thermalFieldsConfig['custom_text_2']['visible']) && $thermalFieldsConfig['custom_text_2']['visible'] && !empty(trim($thermalCustomText2Value))): ?>
-                        <div class="custom-text-line-print"><?php echo htmlspecialchars($thermalCustomText2Value); ?></div>
+                     <?php if ($hasCustomText2): ?>
+                        <div style="font-size: 7pt; font-weight: bold; line-height: 1.1;"><?php echo htmlspecialchars($thermalCustomText2Value); ?></div>
                     <?php endif; ?>
                 </div>
-
-                <?php 
-                    $hasCustomText = (isset($thermalFieldsConfig['custom_text_1']['visible']) && $thermalFieldsConfig['custom_text_1']['visible'] && !empty(trim($thermalCustomText1Value))) ||
-                                     (isset($thermalFieldsConfig['custom_text_2']['visible']) && $thermalFieldsConfig['custom_text_2']['visible'] && !empty(trim($thermalCustomText2Value)));
-                    $hasMainContent = !empty($fieldsToDisplay); 
-                ?>
-                <?php if ($hasCustomText && $hasMainContent): ?>
-                    <div class="separator-line"></div>
+                <?php if (!empty($fieldsToDisplay)): ?>
+                    <div style="width: 90%; height: 0.5px; background-color: #6b7280; margin: 0.5mm auto; flex-shrink: 0;"></div>
+                <?php endif; ?>
                 <?php endif; ?>
 
-                <div class="main-content-area">
-                    <div class="qr-code-container-thermal">
+                <div style="display: flex; flex-direction: column; width: 100%; overflow: hidden;">
+                    <div style="text-align: center; margin-bottom: 1mm; width: 100%; flex-shrink: 0;">
                         <?php 
                         if (!$qrLibMissing && class_exists('QRcode') && isset($labelDetails['label_unique_id']) && !empty($labelDetails['label_unique_id'])) {
                             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) &&$_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://";
@@ -232,7 +218,7 @@ $qrPixelSize = 6;
                             QRcode::png($qrData, null, QR_ECLEVEL_L, $qrPixelSize, 1);
                             $imageData = ob_get_contents();
                             ob_end_clean();
-                            echo '<img src="data:image/png;base64,' . base64_encode($imageData) . '" alt="QR Code">';
+                            echo '<img src="data:image/png;base64,' . base64_encode($imageData) . '" alt="QR Code" style="max-width: 100%; max-height: calc('.($thermalPaperHeightMM/2).'mm); height: auto; object-fit: contain; display: block; margin: 0 auto;">';
                         } elseif ($qrLibMissing) { 
                             echo '<p style="color:red;font-size:5pt;"><em>QR Lib missing</em></p>';
                         } else { 
@@ -240,69 +226,40 @@ $qrPixelSize = 6;
                         }
                         ?>
                     </div>
-                    <div class="label-thermal-content">
-                        <?php
+                    <div style="overflow: hidden; display: flex; flex-direction: column; justify-content: flex-start; text-align: left; flex-shrink: 0;">
+                       <?php
                         foreach ($fieldsToDisplay as $fieldKey => $fieldConfig):
-                            if ($fieldKey === 'custom_text_1' || $fieldKey === 'custom_text_2') { continue; }
                             $value = ''; $isItemName = ($fieldKey === 'item_name');
                             $currentFieldLabelText = !empty(trim((string)($fieldConfig['custom_label'] ?? ''))) ? htmlspecialchars($fieldConfig['custom_label']) : htmlspecialchars($fieldConfig['label']);
                             $hideThisLabel = (bool)($fieldConfig['hide_label'] ?? false);
 
-                            switch ($fieldKey) {
-                                case 'item_name':
-                                    if ($itemDetails) { 
-                                        if ($labelDetails['item_type'] === 'instrument') { $value = $itemDetails['instrument_name']; }
-                                        elseif ($labelDetails['item_type'] === 'set') { $value = $itemDetails['set_name']; }
-                                    } else { $value = 'N/A'; }
-                                    break;
+                             switch ($fieldKey) {
+                                case 'item_name': $value = $itemDetails[$labelDetails['item_type'].'_name'] ?? 'N/A'; break;
                                 case 'label_unique_id': $value = $labelDetails['label_unique_id'] ?? 'N/A'; break;
                                 case 'label_title': $value = $labelDetails['label_title'] ?? 'N/A'; break; 
                                 case 'creator_username': $value = $labelDetails['creator_full_name'] ?? ($labelDetails['creator_username'] ?? 'N/A'); break;
                                 case 'created_at': $value = isset($labelDetails['created_at']) ? (new DateTime($labelDetails['created_at']))->format('d/m/y H:i') : 'N/A'; break;
-                                case 'expiry_date':
-                                    $value = isset($labelDetails['expiry_date']) ? (new DateTime($labelDetails['expiry_date']))->format('d/m/y H:i') : 'N/A';
-                                    break; 
-                                case 'used_at':
-                                    if (isset($labelDetails['status']) && strtolower($labelDetails['status']) === 'used' && !empty($labelDetails['used_at'])) {
-                                        $value = (new DateTime($labelDetails['used_at']))->format('d/m/y H:i');
-                                    } else { if (!($fieldConfig['visible'] ?? false)) continue 2; $value = '-'; }
-                                    break;
-                                case 'validated_at':
-                                    if (isset($labelDetails['status']) && strtolower($labelDetails['status']) === 'active' && !empty($labelDetails['validated_at'])) {
-                                        $value = (new DateTime($labelDetails['validated_at']))->format('d/m/y H:i');
-                                    } else { if (!($fieldConfig['visible'] ?? false)) continue 2; $value = '-'; }
-                                    break;
-                                case 'validator_username':
-                                    if (isset($labelDetails['status']) && strtolower($labelDetails['status']) === 'active' && !empty($labelDetails['validated_at'])) {
-                                        $value = htmlspecialchars($labelDetails['validator_full_name'] ?? ($labelDetails['validator_username'] ?? 'N/A'));
-                                    } else { if (!($fieldConfig['visible'] ?? false)) continue 2; $value = '-'; }
-                                    break;
-                                case 'notes': 
-                                    if (!empty($labelDetails['notes'])) {
-                                        $value = substr(htmlspecialchars($labelDetails['notes']), 0, 20); 
-                                        if (strlen($labelDetails['notes']) > 20) $value .= '...';
-                                    }
-                                    break;
+                                case 'expiry_date': $value = isset($labelDetails['expiry_date']) ? (new DateTime($labelDetails['expiry_date']))->format('d/m/y H:i') : 'N/A'; break; 
+                                case 'load_name': $value = $labelDetails['load_name'] ?? 'N/A'; break;
+                                case 'load_creator_name': $value = $labelDetails['load_creator_name'] ?? 'N/A'; break;
+                                case 'cycle_number': $value = $labelDetails['cycle_number'] ?? 'N/A'; break;
+                                case 'machine_name': $value = $labelDetails['machine_name'] ?? 'N/A'; break;
+                                case 'cycle_operator_name': $value = $labelDetails['cycle_operator_name'] ?? 'N/A'; break;
+                                case 'cycle_date': $value = isset($labelDetails['cycle_date']) ? (new DateTime($labelDetails['cycle_date']))->format('d/m/y H:i') : 'N/A'; break;
+                                case 'destination_department_name': $value = $labelDetails['destination_department_name'] ?? 'Stok Umum'; break;
+                                case 'notes': if (!empty($labelDetails['notes'])) { $value = substr(htmlspecialchars($labelDetails['notes']), 0, 20); if (strlen($labelDetails['notes']) > 20) $value .= '...'; } break;
                             }
                             
-                            if (empty(trim((string)$value)) && !in_array($fieldKey, ['item_name', 'notes', 'label_title', 'used_at', 'validated_at', 'validator_username'])) continue; 
-                            if ($fieldKey === 'item_name' && empty(trim((string)$value))) continue;
-                            if ($fieldKey === 'label_title' && empty(trim((string)$value))) { if ($fieldConfig['visible']) { continue; } }
-                            if ($fieldKey === 'notes' && empty(trim((string)$value))) continue;
-                            if (in_array($fieldKey, ['used_at', 'validated_at', 'validator_username']) && $value === '-') {
-                                 if (!empty(trim((string)($fieldConfig['custom_label'] ?? '')))) { /* tampilkan label jika ada custom */ }
-                                 else if (!($fieldConfig['hide_label'] ?? false) && !empty($fieldConfig['label'])) { /* tampilkan label jika ada default & tidak hide */ }
-                                 else { continue; } 
-                            }
+                            if (empty(trim((string)$value))) continue;
 
                             if ($isItemName): ?>
-                                <div class="item-name-value-thermal"><?php echo htmlspecialchars($value); ?></div>
+                                <div style="font-size: 7pt; font-weight: bold; margin-bottom: 1mm; line-height: 1.1; display: block; text-align: left;"><?php echo htmlspecialchars($value); ?></div>
                             <?php else: ?>
-                                <div class="label-thermal-section">
+                                <div style="margin-bottom: 0.5mm; display: flex; justify-content: flex-start; align-items: baseline;">
                                     <?php if (!$hideThisLabel): ?>
-                                        <strong><?php echo $currentFieldLabelText; ?>:</strong> 
+                                        <strong style="margin-right: 1mm; flex-shrink: 0;"><?php echo $currentFieldLabelText; ?>:</strong> 
                                     <?php endif; ?>
-                                    <span class="value"><?php echo htmlspecialchars($value); ?></span>
+                                    <span style="word-break: break-all; text-align: left;"><?php echo htmlspecialchars($value); ?></span>
                                 </div>
                             <?php endif; 
                         endforeach;
@@ -310,8 +267,8 @@ $qrPixelSize = 6;
                     </div>
                 </div>
             </div>
-            <div class="cutting-line"></div>
-            <div class="layout-half empty"></div>
+            <div style="position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed #9ca3af;"></div>
+            <div style="width: 50%; height: 100%; background-color: transparent;"></div>
         </div>
     <?php else: ?>
         <div class="no-print-on-labelpage" style="padding:20px; text-align:center; color:red;">

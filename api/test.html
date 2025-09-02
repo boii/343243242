@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Tes Cetak Label via API</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f7f6; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1f2937; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #4b5563; }
+        input[type="text"] { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #d1d5db; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #3b82f6; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background-color: #2563eb; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        #status { margin-top: 20px; text-align: center; font-weight: bold; }
+        .status-success { color: #16a34a; }
+        .status-error { color: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tes Cetak Label via API</h1>
+        <div class="form-group">
+            <label for="apiKey">Kunci API (X-API-Key)</label>
+            <input type="text" id="apiKey" placeholder="Masukkan Kunci API Anda...">
+        </div>
+        <div class="form-group">
+            <label for="labelUid">UID Label</label>
+            <input type="text" id="labelUid" placeholder="Contoh: ABEF1345B">
+        </div>
+        <button id="printButton">Cetak Label</button>
+        <p id="status"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const printButton = document.getElementById('printButton');
+            const apiKeyInput = document.getElementById('apiKey');
+            const labelUidInput = document.getElementById('labelUid');
+            const statusDiv = document.getElementById('status');
+            
+            // Isi otomatis jika Anda ingin (opsional)
+            // apiKeyInput.value = "KUNCI_API_ANDA"; 
+
+            printButton.addEventListener('click', function () {
+                const apiKey = apiKeyInput.value.trim();
+                const labelUid = labelUidInput.value.trim();
+                const baseUrl = 'https://steril.rejiva.my.id/api/v1'; // Sesuaikan jika perlu
+
+                if (!apiKey || !labelUid) {
+                    statusDiv.textContent = 'Kunci API dan UID Label tidak boleh kosong.';
+                    statusDiv.className = 'status-error';
+                    return;
+                }
+
+                statusDiv.textContent = 'Meminta data cetak dari server...';
+                statusDiv.className = '';
+                printButton.disabled = true;
+
+                const apiUrl = `${baseUrl}/labels/${labelUid}/print`;
+
+                fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Key': apiKey
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Jika status error (misal: 401, 404), lempar error untuk ditangkap di .catch()
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.status === 'success' && result.data.html_content) {
+                        statusDiv.textContent = 'Sukses! Membuka jendela cetak...';
+                        statusDiv.className = 'status-success';
+                        
+                        // Ambil konten HTML dari respons JSON
+                        const htmlContent = result.data.html_content;
+
+                        // Buka jendela baru untuk proses cetak
+                        const printWindow = window.open('', '_blank');
+                        if (printWindow) {
+                            printWindow.document.write(htmlContent);
+                            printWindow.document.close(); // Penting agar event onload di body bisa berjalan
+                        } else {
+                            throw new Error('Gagal membuka jendela cetak. Pastikan pop-up diizinkan oleh browser Anda.');
+                        }
+                    } else {
+                        // Jika status dari API bukan 'success'
+                        throw new Error(result.message || 'Gagal mendapatkan konten cetak.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.textContent = `Terjadi kesalahan: ${error.message}`;
+                    statusDiv.className = 'status-error';
+                })
+                .finally(() => {
+                    printButton.disabled = false;
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

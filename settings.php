@@ -52,15 +52,20 @@ $defaultThermalFieldsStructure = [
     'expiry_date'       => ['visible' => true,  'order' => 4, 'label' => 'Tanggal Kedaluwarsa','group' => 'Informasi Esensial', 'hide_label' => false, 'custom_label' => ''],
     'label_unique_id'   => ['visible' => false, 'order' => 5, 'label' => 'ID Unik Label',      'group' => 'Informasi Esensial', 'hide_label' => false, 'custom_label' => ''],
     
-    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan',        'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus',       'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin',         'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'creator_username'  => ['visible' => false, 'order' => 9, 'label' => 'Dibuat Oleh',        'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'used_at'           => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Digunakan', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
-    'notes'             => ['visible' => false, 'order' => 11, 'label' => 'Catatan Tambahan',  'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'load_name'         => ['visible' => false, 'order' => 6, 'label' => 'Nama Muatan',        'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_number'      => ['visible' => false, 'order' => 7, 'label' => 'Nomor Siklus',       'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'machine_name'      => ['visible' => false, 'order' => 8, 'label' => 'Nama Mesin',         'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_operator_name' => ['visible' => false, 'order' => 9, 'label' => 'Operator Siklus',  'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'cycle_date'        => ['visible' => false, 'order' => 10, 'label' => 'Tanggal Siklus',     'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'load_creator_name'   => ['visible' => false, 'order' => 11, 'label' => 'Pembuat Muatan',   'group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+    'destination_department_name' => ['visible' => false, 'order' => 12, 'label' => 'Departemen Tujuan','group' => 'Informasi Pelacakan', 'hide_label' => false, 'custom_label' => ''],
+
+    'creator_username'  => ['visible' => false, 'order' => 13, 'label' => 'Dibuat Oleh (Label)', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'used_at'           => ['visible' => false, 'order' => 14, 'label' => 'Tanggal Digunakan', 'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
+    'notes'             => ['visible' => false, 'order' => 15, 'label' => 'Catatan Tambahan',  'group' => 'Informasi Tambahan', 'hide_label' => false, 'custom_label' => ''],
     
-    'custom_text_1'     => ['visible' => false, 'order' => 12, 'label' => 'Teks Kustom 1',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => ''],
-    'custom_text_2'     => ['visible' => false, 'order' => 13, 'label' => 'Teks Kustom 2',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => '']
+    'custom_text_1'     => ['visible' => false, 'order' => 16, 'label' => 'Teks Kustom 1',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => ''],
+    'custom_text_2'     => ['visible' => false, 'order' => 17, 'label' => 'Teks Kustom 2',     'group' => 'Teks Kustom', 'hide_label' => true,  'custom_label' => '']
 ];
 
 $currentThermalFieldsConfig = [];
@@ -77,7 +82,7 @@ foreach ($defaultThermalFieldsStructure as $key => $defaultValues) {
 }
 
 uasort($currentThermalFieldsConfig, function($a, $b) {
-    $groupOrder = ['Informasi Esensial' => 1, 'Informasi Tambahan' => 2, 'Teks Kustom' => 3];
+    $groupOrder = ['Informasi Esensial' => 1, 'Informasi Pelacakan' => 2, 'Informasi Tambahan' => 3, 'Teks Kustom' => 4];
     $groupComparison = ($groupOrder[$a['group']] ?? 99) <=> ($groupOrder[$b['group']] ?? 99);
     if ($groupComparison !== 0) {
         return $groupComparison;
@@ -119,6 +124,37 @@ $qrSizeOptions = [
         border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
     }
     .field-group-header:first-of-type { margin-top: 0; border-top: none; }
+    
+    /* --- Gaya untuk Pratinjau --- */
+    #preview-container-wrapper {
+        padding: 1rem;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+    }
+    #thermal-preview-container {
+        border: 2px dashed #a5b4fc;
+        background-color: white;
+        margin: 0 auto;
+        transform-origin: top center;
+        transition: width 0.3s ease, height 0.3s ease;
+        overflow: hidden; /* Penting */
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        color: #333;
+    }
+    .preview-qr-placeholder {
+        background-color: #e5e7eb;
+        border: 1px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 0.3s ease, height 0.3s ease;
+    }
+    .preview-qr-placeholder .material-icons {
+        font-size: 48px;
+        color: #9ca3af;
+    }
 </style>
 
 <main class="container mx-auto px-4 sm:px-6 py-8">
@@ -174,8 +210,15 @@ $qrSizeOptions = [
             </div>
 
             <div class="space-y-8">
-                <div class="card">
+                <div class="card" id="thermal-settings-card">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-3 border-b">Pengaturan Template Thermal</h3>
+                    
+                    <div id="preview-container-wrapper" class="mb-6">
+                        <h4 class="form-label text-center text-sm mb-2">Pratinjau Label Real-time</h4>
+                        <div id="thermal-preview-container">
+                            </div>
+                    </div>
+                    
                     <div class="mb-6 pb-6 border-b">
                         <label for="print_template" class="form-label text-lg">Template Cetak</label>
                         <select name="print_template" id="print_template" class="form-select">
@@ -197,7 +240,7 @@ $qrSizeOptions = [
                                     echo '<div class="field-group-header">' . htmlspecialchars($currentGroup) . '</div>';
                                 }
                             ?>
-                                <div class="field-config-item">
+                                <div class="field-config-item" data-field-key="<?php echo $fieldKey; ?>">
                                     <input type="checkbox" name="thermal_fields_config[<?php echo $fieldKey; ?>][visible]" value="1" class="visibility-checkbox" <?php echo ($fieldConfig['visible']) ? 'checked' : ''; ?>>
                                     <span class="field-name" title="<?php echo htmlspecialchars($fieldConfig['label']); ?>"><?php echo htmlspecialchars($fieldConfig['label']); ?></span>
                                     <input type="text" name="thermal_fields_config[<?php echo $fieldKey; ?>][custom_label]" class="form-input form-input-sm" value="<?php echo htmlspecialchars($fieldConfig['custom_label'] ?? ''); ?>" placeholder="Default">
@@ -238,6 +281,122 @@ $qrSizeOptions = [
         </div>
     </form>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const settingsForm = document.getElementById('settingsForm');
+    const previewContainer = document.getElementById('thermal-preview-container');
+
+    function getPreviewSettings() {
+        const settings = {
+            template: document.getElementById('print_template').value,
+            width: document.getElementById('thermal_paper_width_mm').value,
+            height: document.getElementById('thermal_paper_height_mm').value,
+            qrPosition: document.getElementById('thermal_qr_position').value,
+            qrSize: document.getElementById('thermal_qr_size').value,
+            customText1: document.getElementById('thermal_custom_text_1').value,
+            customText2: document.getElementById('thermal_custom_text_2').value,
+            fields: []
+        };
+        
+        document.querySelectorAll('.field-config-item').forEach(item => {
+            const key = item.dataset.fieldKey;
+            settings.fields.push({
+                key: key,
+                label: item.querySelector('.field-name').textContent,
+                visible: item.querySelector('.visibility-checkbox').checked,
+                order: parseInt(item.querySelector('input[type="number"]').value, 10),
+                hideLabel: item.querySelector('.hide-label-checkbox').checked,
+                customLabel: item.querySelector('input[type="text"]').value
+            });
+        });
+        settings.fields.sort((a, b) => a.order - b.order);
+        return settings;
+    }
+
+    function updatePreview() {
+        const settings = getPreviewSettings();
+        const previewWrapper = document.getElementById('preview-container-wrapper');
+        const availableWidth = previewWrapper.clientWidth - 32;
+        const scale = availableWidth < settings.width ? availableWidth / settings.width : 1;
+        
+        previewContainer.style.width = `${settings.width}mm`;
+        previewContainer.style.height = `${settings.height}mm`;
+        previewContainer.style.transform = `scale(${scale})`;
+        previewContainer.style.fontSize = settings.template === 'half' ? '6pt' : '10pt';
+
+        // Logika untuk konten tetap sama
+        let mainFlexDirection = 'column';
+        let qrOrder = 1, contentOrder = 0;
+        let qrAlignSelf = 'center', contentTextAlign = 'center', sectionJustify = 'center';
+        if (settings.qrPosition.startsWith('top')) { qrOrder = 0; contentOrder = 1; }
+        if (settings.qrPosition.includes('left')) { qrAlignSelf = 'flex-start'; contentTextAlign = 'left'; sectionJustify = 'flex-start'; }
+        if (settings.qrPosition.includes('right')) { qrAlignSelf = 'flex-end'; contentTextAlign = 'right'; sectionJustify = 'flex-end'; }
+        if (settings.qrPosition.startsWith('middle')) { mainFlexDirection = 'row'; }
+        if (settings.qrPosition === 'middle_left') { qrOrder = 0; contentOrder = 1; contentTextAlign = 'left'; sectionJustify = 'flex-start';}
+        if (settings.qrPosition === 'middle_right') { qrOrder = 1; contentOrder = 0; contentTextAlign = 'left'; sectionJustify = 'flex-start';}
+        
+        const qrSizeMap = { small: '25mm', medium: '30mm', large: '35mm' };
+        const qrSize = qrSizeMap[settings.qrSize] || '30mm';
+        
+        let customTextHtml = '';
+        if (settings.fields.find(f => f.key === 'custom_text_1')?.visible && settings.customText1) { customTextHtml += `<div style="font-size: ${settings.template === 'half' ? '7pt' : '12pt'}; line-height: 1.1; font-weight: bold;">${settings.customText1}</div>`; }
+        if (settings.fields.find(f => f.key === 'custom_text_2')?.visible && settings.customText2) { customTextHtml += `<div style="font-size: ${settings.template === 'half' ? '7pt' : '12pt'}; line-height: 1.1; font-weight: bold;">${settings.customText2}</div>`; }
+
+        let fieldsHtml = '';
+        settings.fields.forEach(field => {
+            if (!field.visible || ['custom_text_1', 'custom_text_2'].includes(field.key)) return;
+            const labelText = field.customLabel || field.label;
+            const valueText = { item_name: "Nama Item Contoh", label_title: "Judul Label Contoh", created_at: "12/08/25 00:00", expiry_date: "19/08/25 00:00" }[field.key] || "Data Contoh";
+            
+            const fontSize = settings.template === 'half' ? '7pt' : '12pt';
+
+            if (field.key === 'item_name') {
+                fieldsHtml += `<div style="font-size: ${fontSize}; margin-bottom: 1.5mm; line-height: 1.1;">${valueText}</div>`;
+            } else {
+                fieldsHtml += `<div style="margin-bottom: 1mm; display: flex; justify-content: ${sectionJustify}; align-items: baseline;">`;
+                if (!field.hideLabel) { fieldsHtml += `<strong style="margin-right: 1mm; flex-shrink: 0;">${labelText}:</strong>`; }
+                fieldsHtml += `<span style="word-break: break-all; text-align: left;">${valueText}</span></div>`;
+            }
+        });
+        
+        const qrHtml = `<div class="preview-qr-placeholder" style="width: ${qrSize}; height: ${qrSize};"><span class="material-icons">qr_code_2</span></div>`;
+        const separatorHtml = customTextHtml && fieldsHtml ? '<div style="width: 85%; height: 0.5px; background-color: #333; margin: 1mm auto 1.5mm auto; flex-shrink: 0;"></div>' : '';
+
+        // *** PERUBAHAN UTAMA DI SINI ***
+        let finalHtml = '';
+        const contentBlock = `
+            <div style="text-align: center; margin-bottom: 1mm; flex-shrink: 0;">${customTextHtml}</div>
+            ${separatorHtml}
+            <div style="display: flex; flex-direction: ${mainFlexDirection}; flex-grow: 1; width: 100%; overflow: hidden;">
+                <div style="order: ${contentOrder}; text-align: ${contentTextAlign}; overflow: hidden; display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">${fieldsHtml}</div>
+                <div style="order: ${qrOrder}; align-self: ${qrAlignSelf}; text-align: center; flex-shrink: 0; margin-top: auto; padding-top: 1mm;">${qrHtml}</div>
+            </div>`;
+
+        if (settings.template === 'half') {
+            finalHtml = `
+                <div style="display: flex; width: 100%; height: 100%; position: relative;">
+                    <div style="width: 50%; height: 100%; padding: 2mm; box-sizing: border-box; display: flex; flex-direction: column;">
+                        ${contentBlock}
+                    </div>
+                    <div style="position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed #9ca3af;"></div>
+                    <div style="width: 50%; height: 100%;"></div>
+                </div>`;
+        } else {
+            finalHtml = `
+                <div style="padding: 2mm; box-sizing: border-box; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden;">
+                    ${contentBlock}
+                </div>`;
+        }
+        
+        previewContainer.innerHTML = finalHtml;
+    }
+
+    settingsForm.addEventListener('input', updatePreview);
+    settingsForm.addEventListener('change', updatePreview);
+    updatePreview();
+});
+</script>
+
 <?php
 require_once 'footer.php';
 ?>

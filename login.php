@@ -1,9 +1,9 @@
 <?php
 /**
- * Login Page (Revamped with Compact, High-Focus Floating Card)
+ * Login Page (Revamped with Consistent Animated Gradient)
  *
- * This version features a slimmer floating card with a larger logo
- * over a darkened, dynamic background from Pexels for maximum focus and elegance.
+ * This version features a subtle, slow-moving animated gradient background
+ * using a color palette consistent with the main application's theme.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -16,7 +16,6 @@
  */
 declare(strict_types=1);
 
-// Include config.php untuk mendapatkan $app_settings
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
 } else {
@@ -30,46 +29,6 @@ if (file_exists(__DIR__ . '/config.php')) {
 $appInstanceName = $app_settings['app_instance_name'] ?? 'Sterilabel';
 $appLogoFilename = $app_settings['app_logo_filename'] ?? '';
 $pageTitle = "Login - " . htmlspecialchars($appInstanceName);
-
-// --- Logika untuk Gambar Latar Dinamis dari Pexels API ---
-define('PEXELS_API_KEY', '1f478h1hjNoLlpfJ5BpjR0oTaynmVOGAot3zomNGIgCJTmayDfLUVpQd');
-
-function getPexelsImage() {
-    if (PEXELS_API_KEY === 'MASUKKAN_KUNCI_API_PEXELS_ANDA_DI_SINI' || PEXELS_API_KEY === '') {
-        return 'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260';
-    }
-
-    $themes = ['operating room', 'laboratory', 'microscope', 'technology', 'minimalist abstract'];
-    $random_theme = $themes[array_rand($themes)];
-    
-    $url = "https://api.pexels.com/v1/search?" . http_build_query([
-        'query' => $random_theme,
-        'per_page' => 1,
-        'page' => rand(1, 100),
-        'orientation' => 'landscape'
-    ]);
-
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_HTTPHEADER => ["Authorization: " . PEXELS_API_KEY],
-    ]);
-
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
-    curl_close($curl);
-
-    if ($err) {
-        return 'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260';
-    } else {
-        $data = json_decode($response, true);
-        return $data['photos'][0]['src']['large2x'] ?? 'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260';
-    }
-}
-
-$background_image_url = getPexelsImage();
 
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: index.php");
@@ -137,108 +96,140 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         body { 
             font-family: 'Nunito', sans-serif;
-            background-color: #1a202c; /* Latar belakang dasar jika gambar gagal dimuat */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-            z-index: 1;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
-        body::before { /* Overlay gelap untuk fokus */
-            content: '';
+        .gradient-bg {
+            width: 100vw;
+            height: 100vh;
+            /* PERUBAHAN: Warna gradasi disesuaikan dengan tema aplikasi */
+            background: linear-gradient(-45deg, #f4f7f6, #dbeafe, #bfdbfe, #3b82f6);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             position: fixed;
-            top: 0; right: 0; bottom: 0; left: 0;
-            background-color: rgba(0, 0, 0, 0.6); /* Overlay lebih gelap */
+            top: 0;
+            left: 0;
             z-index: -1;
         }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
         .login-container {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 1rem;
+            padding: 1.5rem;
         }
-        /* PERUBAHAN: Kartu lebih ramping */
         .login-card {
             width: 100%;
-            max-width: 380px; 
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 0.75rem;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px; 
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2.5rem;
         }
-        /* PERUBAHAN: Logo lebih besar */
         .branding-logo { 
-            max-height: 60px; /* Ukuran lebih besar */
-            margin-bottom: 1rem; 
+            max-height: 50px; 
+            margin-bottom: 0.5rem; 
             display: block; 
             margin-left: auto; 
             margin-right: auto; 
         }
+        
         .form-input-group { position: relative; }
         .form-input-group .material-icons { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: #9ca3af; }
         .form-input { 
-            border-radius: 0.375rem; padding: 0.6rem 1rem 0.6rem 2.75rem; border: 1px solid #d1d5db; 
-            width: 100%; transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: white;
+            border-radius: 6px; 
+            padding: 10px 10px 10px 2.75rem; 
+            border: 1px solid #d1d5db; 
+            width: 100%; 
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); outline: none; }
+        .form-input:focus { 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.3); 
+            outline: none; 
+        }
+        
         .btn-login { 
-            padding: 0.6rem; border-radius: 0.375rem; font-weight: 700; transition: background-color 0.3s ease; 
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            background-color: #3b82f6; color: white; width: 100%;
+            padding: 0.75rem; 
+            border-radius: 6px; 
+            font-weight: 600; 
+            transition: background-color 0.3s ease; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer;
+            background-color: #3b82f6; 
+            color: white; 
+            width: 100%;
+            border: 1px solid #3b82f6;
         }
-        .btn-login:hover { background-color: #2563eb; }
+        .btn-login:hover { background-color: #2563eb; border-color: #2563eb; }
+        
         .alert-login {
-            background-color: #fee2e2; border-left: 4px solid #ef4444; color: #b91c1c;
-            padding: 0.75rem; margin-bottom: 1.25rem; font-size: 0.875rem; font-weight: 500;
+            background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b;
+            padding: 1rem; margin-bottom: 1.5rem; font-size: 0.875rem; font-weight: 500;
+            border-radius: 6px; display: flex; align-items: center;
         }
-        .text-center h2 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-        .text-center p { font-size: 0.875rem; color: #6b7280; }
+        .alert-login .material-icons { margin-right: 0.5rem; }
     </style>
 </head>
-<body style="background-image: url('<?php echo $background_image_url; ?>');">
+<body>
+    <div class="gradient-bg"></div>
     <div class="login-container">
         <div class="login-card">
-            <div class="text-center mb-6">
-                <?php if (!empty($appLogoFilename) && file_exists('uploads/' . $appLogoFilename)): ?>
+            <div class="text-center mb-8">
+                 <?php if (!empty($appLogoFilename) && file_exists('uploads/' . $appLogoFilename)): ?>
                     <img src="uploads/<?php echo htmlspecialchars($appLogoFilename); ?>" alt="Logo" class="branding-logo">
                 <?php else: ?>
-                    <span class="material-icons text-6xl text-blue-600 mb-2">qr_code_scanner</span>
+                    <img src="https://i.ibb.co/L0SM53S/focus-16747631.png" alt="Default Logo" class="branding-logo">
                 <?php endif; ?>
-                <h2 class="font-bold text-gray-800"><?php echo htmlspecialchars($appInstanceName); ?></h2>
-                <p>Silakan masuk untuk melanjutkan</p>
+                <h1 class="text-2xl font-bold text-gray-800"><?php echo htmlspecialchars($appInstanceName); ?></h1>
+                <p class="text-gray-500 text-sm mt-1">Silakan masuk untuk memulai sesi Anda</p>
             </div>
-            
+
             <?php if(!empty($login_err)): ?>
                 <div class="alert-login" role="alert">
-                    <?php echo htmlspecialchars($login_err); ?>
+                    <span class="material-icons">error_outline</span>
+                    <span><?php echo htmlspecialchars($login_err); ?></span>
                 </div>
             <?php endif; ?>
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" novalidate>
-                <div class="space-y-4">
-                    <div class="form-input-group">
-                        <span class="material-icons">person</span>
-                        <input type="text" name="username" placeholder="Username" class="form-input <?php echo (!empty($username_err)) ? 'border-red-500' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>" required>
+                <div class="space-y-5">
+                    <div>
+                        <label for="username" class="font-semibold text-gray-700 text-sm">Username</label>
+                        <div class="form-input-group mt-1">
+                            <span class="material-icons">person</span>
+                            <input type="text" id="username" name="username" class="form-input <?php echo (!empty($username_err)) ? 'border-red-500' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>" required>
+                        </div>
+                        <?php if(!empty($username_err)): ?>
+                            <p class="text-red-600 text-xs mt-1"><?php echo htmlspecialchars($username_err); ?></p>
+                        <?php endif; ?>
                     </div>
-                    <div class="form-input-group">
-                         <span class="material-icons">lock</span>
-                        <input type="password" name="password" placeholder="Password" class="form-input <?php echo (!empty($password_err)) ? 'border-red-500' : ''; ?>" required>
+                    <div>
+                        <label for="password" class="font-semibold text-gray-700 text-sm">Password</label>
+                        <div class="form-input-group mt-1">
+                            <span class="material-icons">lock</span>
+                            <input type="password" id="password" name="password" class="form-input <?php echo (!empty($password_err)) ? 'border-red-500' : ''; ?>" required>
+                        </div>
+                         <?php if(!empty($password_err)): ?>
+                            <p class="text-red-600 text-xs mt-1"><?php echo htmlspecialchars($password_err); ?></p>
+                        <?php endif; ?>
                     </div>
                 </div>
                 
-                <?php if(!empty($username_err) || !empty($password_err)): ?>
-                    <p class="text-red-500 text-sm mt-2">
-                        <?php echo htmlspecialchars($username_err ?: $password_err); ?>
-                    </p>
-                <?php endif; ?>
-                
-                <div class="mt-6">
-                    <button type="submit" class="btn-login">Login</button>
+                <div class="mt-8">
+                    <button type="submit" class="btn-login">
+                        <span>Login</span>
+                    </button>
                 </div>
             </form>
         </div>

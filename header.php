@@ -17,7 +17,7 @@
 declare(strict_types=1);
 
 // --- TANDAI WAKTU MULAI & VERSI APLIKASI ---
-define('APP_VERSION', '1.4.0');
+define('APP_VERSION', '2.0.0'); // <--- VERSI DIPERBARUI DI SINI
 $page_load_start = microtime(true);
 
 if (file_exists('config.php')) {
@@ -222,11 +222,17 @@ function render_breadcrumbs(string $currentPageTitle = ''): void
         $typeClass = is_array($flash['text']) ? 'alert-flash-danger' : 'alert-flash-' . ($flash['type'] ?? 'info');
         echo "<div class='alert-flash " . $typeClass . "'>";
         echo "<span class='material-icons'>info</span><span>";
+        
+        // --- PERBAIKAN DI SINI ---
         if (is_array($flash['text'])) {
+            // Jika array, setiap elemen di-escape (aman)
             echo implode('<br>', array_map('htmlspecialchars', $flash['text']));
         } else {
-            echo htmlspecialchars($flash['text']);
+            // Jika string, cetak langsung tanpa escape (karena sudah disiapkan dengan HTML)
+            echo $flash['text'];
         }
+        // --- AKHIR PERBAIKAN ---
+
         echo "</span></div>";
         unset($_SESSION['flash_message']);
     }

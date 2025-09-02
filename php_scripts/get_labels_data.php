@@ -36,6 +36,7 @@ $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 $itemTypeFilter = trim($_GET['item_type'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+$departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT); // Filter baru
 
 $response = ['success' => false, 'data' => [], 'pagination' => []];
 $conn = connectToDatabase();
@@ -46,7 +47,8 @@ if ($conn) {
 
     $baseJoins = "FROM sterilization_records sr
                   LEFT JOIN users u ON sr.created_by_user_id = u.user_id 
-                  LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id";
+                  LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id
+                  LEFT JOIN departments d ON sr.destination_department_id = d.department_id";
 
     $whereClause = " WHERE 1=1";
     $params = [];
@@ -62,6 +64,7 @@ if ($conn) {
     if (!empty($dateEnd)) { $whereClause .= " AND DATE(sr.created_at) <= ?"; $params[] = $dateEnd; $types .= "s"; }
     if (!empty($itemTypeFilter)) { $whereClause .= " AND sr.item_type = ?"; $params[] = $itemTypeFilter; $types .= "s"; }
     if (!empty($statusFilter)) { $whereClause .= " AND sr.status = ?"; $params[] = $statusFilter; $types .= "s"; }
+    if ($departmentFilter) { $whereClause .= " AND sr.destination_department_id = ?"; $params[] = $departmentFilter; $types .= "i"; } // Filter baru ditambahkan
     
     // Count total records
     $sqlCount = "SELECT COUNT(sr.record_id) as total " . $baseJoins . $whereClause;
@@ -76,9 +79,11 @@ if ($conn) {
 
     // Fetch data for the current page
     $labels = [];
+    $setIdsToCheck = [];
     if ($totalRecords > 0) {
-        $sqlData = "SELECT sr.record_id, sr.label_unique_id, sr.item_type, sr.label_title, sr.created_at, sr.expiry_date, sr.status, 
-                           u.full_name as creator_name, sl.load_name
+        // --- PERUBAHAN: Menambahkan item_id dan label_items_snapshot ke SELECT ---
+        $sqlData = "SELECT sr.record_id, sr.label_unique_id, sr.item_type, sr.item_id, sr.label_items_snapshot, sr.label_title, sr.created_at, sr.expiry_date, sr.status, 
+                           u.full_name as creator_name, sl.load_name, d.department_name as destination_department_name
                     {$baseJoins}
                     {$whereClause}
                     ORDER BY sr.created_at DESC
@@ -97,10 +102,55 @@ if ($conn) {
                 $row['status_class'] = $statusInfo['class'];
                 $row['row_status_class'] = 'tr-status-' . str_replace([' ', '_'], '-', strtolower($row['status']));
                 $labels[] = $row;
+                if ($row['item_type'] === 'set') {
+                    $setIdsToCheck[] = $row['item_id'];
+                }
             }
             $stmtData->close();
         }
     }
+
+    // --- PERUBAHAN: Logika untuk membandingkan snapshot dengan master set ---
+    $masterSetsData = [];
+    if (!empty($setIdsToCheck)) {
+        $uniqueSetIds = array_unique($setIdsToCheck);
+        $setPlaceholders = implode(',', array_fill(0, count($uniqueSetIds), '?'));
+        $setTypes = str_repeat('i', count($uniqueSetIds));
+        
+        $sqlMaster = "SELECT set_id, instrument_id, quantity FROM instrument_set_items WHERE set_id IN ($setPlaceholders)";
+        if ($stmtMaster = $conn->prepare($sqlMaster)) {
+            $stmtMaster->bind_param($setTypes, ...$uniqueSetIds);
+            $stmtMaster->execute();
+            $resultMaster = $stmtMaster->get_result();
+            while($item = $resultMaster->fetch_assoc()) {
+                $masterSetsData[$item['set_id']][] = ['instrument_id' => (int)$item['instrument_id'], 'quantity' => (int)$item['quantity']];
+            }
+            $stmtMaster->close();
+        }
+    }
+
+    foreach ($labels as &$label) {
+        $label['is_modified'] = false; // Default
+        if ($label['item_type'] === 'set') {
+            $snapshot = json_decode($label['label_items_snapshot'] ?? '[]', true);
+            $master = $masterSetsData[$label['item_id']] ?? [];
+
+            // Normalisasi: urutkan berdasarkan instrument_id untuk perbandingan yang konsisten
+            usort($snapshot, fn($a, $b) => $a['instrument_id'] <=> $b['instrument_id']);
+            usort($master, fn($a, $b) => $a['instrument_id'] <=> $b['instrument_id']);
+            
+            // Konversi ke int untuk konsistensi tipe data dari JSON
+            $snapshotNormalized = array_map(function($item) {
+                return ['instrument_id' => (int)$item['instrument_id'], 'quantity' => (int)$item['quantity']];
+            }, $snapshot);
+
+            if (json_encode($snapshotNormalized) !== json_encode($master)) {
+                $label['is_modified'] = true;
+            }
+        }
+    }
+    unset($label); // Hapus referensi terakhir
+    // --- AKHIR PERUBAHAN ---
 
     $response = [
         'success' => true,
