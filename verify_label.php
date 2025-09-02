@@ -1,9 +1,9 @@
 <?php
 /**
- * Verify Label Page (Internal) - Enriched Timeline & Internal Notes UI/UX Revamp v8
+ * Verify Label Page (Internal) - Enriched Timeline & Internal Notes UI/UX Revamp v9
  *
- * This version adds an interactive internal notes section for authorized users,
- * completing the audit trail functionality.
+ * This version adds the display of proof-of-use and proof-of-issue images
+ * directly into the timeline for complete visual auditing.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -48,9 +48,9 @@ if ($conn) {
         $stmtUpdate->close();
     }
 
-    $sql = "SELECT 
-                sr.*, 
-                creator.full_name as creator_full_name, 
+    $sql = "SELECT
+                sr.*, sr.usage_proof_filename, sr.issue_proof_filename,
+                creator.full_name as creator_full_name,
                 validator.full_name as validator_full_name,
                 sc.machine_name, sc.cycle_number, sc.cycle_date, sc.status as cycle_status,
                 cycle_operator.full_name as cycle_operator_name,
@@ -67,15 +67,15 @@ if ($conn) {
             LEFT JOIN departments dest_dept ON sl.destination_department_id = dest_dept.department_id
             LEFT JOIN instruments i ON sr.item_type = 'instrument' AND sr.item_id = i.instrument_id
             WHERE sr.label_unique_id = ?";
-    
+
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("s", $labelUniqueIdFromGet);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result && $result->num_rows === 1) {
             $labelDetails = $result->fetch_assoc();
-            
+
             $statusInfo = getUniversalStatusBadge($labelDetails['status']);
             $labelDetails['status_display'] = $statusInfo['text'];
             $labelStatusClass = $statusInfo['class'];
@@ -94,11 +94,11 @@ if ($conn) {
                             $resultSnapshot = $stmtSnapshot->get_result();
                             while($row = $resultSnapshot->fetch_assoc()){ $instrumentDetailsMap[$row['instrument_id']] = $row; }
                             $stmtSnapshot->close();
-                            
-                            foreach($snapshotData as $item){ 
-                                $setInstrumentsList[] = [ 
-                                    'instrument_name' => $instrumentDetailsMap[$item['instrument_id']]['instrument_name'] ?? 'Instrumen Dihapus', 
-                                    'instrument_code' => $instrumentDetailsMap[$item['instrument_id']]['instrument_code'] ?? '-', 
+
+                            foreach($snapshotData as $item){
+                                $setInstrumentsList[] = [
+                                    'instrument_name' => $instrumentDetailsMap[$item['instrument_id']]['instrument_name'] ?? 'Instrumen Dihapus',
+                                    'instrument_code' => $instrumentDetailsMap[$item['instrument_id']]['instrument_code'] ?? '-',
                                     'quantity' => $item['quantity'],
                                     'image_filename' => $instrumentDetailsMap[$item['instrument_id']]['image_filename'] ?? null
                                 ];
@@ -155,7 +155,6 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
         font-size: 32px;
         color: #9ca3af;
     }
-    /* --- PERUBAHAN: Menambahkan cursor pointer untuk thumbnail di tabel --- */
     .instrument-list-thumbnail {
         width: 40px;
         height: 40px;
@@ -182,8 +181,6 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
         color: #9ca3af; /* gray-400 */
         font-size: 20px;
     }
-    /* --- AKHIR PERUBAHAN --- */
-
     #imageModal.active {
         opacity: 1;
         visibility: visible;
@@ -208,10 +205,26 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
     #imageModal .no-image-placeholder .material-icons {
         font-size: 4rem;
     }
+    .proof-thumbnail-container {
+        margin-top: 0.75rem; /* 12px */
+    }
+    .proof-thumbnail {
+        width: 80px;
+        height: 80px;
+        border-radius: 0.5rem; /* rounded-lg */
+        border: 2px solid #e5e7eb;
+        object-fit: cover;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .proof-thumbnail:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
 </style>
 
 <main class="container mx-auto px-4 sm:px-6 py-8">
-    
+
     <div class="label-view-wrapper">
         <?php if (!empty($pageErrorMessage)): ?>
             <div class="alert alert-danger" role="alert"><span class="material-icons">error_outline</span><span><?php echo htmlspecialchars($pageErrorMessage); ?></span></div>
@@ -219,10 +232,10 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
             <div class="card p-0">
                 <div class="p-6 border-b">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                        
+
                         <div class="flex items-start gap-4">
-                            <div id="itemThumbnail" class="item-thumbnail" 
-                                data-image-src="<?php 
+                            <div id="itemThumbnail" class="item-thumbnail"
+                                data-image-src="<?php
                                     if ($labelDetails['item_type'] === 'instrument' && !empty($labelDetails['image_filename']) && file_exists('uploads/instruments/' . $labelDetails['image_filename'])) {
                                         echo 'uploads/instruments/' . htmlspecialchars($labelDetails['image_filename']);
                                     } else {
@@ -285,10 +298,20 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                             <p class="font-semibold text-gray-800">Status Akhir Label</p>
                             <?php if($labelDetails['status'] === 'used' && !empty($labelDetails['used_at'])): ?>
                                 <p class="text-sm text-gray-600">Telah digunakan pada <?php echo (new DateTime($labelDetails['used_at']))->format('d M Y, H:i:s'); ?>.</p>
+                                <?php if (!empty($labelDetails['usage_proof_filename']) && file_exists('uploads/usage_proof/' . $labelDetails['usage_proof_filename'])): ?>
+                                    <div class="proof-thumbnail-container">
+                                        <img src="uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>" alt="Bukti Penggunaan" class="proof-thumbnail" onclick="showImageModal('uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>', 'instrument')">
+                                    </div>
+                                <?php endif; ?>
                             <?php elseif($labelDetails['status'] === 'expired'): ?>
                                 <p class="text-sm text-gray-600">Kedaluwarsa pada <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php elseif($labelDetails['status'] === 'recalled'): ?>
                                 <p class="text-sm text-red-600 font-medium">Ditarik Kembali (Recalled)</p>
+                                <?php if (!empty($labelDetails['issue_proof_filename']) && file_exists('uploads/issue_proof/' . $labelDetails['issue_proof_filename'])): ?>
+                                    <div class="proof-thumbnail-container">
+                                        <img src="uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>" alt="Bukti Masalah" class="proof-thumbnail" onclick="showImageModal('uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>', 'instrument')">
+                                    </div>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <p class="text-sm text-gray-600">Label masih aktif dan siap digunakan hingga <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php endif; ?>
@@ -307,7 +330,7 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                                     <tr>
                                         <td>
                                             <div class="instrument-list-thumbnail"
-                                                data-image-src="<?php 
+                                                data-image-src="<?php
                                                     if (!empty($instrument['image_filename']) && file_exists('uploads/instruments/' . $instrument['image_filename'])) {
                                                         echo 'uploads/instruments/' . htmlspecialchars($instrument['image_filename']);
                                                     } else {
@@ -374,7 +397,7 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
             </div>
         </div>
     </div>
-    
+
     <div id="qrCodeModal" class="modal-overlay"><div class="qr-code-modal-content"><h3 class="text-lg font-bold mb-4">QR Code Label</h3><div id="qrCodeImageContainer"><?php if (!$qrLibMissing && !empty($labelDetails['label_unique_id'])) { $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) ? "https://" : "http://"; $host = $_SERVER['HTTP_HOST']; $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); if ($basePath === '/' || $basePath === '\\') $basePath = ''; $qrData = $protocol . $host . $basePath . "/handle_qr_scan.php?uid=" . urlencode($labelDetails['label_unique_id']); ob_start(); QRcode::png($qrData, null, QR_ECLEVEL_L, 10, 2); $imageData = ob_get_contents(); ob_end_clean(); echo '<img src="data:image/png;base64,' . base64_encode($imageData) . '" alt="QR Code">'; } else { echo '<p class="text-red-500">Gagal membuat QR Code.</p>'; } ?></div><p class="text-sm text-gray-600 mt-2 font-mono"><?php echo htmlspecialchars($labelDetails['label_unique_id'] ?? ''); ?></p><button id="closeQrModalBtn" class="btn btn-secondary mt-6">Tutup</button></div></div>
 
     <div id="imageModal" class="modal-overlay">
@@ -400,14 +423,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitConfirmUsedBtn = document.getElementById('submitConfirmUsedBtn');
     const markAsUsedForm = document.getElementById('markAsUsedForm');
 
-    // --- PERUBAHAN: Dapatkan referensi ke elemen modal gambar & isinya ---
     const imageModal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const noImagePlaceholder = document.getElementById('noImagePlaceholder');
     const noImageIcon = noImagePlaceholder.querySelector('.material-icons');
     const noImageText = noImagePlaceholder.querySelector('p');
 
-    // Fungsi untuk menampilkan modal gambar dengan konten yang sesuai
     function showImageModal(imageSrc, itemType) {
         if (imageSrc) {
             modalImage.src = imageSrc;
@@ -422,7 +443,6 @@ document.addEventListener('DOMContentLoaded', function() {
         imageModal.classList.add('active');
     }
 
-    // Event listener untuk thumbnail utama (atas)
     const itemThumbnail = document.getElementById('itemThumbnail');
     if (itemThumbnail) {
         itemThumbnail.addEventListener('click', () => {
@@ -432,18 +452,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- PERUBAHAN: Event listener untuk semua thumbnail di tabel rincian set ---
     const instrumentThumbnails = document.querySelectorAll('.instrument-list-thumbnail');
     instrumentThumbnails.forEach(thumbnail => {
         thumbnail.addEventListener('click', () => {
             const imageSrc = thumbnail.dataset.imageSrc;
-            const itemType = thumbnail.dataset.itemType; // Ini akan selalu 'instrument'
+            const itemType = thumbnail.dataset.itemType;
             showImageModal(imageSrc, itemType);
         });
     });
-    // --- AKHIR PERUBAHAN ---
 
-    // Menutup modal gambar saat mengklik area gelap di sekitarnya
     if (imageModal) {
         imageModal.addEventListener('click', (e) => {
             if (e.target === imageModal) {

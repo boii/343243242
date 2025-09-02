@@ -1,9 +1,9 @@
 <?php
 /**
- * Mark Label as Used from Public Page (with Nerd Details Logging & User Note)
+ * Mark Label as Used from Public Page (with Nerd Details Logging, User Note & Image Upload)
  *
- * This version captures a user-provided note along with device/IP details
- * and saves them into dedicated columns for enhanced auditing.
+ * This version captures a user-provided note and an optional proof image,
+ * along with device/IP details and saves them for enhanced auditing.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-require_once '../config.php'; 
+require_once '../config.php';
 
 header('Content-Type: application/json');
 
@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$inputJSON = file_get_contents('php://input');
-$input = json_decode($inputJSON, true);
-
-$labelUid = trim($input['label_uid'] ?? '');
-$userNote = trim($input['note'] ?? '');
+// Data sekarang datang dari $_POST karena menggunakan FormData
+$labelUid = trim($_POST['label_uid'] ?? '');
+$userNote = trim($_POST['note'] ?? '');
+$imageFile = $_FILES['usage_proof_image'] ?? null;
+$newImageFilename = null;
 
 if (empty($labelUid)) {
     $response['message'] = 'ID Label tidak boleh kosong.';
@@ -48,6 +48,35 @@ if (!$conn) {
 }
 
 try {
+    // --- Logika Upload Gambar ---
+    if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/usage_proof/';
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                throw new Exception("Gagal membuat direktori penyimpanan bukti.");
+            }
+        }
+
+        $maxFileSize = 2 * 1024 * 1024; // 2 MB
+        if ($imageFile['size'] > $maxFileSize) {
+            throw new Exception("Ukuran file gambar terlalu besar. Maksimal 2MB.");
+        }
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $fileMimeType = mime_content_type($imageFile['tmp_name']);
+        if (!in_array($fileMimeType, $allowedMimeTypes)) {
+            throw new Exception("Format file tidak diizinkan. Harap unggah JPG, PNG, atau WebP.");
+        }
+
+        $fileExtension = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+        $newImageFilename = 'proof_' . $labelUid . '_' . time() . '.' . $fileExtension;
+        $targetPath = $uploadDir . $newImageFilename;
+
+        if (!move_uploaded_file($imageFile['tmp_name'], $targetPath)) {
+            throw new Exception("Gagal menyimpan file gambar yang diunggah.");
+        }
+    }
+
     $conn->begin_transaction();
 
     $sqlGetLabel = "SELECT record_id, status, notes FROM sterilization_records WHERE label_unique_id = ? LIMIT 1 FOR UPDATE";
@@ -67,41 +96,48 @@ try {
     if ($label['status'] !== 'active') {
         throw new Exception("Item ini sudah tidak aktif dan tidak bisa diubah statusnya.");
     }
-    
-    // --- Menangkap Detail Teknis ---
+
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'Unknown IP';
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device';
-    
-    // --- Memformat catatan baru (hanya catatan publik) ---
+
     $publicNote = "USED: " . date('d-m-Y H:i');
     if (!empty($userNote)) {
         $publicNote .= " - Oleh: " . htmlspecialchars($userNote);
     }
-    
-    // Gabungkan hanya catatan publik dengan yang sudah ada
+
     $updatedNotes = $publicNote . "\n-----------------\n" . $existingNotes;
-    
-    // --- PERUBAHAN: UPDATE query untuk menyertakan kolom baru ---
-    $sqlUpdate = "UPDATE sterilization_records SET status = 'used', used_at = NOW(), notes = ?, action_ip_address = ?, action_user_agent = ? WHERE record_id = ?";
+
+    // UPDATE query untuk menyertakan kolom baru `usage_proof_filename`
+    $sqlUpdate = "UPDATE sterilization_records
+                  SET status = 'used', used_at = NOW(), notes = ?,
+                      action_ip_address = ?, action_user_agent = ?, usage_proof_filename = ?
+                  WHERE record_id = ?";
     $stmtUpdate = $conn->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("sssi", $updatedNotes, $ipAddress, $userAgent, $recordId);
-    
+    // Tambahkan $newImageFilename ke bind_param
+    $stmtUpdate->bind_param("ssssi", $updatedNotes, $ipAddress, $userAgent, $newImageFilename, $recordId);
+
     if (!$stmtUpdate->execute()) {
         throw new Exception("Gagal memperbarui status item.");
     }
-    
-    // Memperbarui detail log
+
     $logDetails = "Label (UID: " . htmlspecialchars($labelUid) . ") ditandai 'Digunakan' via aksi publik.";
     if(!empty($userNote)) {
         $logDetails .= " Catatan: " . htmlspecialchars($userNote);
     }
+    if($newImageFilename) {
+        $logDetails .= " Dengan bukti foto: " . $newImageFilename;
+    }
     log_activity('PUBLIC_MARK_USED', null, $logDetails, 'label', $recordId);
-    
+
     $conn->commit();
     $response = ['success' => true, 'message' => 'Status item berhasil diperbarui menjadi "Telah Digunakan"!'];
 
 } catch (Exception $e) {
-    $conn->rollback();
+    if ($conn->inTransaction) $conn->rollback();
+    // Hapus file yang sudah terunggah jika terjadi error database
+    if ($newImageFilename && file_exists('../uploads/usage_proof/' . $newImageFilename)) {
+        unlink('../uploads/usage_proof/' . $newImageFilename);
+    }
     $response['message'] = $e->getMessage();
 } finally {
     if (isset($stmtGet)) $stmtGet->close();

@@ -1,9 +1,9 @@
 <?php
 /**
- * Mark Label as Recalled/Compromised from Public Page (with Nerd Details Logging)
+ * Mark Label as Recalled/Compromised from Public Page (with Nerd Details Logging & Image Upload)
  *
- * This version separates the public-facing reason from the internal-only
- * device and IP address details for enhanced auditing and security.
+ * This version handles an optional proof image upload, separates the public-facing
+ * reason from internal details, and saves all data for enhanced auditing.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -16,7 +16,7 @@
  */
 declare(strict_types=1);
 
-require_once '../config.php'; 
+require_once '../config.php';
 
 header('Content-Type: application/json');
 
@@ -27,11 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$inputJSON = file_get_contents('php://input');
-$input = json_decode($inputJSON, true);
+// Data sekarang datang dari $_POST karena menggunakan FormData
+$labelUid = trim($_POST['label_uid'] ?? '');
+$reason = trim($_POST['reason'] ?? '');
+$imageFile = $_FILES['issue_proof_image'] ?? null;
+$newImageFilename = null;
 
-$labelUid = trim($input['label_uid'] ?? '');
-$reason = trim($input['reason'] ?? '');
 
 if (empty($labelUid)) {
     $response['message'] = 'ID Label tidak boleh kosong.';
@@ -47,12 +48,43 @@ if (empty($reason)) {
 $conn = connectToDatabase();
 if (!$conn) {
     $response['message'] = 'Kesalahan koneksi database.';
-    http_response_code(500); 
+    http_response_code(500);
     echo json_encode($response);
     exit;
 }
 
 try {
+    // --- Logika Upload Gambar ---
+    if ($imageFile && $imageFile['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/issue_proof/';
+        if (!is_dir($uploadDir)) {
+            if (!mkdir($uploadDir, 0755, true)) {
+                throw new Exception("Gagal membuat direktori penyimpanan bukti masalah.");
+            }
+        }
+
+        $maxFileSize = 2 * 1024 * 1024; // 2 MB
+        if ($imageFile['size'] > $maxFileSize) {
+            throw new Exception("Ukuran file gambar terlalu besar. Maksimal 2MB.");
+        }
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $fileMimeType = mime_content_type($imageFile['tmp_name']);
+        if (!in_array($fileMimeType, $allowedMimeTypes)) {
+            throw new Exception("Format file tidak diizinkan. Harap unggah JPG, PNG, atau WebP.");
+        }
+
+        $fileExtension = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+        // Membuat nama file yang unik untuk bukti masalah
+        $newImageFilename = 'issue_' . $labelUid . '_' . time() . '.' . $fileExtension;
+        $targetPath = $uploadDir . $newImageFilename;
+
+        if (!move_uploaded_file($imageFile['tmp_name'], $targetPath)) {
+            throw new Exception("Gagal menyimpan file gambar yang diunggah.");
+        }
+    }
+
+
     $conn->begin_transaction();
 
     $sqlGetLabel = "SELECT record_id, status, notes FROM sterilization_records WHERE label_unique_id = ? LIMIT 1 FOR UPDATE";
@@ -73,36 +105,43 @@ try {
     if ($currentStatus !== 'active') {
         throw new Exception("Item ini sudah tidak aktif dan tidak dapat dilaporkan.");
     }
-    
-    // --- Menangkap Detail Teknis ---
+
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'Unknown IP';
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device';
-    
-    // --- Memformat catatan baru (hanya catatan publik) ---
+
     $publicNote = "RECALLED (public): " . date('d-m-Y H:i') . " - " . htmlspecialchars($reason);
-    
-    // Gabungkan hanya catatan publik dengan yang sudah ada
+
     $updatedNotes = $publicNote . "\n-----------------\n" . $existingNotes;
-    
-    // --- PERUBAHAN: UPDATE query untuk menyertakan kolom baru ---
-    $sqlUpdate = "UPDATE sterilization_records SET status = 'recalled', notes = ?, used_at = NULL, action_ip_address = ?, action_user_agent = ? WHERE record_id = ?";
+
+    // UPDATE query untuk menyertakan kolom baru issue_proof_filename
+    $sqlUpdate = "UPDATE sterilization_records
+                  SET status = 'recalled', notes = ?, used_at = NULL,
+                      action_ip_address = ?, action_user_agent = ?, issue_proof_filename = ?
+                  WHERE record_id = ?";
     $stmtUpdate = $conn->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("sssi", $updatedNotes, $ipAddress, $userAgent, $recordId);
-    
+    $stmtUpdate->bind_param("ssssi", $updatedNotes, $ipAddress, $userAgent, $newImageFilename, $recordId);
+
     if (!$stmtUpdate->execute()) {
         throw new Exception("Gagal memperbarui status item.");
     }
-    
+
     $logDetails = "Label (UID: " . htmlspecialchars($labelUid) . ") ditandai 'Recalled' via aksi publik. Alasan: " . htmlspecialchars($reason);
+    if ($newImageFilename) {
+        $logDetails .= " Dengan bukti foto: " . $newImageFilename;
+    }
     log_activity('PUBLIC_RECALL_LABEL', null, $logDetails, 'label', $recordId);
-    
+
     $conn->commit();
-    $response = ['success' => true, 'message' => 'Status item berhasil diperbarui menjadi "Ditarik Kembali"!'];
+    $response = ['success' => true, 'message' => 'Masalah berhasil dilaporkan! Status item telah diperbarui menjadi "Ditarik Kembali".'];
 
 } catch (Exception $e) {
-    $conn->rollback();
+    if ($conn->inTransaction) $conn->rollback();
+    // Hapus file yang sudah terunggah jika terjadi error database
+    if ($newImageFilename && file_exists('../uploads/issue_proof/' . $newImageFilename)) {
+        unlink('../uploads/issue_proof/' . $newImageFilename);
+    }
     $response['message'] = $e->getMessage();
-    http_response_code(422);
+    http_response_code(422); // Unprocessable Entity
 } finally {
     if (isset($stmtGet)) $stmtGet->close();
     if (isset($stmtUpdate)) $stmtUpdate->close();
