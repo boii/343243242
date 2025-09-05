@@ -1,50 +1,41 @@
 <?php
 /**
- * Process a Sterilization Load and Cycle (Direct to Complete - Simplified)
- *
- * This version is corrected to remove the 'sterilization_method' column from the INSERT query,
- * aligning it with the simplified database schema.
- * Adheres to PSR-12.
+ * Script untuk memproses muatan yang dipilih dan menautkannya ke siklus sterilisasi baru.
+ * Ini juga menghasilkan label unik untuk setiap item di dalam muatan dengan tanggal kadaluarsa yang tepat.
  *
  * PHP version 7.4 or higher
  *
  * @category BackendProcessing
  * @package  Sterilabel
- * @author   UI/UX Specialist
+ * @author   Your Name <you@example.com>
  * @license  MIT License
  * @link     null
  */
 declare(strict_types=1);
 
 require_once '../config.php';
+require_once '../app/helpers.php'; // Memastikan fungsi helper dimuat
 
 // --- Authorization & CSRF Check ---
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Akses ditolak.'];
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || !in_array($_SESSION['role'], ['admin', 'supervisor'])) {
+    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Akses ditolak. Silakan login.'];
+    header("Location: ../login.php");
+    exit;
+}
+if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Permintaan tidak valid.'];
     header("Location: ../manage_loads.php");
     exit;
 }
-if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Token CSRF tidak valid.'];
-    $loadId = $_POST['load_id'] ?? null;
-    $redirectUrl = $loadId ? "../load_detail.php?load_id=" . $loadId : "../manage_loads.php";
-    header("Location: " . $redirectUrl);
-    exit;
-}
-$loggedInUserId = $_SESSION['user_id'] ?? null;
 
+$loggedInUserId = $_SESSION['user_id'];
 $loadId = filter_input(INPUT_POST, 'load_id', FILTER_VALIDATE_INT);
-$processType = trim($_POST['process_type'] ?? '');
-$targetCycleId = filter_input(INPUT_POST, 'target_cycle_id', FILTER_VALIDATE_INT);
-// PERUBAHAN: Variabel sterilization_method dihapus karena tidak lagi digunakan.
+$machineId = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
+$cycleNumber = trim($_POST['cycle_number'] ?? '');
+$cycleDate = trim($_POST['cycle_date'] ?? date('Y-m-d H:i:s'));
 
-if (!$loadId || empty($processType)) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Data tidak lengkap untuk memproses muatan.'];
-    header("Location: ../manage_loads.php");
-    exit;
-}
-if ($processType === 'merge_existing' && !$targetCycleId) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Anda harus memilih siklus target untuk digabungkan.'];
+if (!$loadId || !$machineId || empty($cycleNumber) || empty($cycleDate)) {
+    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Data muatan, mesin, dan nomor siklus wajib diisi.'];
     header("Location: ../load_detail.php?load_id=" . $loadId);
     exit;
 }
@@ -57,114 +48,141 @@ if (!$conn) {
 }
 
 $conn->begin_transaction();
+
 try {
-    // Get the load details, ensuring it's in 'persiapan' status
-    $stmtGetLoad = $conn->prepare("SELECT load_name, machine_id, created_by_user_id FROM sterilization_loads WHERE load_id = ? AND status = 'persiapan' FOR UPDATE");
-    $stmtGetLoad->bind_param("i", $loadId);
-    $stmtGetLoad->execute();
-    $resultLoad = $stmtGetLoad->get_result();
-    if (!($load = $resultLoad->fetch_assoc())) {
-        throw new Exception("Muatan tidak ditemukan atau statusnya bukan 'Persiapan'.");
+    // 1. Perbarui status muatan menjadi 'berjalan'
+    $stmtLoad = $conn->prepare("UPDATE sterilization_loads SET status = 'berjalan', machine_id = ?, updated_at = NOW() WHERE load_id = ? AND status = 'persiapan'");
+    if (!$stmtLoad) {
+        throw new Exception("Gagal mempersiapkan statement: " . $conn->error);
     }
-    $loadName = $load['load_name'];
-    $machineId = $load['machine_id'];
-    $loadCreatorId = $load['created_by_user_id'];
-    $stmtGetLoad->close();
-
-    if (!$machineId) {
-        throw new Exception("Informasi mesin tidak ditemukan pada muatan ini.");
-    }
-    
-    $finalCycleId = null;
-    $finalCycleNumber = '';
-
-    if ($processType === 'create_new') {
-        // --- Logic to create a new cycle ---
-        $stmtGetMachine = $conn->prepare("SELECT machine_name, machine_code FROM machines WHERE machine_id = ?");
-        $stmtGetMachine->bind_param("i", $machineId);
-        $stmtGetMachine->execute();
-        $machine = $stmtGetMachine->get_result()->fetch_assoc();
-        $machineName = $machine['machine_name'];
-        $machineCode = $machine['machine_code'];
-        $stmtGetMachine->close();
-
-        $datePart = date('dmy');
-        $likePattern = "SIKLUS-" . $machineCode . '-' . $datePart . '-%';
-        $stmtGetSeq = $conn->prepare("SELECT COUNT(cycle_id) as daily_count FROM sterilization_cycles WHERE cycle_number LIKE ?");
-        $stmtGetSeq->bind_param("s", $likePattern);
-        $stmtGetSeq->execute();
-        $dailyCount = (int) $stmtGetSeq->get_result()->fetch_assoc()['daily_count'];
-        $nextSeq = $dailyCount + 1;
-        $cycleNumber = sprintf("SIKLUS-%s-%s-%02d", $machineCode, $datePart, $nextSeq);
-        $stmtGetSeq->close();
-        $finalCycleNumber = $cycleNumber;
-
-        // PERUBAHAN: Menghapus kolom 'sterilization_method' dari query INSERT
-        $sqlCreateCycle = "INSERT INTO sterilization_cycles (machine_name, cycle_number, cycle_date, operator_user_id, status) VALUES (?, ?, NOW(), ?, 'completed')";
-        $stmtCycle = $conn->prepare($sqlCreateCycle);
-        // PERUBAHAN: Menyesuaikan bind_param, menghapus 's' untuk sterilization_method
-        $stmtCycle->bind_param("ssi", $machineName, $cycleNumber, $loggedInUserId);
-        if (!$stmtCycle->execute()) {
-            throw new Exception("Gagal membuat data siklus baru: " . $stmtCycle->error);
-        }
-        $finalCycleId = $stmtCycle->insert_id;
-        $stmtCycle->close();
-        
-        $successMessage = "Muatan berhasil diproses dengan siklus baru: " . htmlspecialchars($cycleNumber) . ". Silakan buat label.";
-        log_activity('CREATE_CYCLE_FROM_LOAD', $loggedInUserId, "Siklus baru (ID: $finalCycleId, No: $cycleNumber) dibuat dan langsung diselesaikan untuk Muatan ID: $loadId.");
-
-    } elseif ($processType === 'merge_existing') {
-        // --- Logic to merge into an existing cycle ---
-        $finalCycleId = $targetCycleId;
-
-        $stmtCheckCycle = $conn->prepare("SELECT cycle_number FROM sterilization_cycles WHERE cycle_id = ? AND status = 'completed' AND DATE(cycle_date) = CURDATE()");
-        $stmtCheckCycle->bind_param("i", $finalCycleId);
-        $stmtCheckCycle->execute();
-        $resultCheckCycle = $stmtCheckCycle->get_result();
-        if($cycleToMerge = $resultCheckCycle->fetch_assoc()) {
-            $finalCycleNumber = $cycleToMerge['cycle_number'];
-        } else {
-            throw new Exception("Siklus target tidak ditemukan atau tidak valid untuk digabungkan (harus berstatus 'Selesai' dan dibuat hari ini).");
-        }
-        $stmtCheckCycle->close();
-        
-        $successMessage = 'Muatan berhasil digabungkan ke siklus yang sudah ada. Silakan buat label.';
-        log_activity('MERGE_LOAD_TO_CYCLE', $loggedInUserId, "Muatan ID: $loadId digabungkan ke Siklus ID: $finalCycleId.");
-    }
-
-    $sqlUpdateLoad = "UPDATE sterilization_loads SET cycle_id = ?, status = 'selesai' WHERE load_id = ?";
-    $stmtLoad = $conn->prepare($sqlUpdateLoad);
-    $stmtLoad->bind_param("ii", $finalCycleId, $loadId);
+    $stmtLoad->bind_param("ii", $machineId, $loadId);
     if (!$stmtLoad->execute()) {
         throw new Exception("Gagal memperbarui status muatan: " . $stmtLoad->error);
     }
+    if ($stmtLoad->affected_rows === 0) {
+        throw new Exception("Muatan tidak ditemukan atau tidak dalam status 'persiapan'.");
+    }
     $stmtLoad->close();
 
-    if ($loadCreatorId && $loadCreatorId != $loggedInUserId) {
-        $notifTitle = "Muatan Telah Diproses";
-        $notifMessage = "Muatan '{$loadName}' telah selesai diproses dalam siklus '{$finalCycleNumber}' dan siap untuk dibuatkan label.";
-        $notifLink = "load_detail.php?load_id=" . $loadId;
-        $notifIcon = "task_alt";
+    // 2. Buat siklus sterilisasi baru
+    $stmtCycle = $conn->prepare("INSERT INTO sterilization_cycles (machine_name, cycle_number, cycle_date, operator_user_id) SELECT machine_name, ?, ?, ? FROM machines WHERE machine_id = ?");
+    if (!$stmtCycle) {
+        throw new Exception("Gagal mempersiapkan statement siklus: " . $conn->error);
+    }
+    $stmtCycle->bind_param("ssii", $cycleNumber, $cycleDate, $loggedInUserId, $machineId);
+    if (!$stmtCycle->execute()) {
+        throw new Exception("Gagal membuat siklus sterilisasi: " . $stmtCycle->error);
+    }
+    $newCycleId = $conn->insert_id;
+    $stmtCycle->close();
 
-        $sqlNotif = "INSERT INTO user_notifications (user_id, icon, title, message, link) VALUES (?, ?, ?, ?, ?)";
-        if ($stmtNotif = $conn->prepare($sqlNotif)) {
-            $stmtNotif->bind_param("issss", $loadCreatorId, $notifIcon, $notifTitle, $notifMessage, $notifLink);
-            $stmtNotif->execute();
-            $stmtNotif->close();
+    // 3. Tautkan muatan ke siklus yang baru dibuat
+    $stmtUpdateLoadCycle = $conn->prepare("UPDATE sterilization_loads SET cycle_id = ?, status = 'menunggu_validasi' WHERE load_id = ?");
+    if (!$stmtUpdateLoadCycle) {
+        throw new Exception("Gagal mempersiapkan statement tautan: " . $conn->error);
+    }
+    $stmtUpdateLoadCycle->bind_param("ii", $newCycleId, $loadId);
+    if (!$stmtUpdateLoadCycle->execute()) {
+        throw new Exception("Gagal menautkan muatan ke siklus: " . $stmtUpdateLoadCycle->error);
+    }
+    $stmtUpdateLoadCycle->close();
+
+    // 4. Ambil packaging_type_id dari muatan untuk perhitungan kedaluwarsa
+    $packagingTypeId = null;
+    $stmtLoadPackaging = $conn->prepare("SELECT packaging_type_id FROM sterilization_loads WHERE load_id = ?");
+    $stmtLoadPackaging->bind_param("i", $loadId);
+    $stmtLoadPackaging->execute();
+    $resultPackaging = $stmtLoadPackaging->get_result()->fetch_assoc();
+    if ($resultPackaging) {
+        $packagingTypeId = $resultPackaging['packaging_type_id'];
+    }
+    $stmtLoadPackaging->close();
+
+    // 5. Salin setiap item muatan ke dalam tabel sterilization_records
+    $stmtItems = $conn->prepare("SELECT load_item_id, item_id, item_type, quantity FROM sterilization_load_items WHERE load_id = ?");
+    $stmtItems->bind_param("i", $loadId);
+    $stmtItems->execute();
+    $resultItems = $stmtItems->get_result();
+
+    $stmtInsertRecord = $conn->prepare(
+        "INSERT INTO sterilization_records (label_unique_id, item_id, item_type, label_title, created_by_user_id, cycle_id, load_id, destination_department_id, load_item_id, expiry_date, status, label_items_snapshot)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)"
+    );
+
+    $recordsCreated = 0;
+    while ($item = $resultItems->fetch_assoc()) {
+        $labelTitle = ''; // Dapatkan nama item dari snapshot atau tabel master
+        if ($item['item_type'] === 'set') {
+            $stmtGetName = $conn->prepare("SELECT set_name FROM instrument_sets WHERE set_id = ?");
+            $stmtGetName->bind_param("i", $item['item_id']);
+            $stmtGetName->execute();
+            $labelTitle = $stmtGetName->get_result()->fetch_assoc()['set_name'];
+            $stmtGetName->close();
+        } else {
+            $stmtGetName = $conn->prepare("SELECT instrument_name FROM instruments WHERE instrument_id = ?");
+            $stmtGetName->bind_param("i", $item['item_id']);
+            $stmtGetName->execute();
+            $labelTitle = $stmtGetName->get_result()->fetch_assoc()['instrument_name'];
+            $stmtGetName->close();
+        }
+
+        // Ambil snapshot item (jika ada)
+        $itemSnapshot = null;
+        if ($item['item_type'] === 'set') {
+            $stmtGetSnapshot = $conn->prepare("SELECT item_snapshot FROM sterilization_load_items WHERE load_item_id = ?");
+            $stmtGetSnapshot->bind_param("i", $item['load_item_id']);
+            $stmtGetSnapshot->execute();
+            $snapshotData = $stmtGetSnapshot->get_result()->fetch_assoc();
+            $itemSnapshot = $snapshotData['item_snapshot'];
+            $stmtGetSnapshot->close();
+        }
+
+        // MENGHITUNG TANGGAL KADALUWARSA MENGGUNAKAN FUNGSI BARU
+        $expiryDate = calculateExpiryDate($conn, $item['item_id'], $item['item_type'], $packagingTypeId);
+
+        for ($i = 0; $i < $item['quantity']; $i++) {
+            $uniqueId = generateUniqueLabelId();
+            $stmtInsertRecord->bind_param(
+                "sissiiisss", 
+                $uniqueId, 
+                $item['item_id'], 
+                $item['item_type'], 
+                $labelTitle, 
+                $loggedInUserId, 
+                $newCycleId, 
+                $loadId, 
+                $loadData['destination_department_id'], 
+                $item['load_item_id'], 
+                $expiryDate,
+                $itemSnapshot
+            );
+            $stmtInsertRecord->execute();
+            $recordsCreated++;
         }
     }
 
+    $stmtInsertRecord->close();
     $conn->commit();
-    $_SESSION['flash_message'] = ['type' => 'success', 'text' => $successMessage];
+
+    log_activity('PROCESS_LOAD', $loggedInUserId, "Muatan (ID: {$loadId}) diproses dan ditautkan ke Siklus baru (ID: {$newCycleId}) dengan nomor {$cycleNumber}.", 'load', $loadId);
+
+    $_SESSION['flash_message'] = ['type' => 'success', 'text' => "Muatan berhasil diproses dan siklus baru #{$cycleNumber} telah dimulai."];
+    header("Location: ../cycle_validation.php?cycle_id=" . $newCycleId);
+    exit;
 
 } catch (Exception $e) {
     $conn->rollback();
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => "Terjadi kesalahan: " . $e->getMessage()];
+    $_SESSION['flash_message'] = ['type' => 'error', 'text' => "Terjadi kesalahan saat memproses muatan: " . $e->getMessage()];
+    header("Location: ../load_detail.php?load_id=" . $loadId);
+    exit;
 } finally {
-    if ($conn) {
-        $conn->close();
-    }
+    $conn->close();
 }
 
-header("Location: ../load_detail.php?load_id=" . $loadId);
-exit;
+/**
+ * Menghasilkan ID unik 8 karakter alfanumerik.
+ * @return string
+ */
+function generateUniqueLabelId(): string {
+    return strtoupper(substr(md5(uniqid((string)mt_rand(), true)), 0, 8));
+}

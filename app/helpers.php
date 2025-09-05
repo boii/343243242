@@ -211,3 +211,66 @@ if (!function_exists('formatActivityMessage')) {
         return ['message' => $message, 'icon' => $icon, 'iconColor' => $iconColor];
     }
 }
+
+/**
+ * Menghitung tanggal kedaluwarsa untuk sebuah item dalam muatan.
+ * Logika prioritas:
+ * 1. expiry_in_days dari instrumen atau set (jika ada).
+ * 2. shelf_life_days dari jenis kemasan yang dipilih untuk muatan.
+ * 3. default_expiry_days dari pengaturan aplikasi.
+ *
+ * @param mysqli $conn Koneksi database.
+ * @param int $itemId ID dari instrumen atau set.
+ * @param string $itemType Tipe item ('instrument' atau 'set').
+ * @param int|null $packagingTypeId ID jenis kemasan dari muatan.
+ * @return string Tanggal kedaluwarsa dalam format 'Y-m-d H:i:s'.
+ */
+function calculateExpiryDate(mysqli $conn, int $itemId, string $itemType, ?int $packagingTypeId): string
+{
+    $expiryDays = null;
+
+    // Prioritas 1: Ambil expiry_in_days dari item/set
+    $tableName = ($itemType === 'set') ? 'instrument_sets' : 'instruments';
+    $primaryKey = ($itemType === 'set') ? 'set_id' : 'instrument_id';
+    $stmt = $conn->prepare("SELECT expiry_in_days FROM {$tableName} WHERE {$primaryKey} = ?");
+    $stmt->bind_param("i", $itemId);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    if ($result && $result['expiry_in_days'] !== null) {
+        $expiryDays = $result['expiry_in_days'];
+    }
+    $stmt->close();
+
+    // Prioritas 2: Jika tidak ada, ambil dari jenis kemasan
+    if ($expiryDays === null && $packagingTypeId !== null) {
+        $stmt = $conn->prepare("SELECT shelf_life_days FROM packaging_types WHERE packaging_type_id = ?");
+        $stmt->bind_param("i", $packagingTypeId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        if ($result) {
+            $expiryDays = $result['shelf_life_days'];
+        }
+        $stmt->close();
+    }
+
+    // Prioritas 3: Jika tidak ada, ambil dari pengaturan global
+    if ($expiryDays === null) {
+        $stmt = $conn->prepare("SELECT setting_value FROM app_settings WHERE setting_name = 'default_expiry_days'");
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        if ($result) {
+            $expiryDays = (int)$result['setting_value'];
+        }
+        $stmt->close();
+    }
+
+    // Hitung tanggal kedaluwarsa jika ada hari yang ditentukan
+    if ($expiryDays !== null) {
+        $expiryDate = new DateTime();
+        $expiryDate->modify("+{$expiryDays} days");
+        return $expiryDate->format('Y-m-d H:i:s');
+    }
+
+    // Mengembalikan tanggal awal sebagai fallback jika tidak ada hari yang ditentukan
+    return '1970-01-01 00:00:00';
+}
