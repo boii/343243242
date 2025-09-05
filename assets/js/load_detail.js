@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <dt><span class="material-icons">schedule</span>Waktu Dibuat:</dt><dd>${new Date(load.created_at).toLocaleString('id-ID')}</dd>
             <dt><span class="material-icons">local_convenience_store</span>Mesin:</dt><dd>${escapeHtml(load.machine_name || 'N/A')}</dd>
             <dt><span class="material-icons">maps_home_work</span>Tujuan:</dt><dd>${escapeHtml(load.destination_department_name || 'Stok Umum')}</dd>
+            <dt><span class="material-icons">local_offer</span>Jenis Kemasan:</dt><dd>${escapeHtml(load.packaging_name || 'Tidak Ada')}</dd>
             <dt><span class="material-icons">cyclone</span>Siklus:</dt><dd>${cycleLink}</dd>
             ${load.notes ? `<dt><span class="material-icons">notes</span>Catatan:</dt><dd class="whitespace-pre-wrap">${escapeHtml(load.notes)}</dd>` : ''}
         `;
@@ -265,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('edit_machine_id').value = currentLoadData.machine_id;
                     document.getElementById('edit_destination_department_id').value = currentLoadData.destination_department_id || '';
                     document.getElementById('edit_notes').value = currentLoadData.notes || '';
+                    document.getElementById('edit_packaging_type_id').value = currentLoadData.packaging_type_id || '';
                     editLoadModal.classList.add('active');
                 }
             } else if (button.classList.contains('expand-set-btn')) {
