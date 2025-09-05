@@ -2,7 +2,8 @@
 /**
  * Add New Sterilization Load Script
  *
- * This version is simplified by removing the session requirement.
+ * This version is updated to include the new 'packaging_type_id' in the
+ * database insertion.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -34,8 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $machineId = filter_input(INPUT_POST, 'machine_id', FILTER_VALIDATE_INT);
     $destinationDepartmentId = filter_input(INPUT_POST, 'destination_department_id', FILTER_VALIDATE_INT, ['options' => ['default' => null]]); // Allow NULL
     $notes = trim($_POST['notes'] ?? '');
+    $packagingTypeId = filter_input(INPUT_POST, 'packaging_type_id', FILTER_VALIDATE_INT);
 
-    // PERUBAHAN: Validasi hanya untuk machineId
     if (!$machineId) {
         $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Mesin wajib dipilih.'];
         header("Location: ../manage_loads.php");
@@ -60,13 +61,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $loadName = sprintf("MUATAN-%s-%02d", $datePart, $nextSeq);
         
-        // PERUBAHAN: Menghilangkan session_id dari query
-        $sql = "INSERT INTO sterilization_loads (load_name, created_by_user_id, machine_id, destination_department_id, notes, status) VALUES (?, ?, ?, ?, ?, 'persiapan')";
+        // PERUBAHAN: Menambahkan packaging_type_id ke dalam query
+        $sql = "INSERT INTO sterilization_loads (load_name, created_by_user_id, machine_id, destination_department_id, notes, packaging_type_id, status) VALUES (?, ?, ?, ?, ?, ?, 'persiapan')";
         
         if ($stmt = $conn->prepare($sql)) {
             $notesToInsert = !empty($notes) ? $notes : null;
-            // PERUBAHAN: Menyesuaikan bind_param
-            $stmt->bind_param("siiis", $loadName, $loggedInUserId, $machineId, $destinationDepartmentId, $notesToInsert);
+            // PERUBAHAN: Menyesuaikan bind_param untuk menambahkan packaging_type_id
+            $stmt->bind_param("siiisi", $loadName, $loggedInUserId, $machineId, $destinationDepartmentId, $notesToInsert, $packagingTypeId);
             
             if ($stmt->execute()) {
                 $newLoadId = $stmt->insert_id;

@@ -2,8 +2,8 @@
 /**
  * Add Master Data Script
  *
- * Handles adding new entries to master data tables (types, departments, machines).
- * This version is simplified by removing logic for methods and sessions.
+ * Handles adding new entries to master data tables (types, departments, machines, packaging).
+ * This version is updated to include a new "packaging" type.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -31,7 +31,8 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 
 $masterType = $_POST['master_type'] ?? '';
 $name = trim($_POST['name'] ?? '');
-$code = trim($_POST['code'] ?? ''); 
+$code = trim($_POST['code'] ?? '');
+$shelfLifeDays = filter_input(INPUT_POST, 'shelf_life_days', FILTER_VALIDATE_INT);
 
 if (empty($name)) {
     $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Nama tidak boleh kosong.'];
@@ -58,6 +59,12 @@ $config = [
         'log_action' => 'CREATE_MACHINE',
         'success_msg' => 'Mesin',
     ],
+    'packaging' => [
+        'table' => 'packaging_types',
+        'columns' => ['packaging_name', 'shelf_life_days'],
+        'log_action' => 'CREATE_PACKAGING_TYPE',
+        'success_msg' => 'Jenis Kemasan',
+    ],
 ];
 
 if (!array_key_exists($masterType, $config)) {
@@ -83,6 +90,11 @@ if (!$conn) {
                 throw new Exception("Kode Mesin wajib diisi.");
             }
             $stmt->bind_param("ss", $name, $code);
+        } elseif ($masterType === 'packaging') {
+            if ($shelfLifeDays === false || $shelfLifeDays < 0) {
+                throw new Exception("Masa kedaluwarsa harus berupa angka yang valid.");
+            }
+            $stmt->bind_param("si", $name, $shelfLifeDays);
         } else {
             $stmt->bind_param("s", $name);
         }
@@ -91,7 +103,12 @@ if (!$conn) {
             $successMessage = $config[$masterType]['success_msg'] . " '" . htmlspecialchars($name) . "' berhasil ditambahkan.";
             $_SESSION['flash_message'] = ['type' => 'success', 'text' => $successMessage];
             
-            $logDetails = "Master data " . $config[$masterType]['success_msg'] . " baru ditambahkan: " . $name . (!empty($code) ? " (Kode: $code)" : "");
+            $logDetails = "Master data " . $config[$masterType]['success_msg'] . " baru ditambahkan: " . $name;
+            if ($masterType === 'machine') {
+                $logDetails .= " (Kode: $code)";
+            } elseif ($masterType === 'packaging') {
+                $logDetails .= " (Masa Kedaluwarsa: {$shelfLifeDays} hari)";
+            }
             log_activity($config[$masterType]['log_action'], $_SESSION['user_id'] ?? null, $logDetails);
         } else {
             if ($conn->errno === 1062) { // Duplicate entry

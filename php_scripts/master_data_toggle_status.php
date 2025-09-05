@@ -2,7 +2,7 @@
 /**
  * Toggle Master Data Status Script (with Dependency Checks & Output Buffering)
  *
- * This version is simplified by removing logic for methods and sessions.
+ * This version is updated to include the new 'packaging' master data type.
  * It also includes dependency checks to ensure data integrity.
  * Adheres to PSR-12.
  *
@@ -52,6 +52,10 @@ $config = [
     'machine' => [
         'table' => 'machines', 'id_col' => 'machine_id', 'name_col' => 'machine_name', 'log_action' => 'TOGGLE_MACHINE_STATUS',
         'check' => ['table' => 'sterilization_loads', 'fk_col' => 'machine_id', 'entity' => 'muatan aktif']
+    ],
+    'packaging' => [
+        'table' => 'packaging_types', 'id_col' => 'packaging_type_id', 'name_col' => 'packaging_name', 'log_action' => 'TOGGLE_PACKAGING_STATUS',
+        'check' => ['table' => 'sterilization_loads', 'fk_col' => 'packaging_type_id', 'entity' => 'muatan aktif']
     ]
 ];
 

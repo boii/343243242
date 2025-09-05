@@ -2,9 +2,8 @@
 /**
  * Sterilization Load Detail Page (Final, Feature-Complete & Polished Version)
  *
- * This version uses an external JavaScript file for better modularity
- * and to ensure all library functions are available.
- * It now includes an elegant Item Picker modal as an alternative to search.
+ * This version is updated to include functionality for managing 'packaging types'
+ * in the Load Detail and Edit modals.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -34,6 +33,7 @@ $allInstrumentsFlat = [];
 $allMasterSetsInfo = []; 
 $activeMachines = [];
 $activeDepartments = [];
+$activePackagingTypes = [];
 $allMasterSetsData = [];
 $dbErrorMessage = '';
 
@@ -64,7 +64,6 @@ if ($conn) {
         $dbErrorMessage .= ' Gagal memuat daftar master set. ';
     }
 
-
     // Fetch master set definitions (untuk perbandingan kustomisasi)
     $sqlMasterSets = "SELECT set_id, instrument_id, quantity FROM instrument_set_items";
     if ($resultMasterSets = $conn->query($sqlMasterSets)) {
@@ -90,6 +89,15 @@ if ($conn) {
     $stmtDepts->execute();
     if ($result = $stmtDepts->get_result()) while($row = $result->fetch_assoc()) $activeDepartments[] = $row;
     $stmtDepts->close();
+    
+    // PERUBAHAN: Fetch active packaging types for the edit modal
+    $sqlPackaging = "SELECT packaging_type_id, packaging_name FROM packaging_types WHERE is_active = 1 UNION (SELECT pt.packaging_type_id, pt.packaging_name FROM packaging_types pt JOIN sterilization_loads sl ON pt.packaging_type_id = sl.packaging_type_id WHERE sl.load_id = ?)";
+    $stmtPackaging = $conn->prepare($sqlPackaging);
+    $stmtPackaging->bind_param("i", $loadId);
+    $stmtPackaging->execute();
+    if ($result = $stmtPackaging->get_result()) while($row = $result->fetch_assoc()) $activePackagingTypes[] = $row;
+    $stmtPackaging->close();
+
 
     $conn->close();
 } else {
@@ -260,6 +268,17 @@ $page_specific_js = 'assets/js/load_detail.js';
                     <label for="edit_destination_department_id" class="form-label md:text-right md:col-span-1">Tujuan</label>
                     <div class="md:col-span-3"><select id="edit_destination_department_id" name="destination_department_id" class="form-select"><option value="">-- Stok Umum --</option><?php foreach($activeDepartments as $dept): ?><option value="<?php echo $dept['department_id']; ?>"><?php echo htmlspecialchars($dept['department_name']); ?></option><?php endforeach; ?></select></div>
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
+                    <label for="edit_packaging_type_id" class="form-label md:text-right md:col-span-1">Jenis Kemasan</label>
+                    <div class="md:col-span-3">
+                        <select id="edit_packaging_type_id" name="packaging_type_id" class="form-select">
+                            <option value="">-- Tidak Ada --</option>
+                            <?php foreach($activePackagingTypes as $packaging): ?>
+                                <option value="<?php echo $packaging['packaging_type_id']; ?>"><?php echo htmlspecialchars($packaging['packaging_name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
                  <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-2">
                     <label for="edit_notes" class="form-label md:text-right md:col-span-1">Catatan</label>
                     <div class="md:col-span-3"><input type="text" id="edit_notes" name="notes" class="form-input"></div>
@@ -288,7 +307,8 @@ $page_specific_js = 'assets/js/load_detail.js';
         allInstrumentsData: <?php echo json_encode($allInstrumentsFlat); ?>,
         allMasterSetsInfo: <?php echo json_encode($allMasterSetsInfo); ?>,
         allMasterSetsData: <?php echo json_encode($allMasterSetsData); ?>,
-        allInstrumentsGrouped: <?php echo json_encode($allInstrumentsGrouped); ?>
+        allInstrumentsGrouped: <?php echo json_encode($allInstrumentsGrouped); ?>,
+        activePackagingTypes: <?php echo json_encode($activePackagingTypes); ?>
     };
 </script>
 

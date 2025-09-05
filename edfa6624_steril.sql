@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 03, 2025 at 04:07 PM
+-- Generation Time: Sep 05, 2025 at 04:51 PM
 -- Server version: 10.11.13-MariaDB-cll-lve
 -- PHP Version: 8.4.10
 
@@ -574,7 +574,12 @@ INSERT INTO `activity_log` (`log_id`, `user_id`, `action_type`, `target_type`, `
 (538, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 2 label baru untuk Muatan ID: 94.', '210.211.17.122', '2025-09-03 15:06:52'),
 (539, 1, 'CREATE_LOAD', 'load', 96, 'Muatan baru dibuat: MUATAN-030925-05', '210.211.17.122', '2025-09-03 15:08:13'),
 (540, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 66, No: SIKLUS-STEAM-030925-03) dibuat dan langsung diselesaikan untuk Muatan ID: 96.', '210.211.17.122', '2025-09-03 15:59:14'),
-(541, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 2 label baru untuk Muatan ID: 96.', '210.211.17.122', '2025-09-03 15:59:18');
+(541, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 2 label baru untuk Muatan ID: 96.', '210.211.17.122', '2025-09-03 15:59:18'),
+(542, 1, 'CREATE_PACKAGING_TYPE', NULL, NULL, 'Master data Jenis Kemasan baru ditambahkan: Linen (Masa Kedaluwarsa: 7 hari)', '210.211.17.122', '2025-09-05 16:26:45'),
+(543, 1, 'CREATE_PACKAGING_TYPE', NULL, NULL, 'Master data Jenis Kemasan baru ditambahkan: Pouches (Masa Kedaluwarsa: 30 hari)', '210.211.17.122', '2025-09-05 16:27:07'),
+(544, 1, 'UPDATE_LOAD', 'load', 95, 'Detail muatan (ID: 95) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 16:27:19'),
+(545, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 67, No: SIKLUS-STEAM-050925-01) dibuat dan langsung diselesaikan untuk Muatan ID: 95.', '210.211.17.122', '2025-09-05 16:27:41'),
+(546, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 95.', '210.211.17.122', '2025-09-05 16:27:43');
 
 -- --------------------------------------------------------
 
@@ -3560,6 +3565,28 @@ INSERT INTO `machines` (`machine_id`, `machine_name`, `machine_code`, `is_active
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `packaging_types`
+--
+
+CREATE TABLE `packaging_types` (
+  `packaging_type_id` int(11) NOT NULL,
+  `packaging_name` varchar(100) NOT NULL,
+  `shelf_life_days` int(11) NOT NULL COMMENT 'Masa kedaluwarsa standar dalam hari',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `packaging_types`
+--
+
+INSERT INTO `packaging_types` (`packaging_type_id`, `packaging_name`, `shelf_life_days`, `is_active`, `created_at`) VALUES
+(1, 'Linen', 7, 1, '2025-09-05 16:26:45'),
+(2, 'Pouches', 30, 1, '2025-09-05 16:27:07');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `print_queue`
 --
 
@@ -3601,8 +3628,8 @@ INSERT INTO `print_queue` (`queue_id`, `record_id`, `load_id`, `added_at`) VALUE
 (306, 303, 75, '2025-08-23 09:18:53'),
 (326, 309, 85, '2025-08-29 08:27:14'),
 (327, 310, 85, '2025-08-29 08:27:14'),
-(334, 320, 96, '2025-09-03 15:59:18'),
-(335, 321, 96, '2025-09-03 15:59:18');
+(336, 320, 96, '2025-09-05 16:14:59'),
+(337, 321, 96, '2025-09-05 16:14:59');
 
 -- --------------------------------------------------------
 
@@ -3668,7 +3695,8 @@ INSERT INTO `sterilization_cycles` (`cycle_id`, `machine_name`, `cycle_number`, 
 (63, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-01', '2025-09-03 08:37:52', 1, 'completed', NULL, '2025-09-03 01:37:52'),
 (64, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-02', '2025-09-03 08:48:06', 1, 'completed', NULL, '2025-09-03 01:48:06'),
 (65, 'Dry Heat Sterilizer', 'SIKLUS-DH-030925-01', '2025-09-03 22:06:49', 1, 'completed', NULL, '2025-09-03 15:06:49'),
-(66, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-03', '2025-09-03 22:59:14', 1, 'completed', NULL, '2025-09-03 15:59:14');
+(66, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-03', '2025-09-03 22:59:14', 1, 'completed', NULL, '2025-09-03 15:59:14'),
+(67, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-050925-01', '2025-09-05 23:27:41', 1, 'completed', NULL, '2025-09-05 16:27:41');
 
 -- --------------------------------------------------------
 
@@ -3685,6 +3713,7 @@ CREATE TABLE `sterilization_loads` (
   `load_type` enum('Rutin','Cito/Darurat','Jadwal Operasi') NOT NULL DEFAULT 'Rutin' COMMENT 'Jenis muatan untuk klasifikasi',
   `priority` enum('Normal','Tinggi','Urgent') NOT NULL DEFAULT 'Normal' COMMENT 'Prioritas pengerjaan muatan',
   `destination_department_id` int(11) DEFAULT NULL,
+  `packaging_type_id` int(11) DEFAULT NULL,
   `cycle_id` int(11) DEFAULT NULL COMMENT 'Diisi saat muatan dijalankan dalam siklus',
   `status` varchar(50) NOT NULL DEFAULT 'persiapan' COMMENT 'persiapan, berjalan, menunggu_validasi, selesai, gagal',
   `created_at` timestamp NULL DEFAULT current_timestamp(),
@@ -3695,68 +3724,68 @@ CREATE TABLE `sterilization_loads` (
 -- Dumping data for table `sterilization_loads`
 --
 
-INSERT INTO `sterilization_loads` (`load_id`, `load_name`, `notes`, `created_by_user_id`, `machine_id`, `load_type`, `priority`, `destination_department_id`, `cycle_id`, `status`, `created_at`, `updated_at`) VALUES
-(33, 'MUATAN-060725-01', NULL, 1, 4, 'Rutin', 'Normal', 2, 23, 'selesai', '2025-07-05 21:00:40', '2025-07-05 21:25:59'),
-(34, 'MUATAN-060725-02', NULL, 1, 5, 'Rutin', 'Normal', 4, 24, 'selesai', '2025-07-05 21:49:19', '2025-07-05 21:50:04'),
-(35, 'MUATAN-060725-03', 'Perlu perhatian khusus', 1, 3, 'Rutin', 'Normal', 4, 26, 'selesai', '2025-07-05 22:54:06', '2025-07-06 03:52:22'),
-(36, 'MUATAN-060725-04', NULL, 1, 3, 'Rutin', 'Normal', 4, 25, 'selesai', '2025-07-06 00:56:42', '2025-07-06 00:57:28'),
-(37, 'MUATAN-060725-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-07-06 00:58:30', '2025-07-06 00:58:30'),
-(38, 'MUATAN-060725-06', NULL, 1, 4, 'Rutin', 'Normal', 1, 29, 'selesai', '2025-07-06 05:46:32', '2025-07-06 15:32:47'),
-(39, 'MUATAN-060725-07', NULL, 1, 3, 'Rutin', 'Normal', 4, 30, 'selesai', '2025-07-06 06:34:04', '2025-07-06 23:37:27'),
-(40, 'MUATAN-060725-08', NULL, 1, 3, 'Rutin', 'Normal', 4, 27, 'selesai', '2025-07-06 06:56:40', '2025-07-06 06:57:15'),
-(41, 'MUATAN-060725-09', NULL, 1, 7, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-07-06 08:56:24', '2025-07-06 08:56:24'),
-(42, 'MUATAN-060725-10', NULL, 1, 3, 'Rutin', 'Normal', 4, 28, 'selesai', '2025-07-06 12:49:32', '2025-07-06 12:51:00'),
-(43, 'MUATAN-070725-01', NULL, 5, 3, 'Rutin', 'Normal', 8, 31, 'selesai', '2025-07-07 02:18:00', '2025-07-07 02:18:09'),
-(44, 'MUATAN-090725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 32, 'selesai', '2025-07-09 01:16:40', '2025-07-09 01:17:05'),
-(45, 'MUATAN-090725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, 33, 'selesai', '2025-07-09 04:04:27', '2025-07-09 04:05:07'),
-(46, 'MUATAN-090725-03', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
-(47, 'MUATAN-090725-04', NULL, 1, 3, 'Rutin', 'Normal', 1, 34, 'selesai', '2025-07-09 04:08:33', '2025-07-09 04:11:12'),
-(48, 'MUATAN-090725-05', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
-(49, 'MUATAN-090725-06', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
-(50, 'MUATAN-090725-07', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:08:36', '2025-07-09 04:08:36'),
-(51, 'MUATAN-090725-08', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:09:41', '2025-07-09 04:09:41'),
-(52, 'MUATAN-090725-09', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:09:47', '2025-07-09 04:09:47'),
-(53, 'MUATAN-090725-10', NULL, 1, 3, 'Rutin', 'Normal', 1, 35, 'selesai', '2025-07-09 04:14:29', '2025-07-09 04:15:07'),
-(54, 'MUATAN-090725-11', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-09 04:35:49', '2025-07-09 04:35:49'),
-(55, 'MUATAN-090725-12', NULL, 1, 3, 'Rutin', 'Normal', 1, 36, 'selesai', '2025-07-09 11:58:35', '2025-07-09 11:58:47'),
-(56, 'MUATAN-140725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 37, 'selesai', '2025-07-14 11:50:03', '2025-07-14 11:51:23'),
-(57, 'MUATAN-150725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 38, 'selesai', '2025-07-15 02:09:55', '2025-07-15 02:10:47'),
-(58, 'MUATAN-150725-02', NULL, 1, 3, 'Rutin', 'Normal', 1, 39, 'selesai', '2025-07-15 04:04:08', '2025-07-15 04:04:31'),
-(59, 'MUATAN-150725-03', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-07-15 07:12:01', '2025-07-15 07:12:01'),
-(60, 'MUATAN-150725-04', NULL, 1, 3, 'Rutin', 'Normal', 4, 40, 'selesai', '2025-07-15 07:17:25', '2025-07-15 07:18:27'),
-(61, 'MUATAN-190725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 41, 'selesai', '2025-07-19 02:16:37', '2025-07-19 02:16:55'),
-(62, 'MUATAN-220725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 42, 'selesai', '2025-07-22 03:42:04', '2025-07-22 03:42:33'),
-(63, 'MUATAN-230725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 43, 'selesai', '2025-07-23 00:18:54', '2025-07-23 00:19:36'),
-(64, 'MUATAN-240725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 44, 'selesai', '2025-07-24 03:09:45', '2025-07-24 03:10:15'),
-(65, 'MUATAN-240725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, 45, 'selesai', '2025-07-24 03:18:33', '2025-07-24 03:18:47'),
-(66, 'MUATAN-240725-03', NULL, 1, 3, 'Rutin', 'Normal', 4, 46, 'selesai', '2025-07-24 05:37:19', '2025-07-24 05:38:50'),
-(67, 'MUATAN-290725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 47, 'selesai', '2025-07-28 23:09:06', '2025-07-28 23:09:30'),
-(68, 'MUATAN-290725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, 48, 'selesai', '2025-07-29 03:22:54', '2025-07-29 03:24:12'),
-(69, 'MUATAN-050825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 49, 'selesai', '2025-08-05 01:03:36', '2025-08-05 01:03:57'),
-(70, 'MUATAN-080825-01', NULL, 1, 3, 'Rutin', 'Normal', 8, 50, 'selesai', '2025-08-07 17:25:50', '2025-08-07 17:26:13'),
-(71, 'MUATAN-080825-02', NULL, 1, 7, 'Rutin', 'Normal', 4, 51, 'selesai', '2025-08-07 17:40:00', '2025-08-07 17:40:10'),
-(72, 'MUATAN-080825-03', NULL, 1, 3, 'Rutin', 'Normal', 8, 52, 'selesai', '2025-08-07 17:53:44', '2025-08-07 17:53:55'),
-(73, 'MUATAN-140825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 53, 'selesai', '2025-08-14 07:37:44', '2025-08-14 07:38:06'),
-(74, 'MUATAN-190825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, 54, 'selesai', '2025-08-19 12:31:17', '2025-08-19 12:31:33'),
-(75, 'MUATAN-230825-01', NULL, 1, 3, 'Rutin', 'Normal', 11, 55, 'selesai', '2025-08-23 09:17:25', '2025-08-23 09:17:53'),
-(76, 'MUATAN-230825-02', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, 'persiapan', '2025-08-23 09:28:03', '2025-08-23 09:28:03'),
-(77, 'MUATAN-250825-01', NULL, 1, 3, 'Rutin', 'Normal', 3, 56, 'selesai', '2025-08-25 03:08:22', '2025-08-25 03:08:36'),
-(78, 'MUATAN-250825-02', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-08-25 03:40:49', '2025-08-25 03:40:49'),
-(79, 'MUATAN-250825-03', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-08-25 03:40:50', '2025-08-25 03:40:50'),
-(80, 'MUATAN-250825-04', NULL, 1, 3, 'Rutin', 'Normal', 4, 57, 'selesai', '2025-08-25 03:40:52', '2025-08-25 03:41:14'),
-(81, 'MUATAN-250825-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-08-25 11:27:48', '2025-08-25 11:27:48'),
-(82, 'MUATAN-250825-06', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 'persiapan', '2025-08-25 11:29:04', '2025-08-25 11:29:04'),
-(83, 'MUATAN-270825-01', 'Catatan', 1, 3, 'Rutin', 'Normal', 4, 58, 'selesai', '2025-08-27 12:33:34', '2025-08-27 12:43:58'),
-(84, 'MUATAN-270825-02', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, 'persiapan', '2025-08-27 12:45:18', '2025-08-27 12:45:18'),
-(85, 'MUATAN-270825-03', NULL, 1, 3, 'Rutin', 'Normal', 8, 59, 'selesai', '2025-08-27 13:12:53', '2025-08-27 13:13:42'),
-(89, 'MUATAN-290825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, 61, 'selesai', '2025-08-29 12:53:40', '2025-08-29 13:13:26'),
-(90, 'MUATAN-290825-02', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, 62, 'selesai', '2025-08-29 13:52:47', '2025-08-29 13:53:47'),
-(91, 'MUATAN-310825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-08-31 05:09:00', '2025-08-31 05:09:00'),
-(92, 'MUATAN-030925-01', NULL, 1, 3, 'Rutin', 'Normal', 12, 63, 'selesai', '2025-09-03 01:37:40', '2025-09-03 01:37:52'),
-(93, 'MUATAN-030925-02', NULL, 1, 3, 'Rutin', 'Normal', 2, 64, 'selesai', '2025-09-03 01:47:53', '2025-09-03 01:48:06'),
-(94, 'MUATAN-030925-03', NULL, 1, 6, 'Rutin', 'Normal', 1, 65, 'selesai', '2025-09-03 14:55:02', '2025-09-03 15:06:49'),
-(95, 'MUATAN-030925-04', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 'persiapan', '2025-09-03 14:59:55', '2025-09-03 14:59:55'),
-(96, 'MUATAN-030925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, 66, 'selesai', '2025-09-03 15:08:13', '2025-09-03 15:59:14');
+INSERT INTO `sterilization_loads` (`load_id`, `load_name`, `notes`, `created_by_user_id`, `machine_id`, `load_type`, `priority`, `destination_department_id`, `packaging_type_id`, `cycle_id`, `status`, `created_at`, `updated_at`) VALUES
+(33, 'MUATAN-060725-01', NULL, 1, 4, 'Rutin', 'Normal', 2, NULL, 23, 'selesai', '2025-07-05 21:00:40', '2025-07-05 21:25:59'),
+(34, 'MUATAN-060725-02', NULL, 1, 5, 'Rutin', 'Normal', 4, NULL, 24, 'selesai', '2025-07-05 21:49:19', '2025-07-05 21:50:04'),
+(35, 'MUATAN-060725-03', 'Perlu perhatian khusus', 1, 3, 'Rutin', 'Normal', 4, NULL, 26, 'selesai', '2025-07-05 22:54:06', '2025-07-06 03:52:22'),
+(36, 'MUATAN-060725-04', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 25, 'selesai', '2025-07-06 00:56:42', '2025-07-06 00:57:28'),
+(37, 'MUATAN-060725-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-07-06 00:58:30', '2025-07-06 00:58:30'),
+(38, 'MUATAN-060725-06', NULL, 1, 4, 'Rutin', 'Normal', 1, NULL, 29, 'selesai', '2025-07-06 05:46:32', '2025-07-06 15:32:47'),
+(39, 'MUATAN-060725-07', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 30, 'selesai', '2025-07-06 06:34:04', '2025-07-06 23:37:27'),
+(40, 'MUATAN-060725-08', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 27, 'selesai', '2025-07-06 06:56:40', '2025-07-06 06:57:15'),
+(41, 'MUATAN-060725-09', NULL, 1, 7, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-07-06 08:56:24', '2025-07-06 08:56:24'),
+(42, 'MUATAN-060725-10', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 28, 'selesai', '2025-07-06 12:49:32', '2025-07-06 12:51:00'),
+(43, 'MUATAN-070725-01', NULL, 5, 3, 'Rutin', 'Normal', 8, NULL, 31, 'selesai', '2025-07-07 02:18:00', '2025-07-07 02:18:09'),
+(44, 'MUATAN-090725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 32, 'selesai', '2025-07-09 01:16:40', '2025-07-09 01:17:05'),
+(45, 'MUATAN-090725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 33, 'selesai', '2025-07-09 04:04:27', '2025-07-09 04:05:07'),
+(46, 'MUATAN-090725-03', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
+(47, 'MUATAN-090725-04', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 34, 'selesai', '2025-07-09 04:08:33', '2025-07-09 04:11:12'),
+(48, 'MUATAN-090725-05', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
+(49, 'MUATAN-090725-06', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:08:33', '2025-07-09 04:08:33'),
+(50, 'MUATAN-090725-07', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:08:36', '2025-07-09 04:08:36'),
+(51, 'MUATAN-090725-08', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:09:41', '2025-07-09 04:09:41'),
+(52, 'MUATAN-090725-09', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:09:47', '2025-07-09 04:09:47'),
+(53, 'MUATAN-090725-10', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 35, 'selesai', '2025-07-09 04:14:29', '2025-07-09 04:15:07'),
+(54, 'MUATAN-090725-11', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-09 04:35:49', '2025-07-09 04:35:49'),
+(55, 'MUATAN-090725-12', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 36, 'selesai', '2025-07-09 11:58:35', '2025-07-09 11:58:47'),
+(56, 'MUATAN-140725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 37, 'selesai', '2025-07-14 11:50:03', '2025-07-14 11:51:23'),
+(57, 'MUATAN-150725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 38, 'selesai', '2025-07-15 02:09:55', '2025-07-15 02:10:47'),
+(58, 'MUATAN-150725-02', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, 39, 'selesai', '2025-07-15 04:04:08', '2025-07-15 04:04:31'),
+(59, 'MUATAN-150725-03', NULL, 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-07-15 07:12:01', '2025-07-15 07:12:01'),
+(60, 'MUATAN-150725-04', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 40, 'selesai', '2025-07-15 07:17:25', '2025-07-15 07:18:27'),
+(61, 'MUATAN-190725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 41, 'selesai', '2025-07-19 02:16:37', '2025-07-19 02:16:55'),
+(62, 'MUATAN-220725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 42, 'selesai', '2025-07-22 03:42:04', '2025-07-22 03:42:33'),
+(63, 'MUATAN-230725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 43, 'selesai', '2025-07-23 00:18:54', '2025-07-23 00:19:36'),
+(64, 'MUATAN-240725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 44, 'selesai', '2025-07-24 03:09:45', '2025-07-24 03:10:15'),
+(65, 'MUATAN-240725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 45, 'selesai', '2025-07-24 03:18:33', '2025-07-24 03:18:47'),
+(66, 'MUATAN-240725-03', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 46, 'selesai', '2025-07-24 05:37:19', '2025-07-24 05:38:50'),
+(67, 'MUATAN-290725-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 47, 'selesai', '2025-07-28 23:09:06', '2025-07-28 23:09:30'),
+(68, 'MUATAN-290725-02', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 48, 'selesai', '2025-07-29 03:22:54', '2025-07-29 03:24:12'),
+(69, 'MUATAN-050825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 49, 'selesai', '2025-08-05 01:03:36', '2025-08-05 01:03:57'),
+(70, 'MUATAN-080825-01', NULL, 1, 3, 'Rutin', 'Normal', 8, NULL, 50, 'selesai', '2025-08-07 17:25:50', '2025-08-07 17:26:13'),
+(71, 'MUATAN-080825-02', NULL, 1, 7, 'Rutin', 'Normal', 4, NULL, 51, 'selesai', '2025-08-07 17:40:00', '2025-08-07 17:40:10'),
+(72, 'MUATAN-080825-03', NULL, 1, 3, 'Rutin', 'Normal', 8, NULL, 52, 'selesai', '2025-08-07 17:53:44', '2025-08-07 17:53:55'),
+(73, 'MUATAN-140825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 53, 'selesai', '2025-08-14 07:37:44', '2025-08-14 07:38:06'),
+(74, 'MUATAN-190825-01', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 54, 'selesai', '2025-08-19 12:31:17', '2025-08-19 12:31:33'),
+(75, 'MUATAN-230825-01', NULL, 1, 3, 'Rutin', 'Normal', 11, NULL, 55, 'selesai', '2025-08-23 09:17:25', '2025-08-23 09:17:53'),
+(76, 'MUATAN-230825-02', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, NULL, 'persiapan', '2025-08-23 09:28:03', '2025-08-23 09:28:03'),
+(77, 'MUATAN-250825-01', NULL, 1, 3, 'Rutin', 'Normal', 3, NULL, 56, 'selesai', '2025-08-25 03:08:22', '2025-08-25 03:08:36'),
+(78, 'MUATAN-250825-02', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-08-25 03:40:49', '2025-08-25 03:40:49'),
+(79, 'MUATAN-250825-03', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-08-25 03:40:50', '2025-08-25 03:40:50'),
+(80, 'MUATAN-250825-04', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 57, 'selesai', '2025-08-25 03:40:52', '2025-08-25 03:41:14'),
+(81, 'MUATAN-250825-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-08-25 11:27:48', '2025-08-25 11:27:48'),
+(82, 'MUATAN-250825-06', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, NULL, 'persiapan', '2025-08-25 11:29:04', '2025-08-25 11:29:04'),
+(83, 'MUATAN-270825-01', 'Catatan', 1, 3, 'Rutin', 'Normal', 4, NULL, 58, 'selesai', '2025-08-27 12:33:34', '2025-08-27 12:43:58'),
+(84, 'MUATAN-270825-02', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, NULL, 'persiapan', '2025-08-27 12:45:18', '2025-08-27 12:45:18'),
+(85, 'MUATAN-270825-03', NULL, 1, 3, 'Rutin', 'Normal', 8, NULL, 59, 'selesai', '2025-08-27 13:12:53', '2025-08-27 13:13:42'),
+(89, 'MUATAN-290825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, 61, 'selesai', '2025-08-29 12:53:40', '2025-08-29 13:13:26'),
+(90, 'MUATAN-290825-02', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, 62, 'selesai', '2025-08-29 13:52:47', '2025-08-29 13:53:47'),
+(91, 'MUATAN-310825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-08-31 05:09:00', '2025-08-31 05:09:00'),
+(92, 'MUATAN-030925-01', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, 63, 'selesai', '2025-09-03 01:37:40', '2025-09-03 01:37:52'),
+(93, 'MUATAN-030925-02', NULL, 1, 3, 'Rutin', 'Normal', 2, NULL, 64, 'selesai', '2025-09-03 01:47:53', '2025-09-03 01:48:06'),
+(94, 'MUATAN-030925-03', NULL, 1, 6, 'Rutin', 'Normal', 1, NULL, 65, 'selesai', '2025-09-03 14:55:02', '2025-09-03 15:06:49'),
+(95, 'MUATAN-030925-04', NULL, 1, 3, 'Rutin', 'Normal', 1, 1, 67, 'selesai', '2025-09-03 14:59:55', '2025-09-05 16:27:41'),
+(96, 'MUATAN-030925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 66, 'selesai', '2025-09-03 15:08:13', '2025-09-03 15:59:14');
 
 -- --------------------------------------------------------
 
@@ -4072,9 +4101,9 @@ INSERT INTO `sterilization_records` (`record_id`, `label_unique_id`, `item_id`, 
 (282, '73B5F715', 45, 48, 68, 4, 223, 'set', 'IBS Bedah 5', 1, '2025-07-29 03:24:18', '2025-08-28 03:24:18', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":10,\"quantity\":1},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":2},{\"instrument_id\":19,\"quantity\":2},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":3},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":50,\"quantity\":2}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (283, '6B3FF3EB', 28, 48, 68, 4, 224, 'set', 'IBS Kandungan 1', 1, '2025-07-29 03:24:18', '2025-08-28 03:24:18', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":5},{\"instrument_id\":7,\"quantity\":3},{\"instrument_id\":11,\"quantity\":2},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":23,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":1},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":28,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":2},{\"instrument_id\":35,\"quantity\":5},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":40,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (284, 'E35F24CC', 20, 48, 68, 4, 225, 'set', 'IBS Kandungan 2', 1, '2025-07-29 03:24:18', '2025-08-28 03:24:18', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":2},{\"instrument_id\":7,\"quantity\":4},{\"instrument_id\":10,\"quantity\":2},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":2},{\"instrument_id\":20,\"quantity\":2},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":1},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":2},{\"instrument_id\":35,\"quantity\":5},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":40,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
-(285, '1520C68B', 22, 49, 69, 4, 226, 'set', 'IBS Bedah 1 bak panjang ram', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":3},{\"instrument_id\":10,\"quantity\":2},{\"instrument_id\":11,\"quantity\":5},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":13,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":25,\"quantity\":5},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":2}]', 'printed', NULL, NULL, NULL, NULL, 1),
-(286, '4F37D1CB', 27, 49, 69, 4, 227, 'set', 'IBS Bedah 2', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":5},{\"instrument_id\":10,\"quantity\":1},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":24,\"quantity\":2},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":2},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
-(287, '98D9E2DD', 46, 49, 69, 4, 228, 'set', 'IBS Bedah 3', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":5,\"quantity\":2},{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":2},{\"instrument_id\":10,\"quantity\":4},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":2},{\"instrument_id\":19,\"quantity\":2},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":28,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":3},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
+(285, '1520C68B', 22, 49, 69, 4, 226, 'set', 'IBS Bedah 1 bak panjang ram', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":3},{\"instrument_id\":10,\"quantity\":2},{\"instrument_id\":11,\"quantity\":5},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":13,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":25,\"quantity\":5},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":2}]', 'printed', NULL, NULL, NULL, NULL, 1),
+(286, '4F37D1CB', 27, 49, 69, 4, 227, 'set', 'IBS Bedah 2', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":5},{\"instrument_id\":10,\"quantity\":1},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":24,\"quantity\":2},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":2},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
+(287, '98D9E2DD', 46, 49, 69, 4, 228, 'set', 'IBS Bedah 3', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":5,\"quantity\":2},{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":2},{\"instrument_id\":10,\"quantity\":4},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":2},{\"instrument_id\":19,\"quantity\":2},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":28,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":3},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
 (288, '4958088F', 97, 50, 70, 8, 229, 'instrument', 'abc', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'active', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
 (289, 'EB0DD423', 87, 50, 70, 8, 230, 'instrument', 'ABC', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'active', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
 (290, '7EE347C3', 80, 51, 71, 4, 231, 'set', 'Abortus', 1, '2025-08-07 17:40:11', '2025-08-14 17:40:11', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
@@ -4108,8 +4137,9 @@ INSERT INTO `sterilization_records` (`record_id`, `label_unique_id`, `item_id`, 
 (317, '21D61415', 83, 64, 93, 2, 265, 'set', 'contoh dengan gambar', 1, '2025-09-03 01:48:09', '2025-10-03 01:48:09', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":5,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":303,\"quantity\":1},{\"instrument_id\":559,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (318, '28873F73', 80, 65, 94, 1, 268, 'set', 'Abortus', 1, '2025-09-03 15:06:52', '2025-11-02 15:06:52', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (319, '034CF380', 17, 65, 94, 1, 269, 'set', 'CURET IBS', 1, '2025-09-03 15:06:52', '2025-09-10 15:06:52', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
-(320, '87816B5A', 69, 66, 96, 4, 272, 'set', 'BPH', 1, '2025-09-03 15:59:18', '2025-10-03 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
-(321, '9A53CFB6', 80, 66, 96, 4, 273, 'set', 'Abortus', 1, '2025-09-03 15:59:18', '2025-11-02 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1);
+(320, '87816B5A', 69, 66, 96, 4, 272, 'set', 'BPH', 1, '2025-09-03 15:59:18', '2025-10-03 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 2),
+(321, '9A53CFB6', 80, 66, 96, 4, 273, 'set', 'Abortus', 1, '2025-09-03 15:59:18', '2025-11-02 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 2),
+(322, '5F8FBF7C', 17, 67, 95, 1, 270, 'set', 'CURET IBS', 1, '2025-09-05 16:27:43', '2025-09-12 16:27:43', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -4237,6 +4267,13 @@ ALTER TABLE `machines`
   ADD UNIQUE KEY `machine_code_unique` (`machine_code`);
 
 --
+-- Indexes for table `packaging_types`
+--
+ALTER TABLE `packaging_types`
+  ADD PRIMARY KEY (`packaging_type_id`),
+  ADD UNIQUE KEY `packaging_name` (`packaging_name`);
+
+--
 -- Indexes for table `print_queue`
 --
 ALTER TABLE `print_queue`
@@ -4261,7 +4298,8 @@ ALTER TABLE `sterilization_loads`
   ADD KEY `fk_load_user` (`created_by_user_id`),
   ADD KEY `fk_load_cycle` (`cycle_id`),
   ADD KEY `fk_load_to_machine` (`machine_id`),
-  ADD KEY `fk_load_to_department` (`destination_department_id`);
+  ADD KEY `fk_load_to_department` (`destination_department_id`),
+  ADD KEY `packaging_type_id` (`packaging_type_id`);
 
 --
 -- Indexes for table `sterilization_load_items`
@@ -4309,7 +4347,7 @@ ALTER TABLE `user_notifications`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=542;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=547;
 
 --
 -- AUTO_INCREMENT for table `api_keys`
@@ -4360,16 +4398,22 @@ ALTER TABLE `machines`
   MODIFY `machine_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `packaging_types`
+--
+ALTER TABLE `packaging_types`
+  MODIFY `packaging_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `print_queue`
 --
 ALTER TABLE `print_queue`
-  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=336;
+  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=339;
 
 --
 -- AUTO_INCREMENT for table `sterilization_cycles`
 --
 ALTER TABLE `sterilization_cycles`
-  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `sterilization_loads`
@@ -4387,7 +4431,7 @@ ALTER TABLE `sterilization_load_items`
 -- AUTO_INCREMENT for table `sterilization_records`
 --
 ALTER TABLE `sterilization_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=322;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=323;
 
 --
 -- AUTO_INCREMENT for table `users`
