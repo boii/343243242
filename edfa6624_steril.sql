@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 05, 2025 at 04:51 PM
+-- Generation Time: Sep 06, 2025 at 07:39 PM
 -- Server version: 10.11.13-MariaDB-cll-lve
 -- PHP Version: 8.4.10
 
@@ -579,7 +579,40 @@ INSERT INTO `activity_log` (`log_id`, `user_id`, `action_type`, `target_type`, `
 (543, 1, 'CREATE_PACKAGING_TYPE', NULL, NULL, 'Master data Jenis Kemasan baru ditambahkan: Pouches (Masa Kedaluwarsa: 30 hari)', '210.211.17.122', '2025-09-05 16:27:07'),
 (544, 1, 'UPDATE_LOAD', 'load', 95, 'Detail muatan (ID: 95) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 16:27:19'),
 (545, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 67, No: SIKLUS-STEAM-050925-01) dibuat dan langsung diselesaikan untuk Muatan ID: 95.', '210.211.17.122', '2025-09-05 16:27:41'),
-(546, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 95.', '210.211.17.122', '2025-09-05 16:27:43');
+(546, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 95.', '210.211.17.122', '2025-09-05 16:27:43'),
+(547, 1, 'UPDATE_LOAD', 'load', 91, 'Detail muatan (ID: 91) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 17:09:28'),
+(548, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 68, No: SIKLUS-STEAM-060925-01) dibuat dan langsung diselesaikan untuk Muatan ID: 91.', '210.211.17.122', '2025-09-05 17:09:35'),
+(549, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 2 label baru untuk Muatan ID: 91.', '210.211.17.122', '2025-09-05 17:09:36'),
+(550, 1, 'CREATE_LOAD', 'load', 97, 'Muatan baru dibuat: MUATAN-060925-01', '210.211.17.122', '2025-09-05 17:10:16'),
+(551, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 69, No: SIKLUS-STEAM-060925-02) dibuat dan langsung diselesaikan untuk Muatan ID: 97.', '210.211.17.122', '2025-09-05 17:10:42'),
+(552, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 97.', '210.211.17.122', '2025-09-05 17:10:44'),
+(553, 1, 'UPDATE_SET', 'set', 80, 'Data set diperbarui untuk: \'Abortus\' (ID: 80).', '210.211.17.122', '2025-09-05 17:13:04'),
+(554, 1, 'CREATE_LOAD', 'load', 98, 'Muatan baru dibuat: MUATAN-060925-02', '210.211.17.122', '2025-09-05 17:13:27'),
+(555, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 70, No: SIKLUS-STEAM-060925-03) dibuat dan langsung diselesaikan untuk Muatan ID: 98.', '210.211.17.122', '2025-09-05 17:13:34'),
+(556, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 98.', '210.211.17.122', '2025-09-05 17:13:37'),
+(557, 1, 'CREATE_LOAD', 'load', 99, 'Muatan baru dibuat: MUATAN-060925-03', '210.211.17.122', '2025-09-05 17:19:36'),
+(558, 1, 'UPDATE_LOAD', 'load', 99, 'Detail muatan (ID: 99) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 17:19:48'),
+(559, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 71, No: SIKLUS-STEAM-060925-04) dibuat dan langsung diselesaikan untuk Muatan ID: 99.', '210.211.17.122', '2025-09-05 17:19:54'),
+(560, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 99.', '210.211.17.122', '2025-09-05 17:19:56'),
+(561, 1, 'CREATE_LOAD', 'load', 100, 'Muatan baru dibuat: MUATAN-060925-04', '210.211.17.122', '2025-09-05 17:21:46'),
+(562, 1, 'UPDATE_LOAD', 'load', 100, 'Detail muatan (ID: 100) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 17:52:58'),
+(563, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 72, No: SIKLUS-STEAM-060925-05) dibuat dan langsung diselesaikan untuk Muatan ID: 100.', '210.211.17.122', '2025-09-05 17:53:28'),
+(564, 1, 'CREATE_LOAD', 'load', 101, 'Muatan baru dibuat: MUATAN-060925-05', '210.211.17.122', '2025-09-05 18:26:06'),
+(565, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 73, No: SIKLUS-STEAM-060925-06) dibuat dan langsung diselesaikan untuk Muatan ID: 101.', '210.211.17.122', '2025-09-05 18:26:49'),
+(566, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 101.', '210.211.17.122', '2025-09-05 18:26:52'),
+(567, 1, 'CREATE_LOAD', 'load', 102, 'Muatan baru dibuat: MUATAN-060925-06', '210.211.17.122', '2025-09-05 18:28:17'),
+(568, 1, 'DELETE_LOAD', NULL, NULL, 'Muatan dihapus: MUATAN-060925-06 (ID: 102).', '210.211.17.122', '2025-09-05 18:31:35'),
+(569, 1, 'CREATE_LOAD', 'load', 103, 'Muatan baru dibuat: MUATAN-060925-06', '210.211.17.122', '2025-09-05 18:31:45'),
+(570, 1, 'UPDATE_LOAD', 'load', 103, 'Detail muatan (ID: 103) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 18:33:46'),
+(571, 1, 'MERGE_LOAD_TO_CYCLE', NULL, NULL, 'Muatan ID: 103 digabungkan ke Siklus ID: 73.', '210.211.17.122', '2025-09-05 18:37:18'),
+(572, 1, 'CREATE_LOAD', 'load', 104, 'Muatan baru dibuat: MUATAN-060925-07', '210.211.17.122', '2025-09-05 18:37:54'),
+(573, 1, 'UPDATE_LOAD', 'load', 104, 'Detail muatan (ID: 104) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 18:38:15'),
+(574, 1, 'UPDATE_LOAD', 'load', 104, 'Detail muatan (ID: 104) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 18:38:29'),
+(575, 1, 'UPDATE_LOAD', 'load', 104, 'Detail muatan (ID: 104) telah diperbarui via modal.', '210.211.17.122', '2025-09-05 18:40:47'),
+(576, 1, 'CREATE_LOAD', 'load', 105, 'Muatan baru dibuat: MUATAN-060925-08', '114.10.152.202', '2025-09-05 23:57:09'),
+(577, 1, 'UPDATE_SET', 'set', 67, 'Data set diperbarui untuk: \'BPH\' (ID: 67).', '114.10.152.202', '2025-09-05 23:57:44'),
+(578, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 74, No: SIKLUS-STEAM-070925-01) dibuat dan langsung diselesaikan untuk Muatan ID: 105.', '210.211.17.122', '2025-09-06 19:17:32'),
+(579, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 105.', '210.211.17.122', '2025-09-06 19:17:35');
 
 -- --------------------------------------------------------
 
@@ -2795,7 +2828,7 @@ INSERT INTO `instrument_sets` (`set_id`, `set_name`, `set_code`, `special_instru
 (64, 'Set Exclusive', 'SET-69031134', NULL, 30, 1, '2025-07-03 18:57:17', '2025-07-03 18:57:17'),
 (65, 'Ffff', 'SET-39567335', NULL, 365, 1, '2025-07-04 14:32:58', '2025-07-04 14:32:58'),
 (66, 'Shshs', 'SET-39600869', NULL, 365, 1, '2025-07-04 14:33:25', '2025-07-04 14:34:06'),
-(67, 'BPH', 'SET-33558925', NULL, NULL, 1, '2025-07-09 04:00:13', '2025-07-09 04:00:13'),
+(67, 'BPH', 'SET-33558925', NULL, 360, 1, '2025-07-09 04:00:13', '2025-09-05 23:57:44'),
 (68, 'Bph', 'SET-33606034', NULL, NULL, 1, '2025-07-09 04:00:14', '2025-07-09 04:00:14'),
 (69, 'BPH', 'SET-33559988', NULL, NULL, 1, '2025-07-09 04:00:14', '2025-07-09 04:00:14'),
 (70, 'BPH', 'SET-33559598', NULL, NULL, 1, '2025-07-09 04:00:19', '2025-07-09 04:00:19'),
@@ -2808,7 +2841,7 @@ INSERT INTO `instrument_sets` (`set_id`, `set_name`, `set_code`, `special_instru
 (77, 'MEDIKASI SET RSPA', 'SET-62930494', NULL, 90, 1, '2025-07-15 07:03:43', '2025-07-15 07:03:43'),
 (78, 'SET LINEN SOEGATEN', 'SET-26348929', NULL, 5, 1, '2025-07-24 03:06:09', '2025-07-24 03:06:09'),
 (79, 'LINEN', 'SET-26529074', NULL, 5, 1, '2025-07-24 03:09:01', '2025-07-24 03:09:01'),
-(80, 'Abortus', 'SET-44101038', NULL, 60, 1, '2025-07-28 23:08:31', '2025-09-03 15:04:58'),
+(80, 'Abortus', 'SET-44101038', NULL, NULL, 1, '2025-07-28 23:08:31', '2025-09-05 17:13:04'),
 (81, 'SET BEDAH 1 LANTAI 7', 'SET-06623269', NULL, 365, 1, '2025-08-19 12:30:45', '2025-08-19 12:30:45'),
 (82, 'contoh set dengan gambar', 'SET-63224263', NULL, NULL, 1, '2025-09-03 01:33:58', '2025-09-03 01:33:58'),
 (83, 'contoh dengan gambar', 'SET-63366317', NULL, NULL, 1, '2025-09-03 01:36:18', '2025-09-03 01:36:18');
@@ -3443,9 +3476,6 @@ INSERT INTO `instrument_set_items` (`set_item_id`, `set_id`, `instrument_id`, `q
 (1383, 46, 36, 1),
 (1384, 66, 97, 1),
 (1385, 66, 98, 1),
-(1386, 67, 70, 1),
-(1387, 67, 71, 1),
-(1388, 67, 72, 1),
 (1389, 69, 72, 1),
 (1390, 69, 73, 1),
 (1391, 69, 74, 1),
@@ -3486,8 +3516,6 @@ INSERT INTO `instrument_set_items` (`set_item_id`, `set_id`, `instrument_id`, `q
 (1430, 83, 559, 1),
 (1431, 83, 303, 1),
 (1432, 83, 5, 1),
-(1433, 80, 70, 1),
-(1434, 80, 71, 1),
 (1435, 17, 70, 1),
 (1436, 17, 71, 1),
 (1437, 17, 72, 1),
@@ -3507,7 +3535,12 @@ INSERT INTO `instrument_set_items` (`set_item_id`, `set_id`, `instrument_id`, `q
 (1451, 17, 17, 1),
 (1452, 17, 31, 1),
 (1453, 17, 32, 1),
-(1454, 17, 35, 1);
+(1454, 17, 35, 1),
+(1455, 80, 70, 1),
+(1456, 80, 71, 1),
+(1457, 67, 70, 1),
+(1458, 67, 71, 1),
+(1459, 67, 72, 1);
 
 -- --------------------------------------------------------
 
@@ -3629,7 +3662,8 @@ INSERT INTO `print_queue` (`queue_id`, `record_id`, `load_id`, `added_at`) VALUE
 (326, 309, 85, '2025-08-29 08:27:14'),
 (327, 310, 85, '2025-08-29 08:27:14'),
 (336, 320, 96, '2025-09-05 16:14:59'),
-(337, 321, 96, '2025-09-05 16:14:59');
+(337, 321, 96, '2025-09-05 16:14:59'),
+(348, 327, 99, '2025-09-05 17:20:14');
 
 -- --------------------------------------------------------
 
@@ -3696,7 +3730,14 @@ INSERT INTO `sterilization_cycles` (`cycle_id`, `machine_name`, `cycle_number`, 
 (64, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-02', '2025-09-03 08:48:06', 1, 'completed', NULL, '2025-09-03 01:48:06'),
 (65, 'Dry Heat Sterilizer', 'SIKLUS-DH-030925-01', '2025-09-03 22:06:49', 1, 'completed', NULL, '2025-09-03 15:06:49'),
 (66, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-030925-03', '2025-09-03 22:59:14', 1, 'completed', NULL, '2025-09-03 15:59:14'),
-(67, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-050925-01', '2025-09-05 23:27:41', 1, 'completed', NULL, '2025-09-05 16:27:41');
+(67, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-050925-01', '2025-09-05 23:27:41', 1, 'completed', NULL, '2025-09-05 16:27:41'),
+(68, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-01', '2025-09-06 00:09:35', 1, 'completed', NULL, '2025-09-05 17:09:35'),
+(69, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-02', '2025-09-06 00:10:42', 1, 'completed', NULL, '2025-09-05 17:10:42'),
+(70, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-03', '2025-09-06 00:13:34', 1, 'completed', NULL, '2025-09-05 17:13:34'),
+(71, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-04', '2025-09-06 00:19:54', 1, 'completed', NULL, '2025-09-05 17:19:54'),
+(72, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-05', '2025-09-06 00:53:28', 1, 'completed', NULL, '2025-09-05 17:53:28'),
+(73, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-06', '2025-09-06 01:26:49', 1, 'completed', NULL, '2025-09-05 18:26:49'),
+(74, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-01', '2025-09-07 02:17:32', 1, 'completed', NULL, '2025-09-06 19:17:32');
 
 -- --------------------------------------------------------
 
@@ -3780,12 +3821,20 @@ INSERT INTO `sterilization_loads` (`load_id`, `load_name`, `notes`, `created_by_
 (85, 'MUATAN-270825-03', NULL, 1, 3, 'Rutin', 'Normal', 8, NULL, 59, 'selesai', '2025-08-27 13:12:53', '2025-08-27 13:13:42'),
 (89, 'MUATAN-290825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, 61, 'selesai', '2025-08-29 12:53:40', '2025-08-29 13:13:26'),
 (90, 'MUATAN-290825-02', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, 62, 'selesai', '2025-08-29 13:52:47', '2025-08-29 13:53:47'),
-(91, 'MUATAN-310825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, NULL, NULL, 'persiapan', '2025-08-31 05:09:00', '2025-08-31 05:09:00'),
+(91, 'MUATAN-310825-01', 'Testing API via Postman', 1, 3, 'Rutin', 'Normal', 1, 1, 68, 'selesai', '2025-08-31 05:09:00', '2025-09-05 17:09:35'),
 (92, 'MUATAN-030925-01', NULL, 1, 3, 'Rutin', 'Normal', 12, NULL, 63, 'selesai', '2025-09-03 01:37:40', '2025-09-03 01:37:52'),
 (93, 'MUATAN-030925-02', NULL, 1, 3, 'Rutin', 'Normal', 2, NULL, 64, 'selesai', '2025-09-03 01:47:53', '2025-09-03 01:48:06'),
 (94, 'MUATAN-030925-03', NULL, 1, 6, 'Rutin', 'Normal', 1, NULL, 65, 'selesai', '2025-09-03 14:55:02', '2025-09-03 15:06:49'),
 (95, 'MUATAN-030925-04', NULL, 1, 3, 'Rutin', 'Normal', 1, 1, 67, 'selesai', '2025-09-03 14:59:55', '2025-09-05 16:27:41'),
-(96, 'MUATAN-030925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 66, 'selesai', '2025-09-03 15:08:13', '2025-09-03 15:59:14');
+(96, 'MUATAN-030925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, NULL, 66, 'selesai', '2025-09-03 15:08:13', '2025-09-03 15:59:14'),
+(97, 'MUATAN-060925-01', NULL, 1, 3, 'Rutin', 'Normal', 8, 1, 69, 'selesai', '2025-09-05 17:10:16', '2025-09-05 17:10:42'),
+(98, 'MUATAN-060925-02', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 70, 'selesai', '2025-09-05 17:13:27', '2025-09-05 17:13:34'),
+(99, 'MUATAN-060925-03', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 71, 'selesai', '2025-09-05 17:19:36', '2025-09-05 17:19:54'),
+(100, 'MUATAN-060925-04', NULL, 1, 3, 'Rutin', 'Normal', 8, 1, 72, 'selesai', '2025-09-05 17:21:46', '2025-09-05 17:53:28'),
+(101, 'MUATAN-060925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 73, 'selesai', '2025-09-05 18:26:06', '2025-09-05 18:26:49'),
+(103, 'MUATAN-060925-06', NULL, 1, 3, 'Rutin', 'Normal', 4, 2, 73, 'selesai', '2025-09-05 18:31:45', '2025-09-05 18:37:18'),
+(104, 'MUATAN-060925-07', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, NULL, 'persiapan', '2025-09-05 18:37:54', '2025-09-05 18:40:47'),
+(105, 'MUATAN-060925-08', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 74, 'selesai', '2025-09-05 23:57:09', '2025-09-06 19:17:32');
 
 -- --------------------------------------------------------
 
@@ -3967,7 +4016,15 @@ INSERT INTO `sterilization_load_items` (`load_item_id`, `load_id`, `item_id`, `i
 (270, 95, 17, 'set', 1, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]'),
 (271, 91, 75, 'set', 1, '[{\"instrument_id\":70,\"quantity\":5},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1}]'),
 (272, 96, 69, 'set', 1, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]'),
-(273, 96, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]');
+(273, 96, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(274, 97, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(275, 98, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(276, 99, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(277, 100, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(278, 101, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(279, 103, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(280, 104, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
+(281, 105, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]');
 
 -- --------------------------------------------------------
 
@@ -4104,8 +4161,8 @@ INSERT INTO `sterilization_records` (`record_id`, `label_unique_id`, `item_id`, 
 (285, '1520C68B', 22, 49, 69, 4, 226, 'set', 'IBS Bedah 1 bak panjang ram', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":3},{\"instrument_id\":10,\"quantity\":2},{\"instrument_id\":11,\"quantity\":5},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":13,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":25,\"quantity\":5},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":2}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (286, '4F37D1CB', 27, 49, 69, 4, 227, 'set', 'IBS Bedah 2', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":5},{\"instrument_id\":10,\"quantity\":1},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":24,\"quantity\":2},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":2},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
 (287, '98D9E2DD', 46, 49, 69, 4, 228, 'set', 'IBS Bedah 3', 1, '2025-08-05 01:03:59', '2025-09-04 01:03:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":5,\"quantity\":2},{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":2},{\"instrument_id\":10,\"quantity\":4},{\"instrument_id\":11,\"quantity\":4},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":2},{\"instrument_id\":19,\"quantity\":2},{\"instrument_id\":20,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":24,\"quantity\":1},{\"instrument_id\":25,\"quantity\":2},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":28,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":4},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":3},{\"instrument_id\":35,\"quantity\":2},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":50,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 1),
-(288, '4958088F', 97, 50, 70, 8, 229, 'instrument', 'abc', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'active', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
-(289, 'EB0DD423', 87, 50, 70, 8, 230, 'instrument', 'ABC', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'active', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
+(288, '4958088F', 97, 50, 70, 8, 229, 'instrument', 'abc', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'expired', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
+(289, 'EB0DD423', 87, 50, 70, 8, 230, 'instrument', 'ABC', 1, '2025-08-07 17:26:42', '2025-09-06 17:26:42', 'expired', NULL, NULL, NULL, NULL, NULL, 'printed', NULL, NULL, NULL, NULL, 2),
 (290, '7EE347C3', 80, 51, 71, 4, 231, 'set', 'Abortus', 1, '2025-08-07 17:40:11', '2025-08-14 17:40:11', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (291, 'BBAB144D', 80, 52, 72, 8, 232, 'set', 'Abortus', 1, '2025-08-07 17:53:59', '2025-08-14 17:53:59', 'expired', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (292, 'A751503A', 22, 53, 73, 4, 233, 'set', 'IBS Bedah 1 bak panjang ram', 1, '2025-08-14 07:38:08', '2025-09-13 07:38:08', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":6,\"quantity\":4},{\"instrument_id\":7,\"quantity\":3},{\"instrument_id\":10,\"quantity\":2},{\"instrument_id\":11,\"quantity\":5},{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":13,\"quantity\":1},{\"instrument_id\":14,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":17,\"quantity\":5},{\"instrument_id\":18,\"quantity\":1},{\"instrument_id\":19,\"quantity\":1},{\"instrument_id\":22,\"quantity\":1},{\"instrument_id\":25,\"quantity\":5},{\"instrument_id\":26,\"quantity\":1},{\"instrument_id\":27,\"quantity\":1},{\"instrument_id\":29,\"quantity\":1},{\"instrument_id\":30,\"quantity\":1},{\"instrument_id\":31,\"quantity\":2},{\"instrument_id\":32,\"quantity\":2},{\"instrument_id\":33,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":36,\"quantity\":1},{\"instrument_id\":37,\"quantity\":1},{\"instrument_id\":50,\"quantity\":2}]', 'printed', NULL, NULL, NULL, NULL, 2),
@@ -4139,7 +4196,14 @@ INSERT INTO `sterilization_records` (`record_id`, `label_unique_id`, `item_id`, 
 (319, '034CF380', 17, 65, 94, 1, 269, 'set', 'CURET IBS', 1, '2025-09-03 15:06:52', '2025-09-10 15:06:52', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
 (320, '87816B5A', 69, 66, 96, 4, 272, 'set', 'BPH', 1, '2025-09-03 15:59:18', '2025-10-03 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 2),
 (321, '9A53CFB6', 80, 66, 96, 4, 273, 'set', 'Abortus', 1, '2025-09-03 15:59:18', '2025-11-02 15:59:18', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'pending', NULL, NULL, NULL, NULL, 2),
-(322, '5F8FBF7C', 17, 67, 95, 1, 270, 'set', 'CURET IBS', 1, '2025-09-05 16:27:43', '2025-09-12 16:27:43', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1);
+(322, '5F8FBF7C', 17, 67, 95, 1, 270, 'set', 'CURET IBS', 1, '2025-09-05 16:27:43', '2025-09-12 16:27:43', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":12,\"quantity\":1},{\"instrument_id\":15,\"quantity\":1},{\"instrument_id\":16,\"quantity\":1},{\"instrument_id\":17,\"quantity\":1},{\"instrument_id\":31,\"quantity\":1},{\"instrument_id\":32,\"quantity\":1},{\"instrument_id\":35,\"quantity\":1},{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1},{\"instrument_id\":76,\"quantity\":1},{\"instrument_id\":77,\"quantity\":1},{\"instrument_id\":78,\"quantity\":1},{\"instrument_id\":79,\"quantity\":1},{\"instrument_id\":80,\"quantity\":1},{\"instrument_id\":81,\"quantity\":1},{\"instrument_id\":82,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 3),
+(323, '4A884152', 80, 68, 91, 1, 267, 'set', 'Abortus', 1, '2025-09-05 17:09:36', '2025-11-04 17:09:36', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
+(324, '0F3C9AD5', 75, 68, 91, 1, 271, 'set', 'BEDAH GEMOLONG', 1, '2025-09-05 17:09:36', '2025-10-05 17:09:36', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":5},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1},{\"instrument_id\":75,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
+(325, '5DDF9967', 80, 69, 97, 8, 274, 'set', 'Abortus', 1, '2025-09-05 17:10:44', '2025-11-04 17:10:44', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
+(326, '9939E8F9', 80, 70, 98, 4, 275, 'set', 'Abortus', 1, '2025-09-05 17:13:37', '2025-10-05 17:13:37', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
+(327, '920DED55', 80, 71, 99, 4, 276, 'set', 'Abortus', 1, '2025-09-05 17:19:56', '2025-10-05 17:19:56', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
+(328, '63F34B14', 80, 73, 101, 4, 278, 'set', 'Abortus', 1, '2025-09-05 18:26:52', '2025-10-05 18:26:52', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
+(329, 'D84E2F37', 67, 74, 105, 4, 281, 'set', 'BPH', 1, '2025-09-06 19:17:35', '2026-09-01 19:17:35', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 3);
 
 -- --------------------------------------------------------
 
@@ -4347,7 +4411,7 @@ ALTER TABLE `user_notifications`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=547;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=580;
 
 --
 -- AUTO_INCREMENT for table `api_keys`
@@ -4383,7 +4447,7 @@ ALTER TABLE `instrument_sets`
 -- AUTO_INCREMENT for table `instrument_set_items`
 --
 ALTER TABLE `instrument_set_items`
-  MODIFY `set_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1455;
+  MODIFY `set_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1460;
 
 --
 -- AUTO_INCREMENT for table `instrument_types`
@@ -4407,31 +4471,31 @@ ALTER TABLE `packaging_types`
 -- AUTO_INCREMENT for table `print_queue`
 --
 ALTER TABLE `print_queue`
-  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=339;
+  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
 
 --
 -- AUTO_INCREMENT for table `sterilization_cycles`
 --
 ALTER TABLE `sterilization_cycles`
-  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `sterilization_loads`
 --
 ALTER TABLE `sterilization_loads`
-  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `sterilization_load_items`
 --
 ALTER TABLE `sterilization_load_items`
-  MODIFY `load_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
+  MODIFY `load_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
 
 --
 -- AUTO_INCREMENT for table `sterilization_records`
 --
 ALTER TABLE `sterilization_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=323;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
 
 --
 -- AUTO_INCREMENT for table `users`
