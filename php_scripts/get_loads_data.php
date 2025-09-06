@@ -2,7 +2,7 @@
 /**
  * Get Sterilization Loads Data (AJAX - Simplified)
  *
- * This version is updated to retrieve and filter by the new packaging type.
+ * This version is simplified by removing session-related data fetching.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -32,7 +32,6 @@ $searchQuery = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
 $machineFilter = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT);
-$packagingFilter = filter_input(INPUT_GET, 'packaging_type_id', FILTER_VALIDATE_INT);
 $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 $offset = ($currentPage - 1) * $recordsPerPage;
@@ -41,13 +40,13 @@ $response = ['success' => false, 'data' => [], 'pagination' => []];
 
 $conn = connectToDatabase();
 if ($conn) {
+    // PERUBAHAN: Menghapus LEFT JOIN ke tabel sessions
     $baseJoins = "FROM sterilization_loads sl
                   LEFT JOIN users u ON sl.created_by_user_id = u.user_id
                   LEFT JOIN machines m ON sl.machine_id = m.machine_id
                   LEFT JOIN departments d ON sl.destination_department_id = d.department_id
                   LEFT JOIN sterilization_cycles sc ON sl.cycle_id = sc.cycle_id
-                  LEFT JOIN sterilization_load_items sli ON sl.load_id = sli.load_id
-                  LEFT JOIN packaging_types pt ON sl.packaging_type_id = pt.packaging_type_id"; // PERUBAHAN
+                  LEFT JOIN sterilization_load_items sli ON sl.load_id = sli.load_id";
 
     $whereClause = " WHERE 1=1";
     $params = [];
@@ -73,12 +72,6 @@ if ($conn) {
         $params[] = $departmentFilter;
         $types .= "i";
     }
-    // PERUBAHAN: Menambahkan filter jenis kemasan
-    if ($packagingFilter) {
-        $whereClause .= " AND sl.packaging_type_id = ?";
-        $params[] = $packagingFilter;
-        $types .= "i";
-    }
     if (!empty($dateStart)) {
         $whereClause .= " AND DATE(sl.created_at) >= ?";
         $params[] = $dateStart;
@@ -102,6 +95,7 @@ if ($conn) {
 
     $loads = [];
     if ($totalRecords > 0) {
+        // PERUBAHAN: Menghapus kolom session_name dari SELECT
         $sqlData = "SELECT 
                         sl.load_id, 
                         sl.load_name, 
@@ -112,7 +106,6 @@ if ($conn) {
                         m.machine_name,
                         sc.cycle_number,
                         d.department_name as destination_department_name,
-                        pt.packaging_name, -- PERUBAHAN
                         COUNT(sli.load_item_id) as item_count
                     {$baseJoins}
                     {$whereClause}

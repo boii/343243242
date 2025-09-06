@@ -3,7 +3,7 @@
  * Manage Master Data Page (Tabbed Interface Revamp)
  *
  * Allows administrators and supervisors to manage core data.
- * This version is simplified by removing Method and Session management.
+ * This version simplifies the UI by removing Method and Session management.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -30,7 +30,6 @@ if (!in_array($userRole, ['admin', 'supervisor'])) {
 $instrumentTypes = [];
 $departments = [];
 $machines = [];
-$packagingTypes = []; // Add new array for packaging types
 $dbErrorMessage = '';
 
 $conn = connectToDatabase();
@@ -59,16 +58,6 @@ if ($conn) {
         }
     } else {
         $dbErrorMessage .= " Gagal memuat data Mesin. ";
-    }
-    
-    // Fetch packaging types
-    $sqlPackaging = "SELECT packaging_type_id, packaging_name, shelf_life_days, is_active FROM packaging_types ORDER BY packaging_name ASC";
-    if ($resultPackaging = $conn->query($sqlPackaging)) {
-        while ($row = $resultPackaging->fetch_assoc()) {
-            $packagingTypes[] = $row;
-        }
-    } else {
-        $dbErrorMessage .= " Gagal memuat data Jenis Kemasan. ";
     }
 
     $conn->close();
@@ -108,7 +97,6 @@ if ($conn) {
                 <button class="tab-link active" data-target="tab-types">Tipe Instrumen</button>
                 <button class="tab-link" data-target="tab-departments">Departemen</button>
                 <button class="tab-link" data-target="tab-machines">Mesin</button>
-                <button class="tab-link" data-target="tab-packaging">Jenis Kemasan</button>
             </nav>
         </div>
 
@@ -219,46 +207,6 @@ if ($conn) {
             </div>
         </div>
 
-        <div id="tab-packaging" class="tab-content">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Master Jenis Kemasan</h3>
-            <form action="php_scripts/master_data_add.php" method="POST" class="space-y-3 mb-4 max-w-md">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
-                <input type="hidden" name="master_type" value="packaging">
-                <div>
-                    <label for="packaging_name" class="form-label">Nama Kemasan</label>
-                    <input type="text" id="packaging_name" name="name" class="form-input" placeholder="Contoh: Pouch Sterilisasi..." required>
-                </div>
-                <div>
-                    <label for="shelf_life_days" class="form-label">Masa Kedaluwarsa (Hari)</label>
-                    <input type="number" id="shelf_life_days" name="shelf_life_days" class="form-input" placeholder="Contoh: 180" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-full"><span class="material-icons mr-2">add</span>Tambah Kemasan</button>
-            </form>
-            <div class="overflow-x-auto max-h-80">
-                <table class="w-full table-auto">
-                    <thead><tr class="bg-gray-100"><th class="px-4 py-2 text-left">Nama Kemasan</th><th class="px-4 py-2 text-left">Masa Kedaluwarsa (Hari)</th><th class="px-4 py-2 text-center">Status</th></tr></thead>
-                    <tbody>
-                        <?php foreach ($packagingTypes as $packaging): ?>
-                            <tr class="<?php echo $packaging['is_active'] ? '' : 'inactive-row'; ?>">
-                                <td class="border-t px-4 py-2"><?php echo htmlspecialchars($packaging['packaging_name']); ?></td>
-                                <td class="border-t px-4 py-2"><?php echo htmlspecialchars($packaging['shelf_life_days']); ?></td>
-                                <td class="border-t px-4 py-2 text-center">
-                                    <form action="php_scripts/master_data_toggle_status.php" method="POST" class="toggle-form">
-                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
-                                        <input type="hidden" name="master_type" value="packaging">
-                                        <input type="hidden" name="id" value="<?php echo $packaging['packaging_type_id']; ?>">
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" onchange="this.form.submit()" <?php echo $packaging['is_active'] ? 'checked' : ''; ?>>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 </main>
 

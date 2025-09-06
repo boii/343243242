@@ -2,8 +2,8 @@
 /**
  * Get Sterilization Load Details (AJAX Endpoint - Final Intelligent Version)
  *
- * This version is updated to retrieve and include packaging type information
- * from the new 'packaging_types' table.
+ * This version is corrected to align with the simplified database schema
+ * by removing session and method logic.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -38,18 +38,16 @@ $conn = connectToDatabase();
 
 if ($conn) {
     try {
-        // PERUBAHAN: Menambahkan `pt.packaging_name` dan JOIN ke tabel `packaging_types`
+        // PERUBAHAN: Menghapus `sess.session_name` dari query
         $sqlLoad = "SELECT 
                         sl.*, u.full_name as creator_name, sc.cycle_number,
                         m.machine_name,
-                        dept.department_name as destination_department_name,
-                        pt.packaging_name
+                        dept.department_name as destination_department_name
                     FROM sterilization_loads sl 
                     LEFT JOIN users u ON sl.created_by_user_id = u.user_id 
                     LEFT JOIN sterilization_cycles sc ON sl.cycle_id = sc.cycle_id
                     LEFT JOIN machines m ON sl.machine_id = m.machine_id
                     LEFT JOIN departments dept ON sl.destination_department_id = dept.department_id
-                    LEFT JOIN packaging_types pt ON sl.packaging_type_id = pt.packaging_type_id
                     WHERE sl.load_id = ?";
         
         $stmtLoad = $conn->prepare($sqlLoad);

@@ -22,7 +22,6 @@ require_once 'header.php'; // Includes session check, CSRF token, etc.
 // Fetch all master data needed for create AND filter dropdowns
 $activeMachines = [];
 $activeDepartments = [];
-$activePackagingTypes = [];
 $dbErrorMessage = '';
 
 $conn_loads = connectToDatabase();
@@ -37,11 +36,6 @@ if ($conn_loads) {
     if ($result = $conn_loads->query($sqlDepts)) while($row = $result->fetch_assoc()) $activeDepartments[] = $row;
     else $dbErrorMessage .= " Gagal memuat data departemen. ";
 
-    // Fetch all active packaging types
-    $sqlPackaging = "SELECT packaging_type_id, packaging_name FROM packaging_types WHERE is_active = 1 ORDER BY packaging_name ASC";
-    if ($result = $conn_loads->query($sqlPackaging)) while($row = $result->fetch_assoc()) $activePackagingTypes[] = $row;
-    else $dbErrorMessage .= " Gagal memuat data jenis kemasan. ";
-
     $conn_loads->close();
 } else {
     $dbErrorMessage = "Koneksi ke database gagal.";
@@ -52,7 +46,6 @@ $searchQuery = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
 $machineFilter = trim($_GET['machine_id'] ?? '');
 $departmentFilter = trim($_GET['department_id'] ?? '');
-$packagingFilter = trim($_GET['packaging_type_id'] ?? '');
 $dateStart = trim($_GET['date_start'] ?? '');
 $dateEnd = trim($_GET['date_end'] ?? '');
 
@@ -117,15 +110,6 @@ $dateEnd = trim($_GET['date_end'] ?? '');
                         <?php endforeach; ?>
                     </select>
                 </div>
-                 <div>
-                    <label for="filter_packaging_type_id" class="form-label text-sm">Jenis Kemasan</label>
-                    <select id="filter_packaging_type_id" name="packaging_type_id" class="form-select">
-                        <option value="">Semua Kemasan</option>
-                        <?php foreach($activePackagingTypes as $packaging): ?>
-                            <option value="<?php echo $packaging['packaging_type_id']; ?>" <?php echo ($packagingFilter == $packaging['packaging_type_id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($packaging['packaging_name']); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
                 <div class="lg:col-span-4">
                     <label class="form-label text-sm">Rentang Tanggal Dibuat</label>
                     <div class="flex flex-col sm:flex-row gap-4">
@@ -144,7 +128,6 @@ $dateEnd = trim($_GET['date_end'] ?? '');
                         <th class="py-3 px-6 text-left">Nama Muatan & Pembuat</th>
                         <th class="py-3 px-6 text-left">Mesin</th>
                         <th class="py-3 px-6 text-left">Siklus & Tujuan</th>
-                        <th class="py-3 px-6 text-left">Jenis Kemasan</th>
                         <th class="py-3 px-6 text-center">Jml Item</th>
                         <th class="py-3 px-6 text-center">Status</th>
                         <th class="py-3 px-6 text-center">Aksi</th>
@@ -160,7 +143,7 @@ $dateEnd = trim($_GET['date_end'] ?? '');
 <div id="addLoadModal" class="modal-overlay">
     <div class="modal-content max-w-2xl">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Buat Muatan Baru</h3>
-        <form id="addLoadForm" action="php_scripts/load_add.php" method="POST">
+        <form action="php_scripts/load_add.php" method="POST">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end text-left">
                 <div>
@@ -181,16 +164,7 @@ $dateEnd = trim($_GET['date_end'] ?? '');
                          <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="md:col-span-2">
-                    <label for="packaging_type_id" class="form-label">Jenis Kemasan</label>
-                    <select id="packaging_type_id" name="packaging_type_id" class="form-select">
-                         <option value="">-- Tidak Ada (Default) --</option>
-                         <?php foreach($activePackagingTypes as $packaging): ?>
-                            <option value="<?php echo $packaging['packaging_type_id']; ?>"><?php echo htmlspecialchars($packaging['packaging_name']); ?></option>
-                         <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="md:col-span-2">
+                 <div class="md:col-span-2">
                     <label for="notes" class="form-label">Catatan (Opsional)</label>
                     <input type="text" id="notes" name="notes" class="form-input" placeholder="Contoh: Alat CITO">
                 </div>
@@ -249,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchLoads(page = 1) {
         const filters = getFilterValues();
-        tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Memuat data muatan...</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Memuat data muatan...</td></tr>';
         
         const url = `php_scripts/get_loads_data.php?page=${page}&${filters}`;
         
@@ -260,18 +234,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     renderTable(result.data);
                     renderPagination(result.pagination);
                 } else {
-                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Error: ${result.error}</td></tr>`;
                 }
             })
             .catch(error => {
-                tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-red-500">Gagal mengambil data.</td></tr>`;
             });
     }
     
     function renderTable(loads) {
         tableBody.innerHTML = '';
         if (loads.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-6 px-6 text-gray-600">Tidak ada muatan ditemukan untuk filter yang dipilih. <a href="manage_loads.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center py-6 px-6 text-gray-600">Tidak ada muatan ditemukan untuk filter yang dipilih. <a href="manage_loads.php" class="text-blue-600 hover:underline">Reset Filter</a></td></tr>`;
             return;
         }
         
@@ -285,8 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const notesIcon = load.notes ? `<span class="material-icons text-gray-400 ml-1" title="${escapeHtml(load.notes)}">info</span>` : '';
             const creatorInfo = `<div class="text-xs text-gray-500">oleh ${escapeHtml(load.creator_name || 'N/A')} pada ${new Date(load.created_at).toLocaleString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })}</div>`;
-            const packagingName = load.packaging_name ? escapeHtml(load.packaging_name) : '-';
-
+            
             tableBody.innerHTML += `
                 <tr class="border-b border-gray-200 hover:bg-gray-100 table-status-indicator clickable-row ${escapeHtml(load.row_status_class)}" data-href="load_detail.php?load_id=${load.load_id}">
                     <td class="py-3 px-6 text-left">
@@ -298,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                     <td class="py-3 px-6 text-left">${escapeHtml(load.machine_name || 'N/A')}</td>
                     <td class="py-3 px-6 text-left">${escapeHtml(load.destination_department_name || 'Stok Umum')}<br><span class="text-xs text-gray-500">${escapeHtml(load.cycle_number || '-')}</span></td>
-                    <td class="py-3 px-6 text-left">${packagingName}</td>
                     <td class="py-3 px-6 text-center">${load.item_count}</td>
                     <td class="py-3 px-6 text-center">${statusBadge}</td>
                     <td class="py-3 px-6 text-center"><div class="flex items-center justify-center space-x-1">${actionButtons}</div></td>

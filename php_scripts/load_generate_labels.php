@@ -2,9 +2,10 @@
 /**
  * Generate All Labels for a Load and Populate Print Queue (with Smart Expiry Logic)
  *
- * This version implements the new rule-based expiry date calculation using ExpiryCalculator.
+ * This version implements the new rule-based expiry date calculation.
  * It intelligently determines the expiry date for each item based on
- * packaging type, item-specific rules, and global defaults.
+ * its master data, the master data of its components (for sets), or the global
+ * default, ensuring maximum safety and accuracy.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -18,8 +19,6 @@
 declare(strict_types=1);
 
 require_once '../config.php';
-// PERUBAHAN: Sertakan class ExpiryCalculator
-require_once '../app/ExpiryCalculator.php';
 
 // --- Authorization & CSRF Check ---
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
@@ -51,18 +50,10 @@ if (!$conn) {
     exit;
 }
 
-// PERUBAHAN: Buat instance dari ExpiryCalculator
-$expiryCalculator = new ExpiryCalculator($conn, $globalDefaultExpiryDays);
-
 $conn->begin_transaction();
 try {
     // 1. Dapatkan informasi muatan utama
-    // PERUBAHAN: Ambil juga packaging_type_id
-    $stmtLoadInfo = $conn->prepare(
-        "SELECT load_name, cycle_id, destination_department_id, packaging_type_id 
-         FROM sterilization_loads 
-         WHERE load_id = ? AND status = 'selesai'"
-    );
+    $stmtLoadInfo = $conn->prepare("SELECT load_name, cycle_id, destination_department_id FROM sterilization_loads WHERE load_id = ? AND status = 'selesai'");
     $stmtLoadInfo->bind_param("i", $loadId);
     $stmtLoadInfo->execute();
     $resultLoadInfo = $stmtLoadInfo->get_result();
@@ -71,57 +62,74 @@ try {
     }
     $cycleId = $loadInfo['cycle_id'];
     $destinationDepartmentId = $loadInfo['destination_department_id'];
-    // PERUBAHAN: Simpan packaging_type_id
-    $packagingTypeId = (int)$loadInfo['packaging_type_id'];
     $stmtLoadInfo->close();
-    
-    // Validasi apakah packaging type dipilih
-    if (empty($packagingTypeId)) {
-        throw new Exception("Jenis kemasan belum diatur untuk muatan ini. Proses tidak dapat dilanjutkan.");
-    }
-
 
     // 2. Ambil semua item dari muatan beserta snapshotnya
     $stmtItems = $conn->prepare("SELECT item_id, item_type, item_snapshot FROM sterilization_load_items WHERE load_id = ?");
     $stmtItems->bind_param("i", $loadId);
     $stmtItems->execute();
     $resultItems = $stmtItems->get_result();
-    $itemsToProcess = $resultItems->fetch_all(MYSQLI_ASSOC);
+    $itemsToProcess = [];
+    $setIds = [];
+    $instrumentIds = []; // Kumpulkan semua instrument_id yang relevan
+    while ($item = $resultItems->fetch_assoc()) {
+        $itemsToProcess[] = $item;
+        if ($item['item_type'] === 'set') {
+            $setIds[] = $item['item_id'];
+            // Ambil instrument_id dari snapshot
+            if (!empty($item['item_snapshot'])) {
+                $snapshot = json_decode($item['item_snapshot'], true);
+                if (is_array($snapshot)) {
+                    foreach ($snapshot as $snapItem) {
+                        $instrumentIds[] = (int)$snapItem['instrument_id'];
+                    }
+                }
+            }
+        } else {
+            $instrumentIds[] = $item['item_id'];
+        }
+    }
     $stmtItems->close();
 
     if (empty($itemsToProcess)) {
         throw new Exception("Tidak ada item di dalam muatan ini untuk dibuatkan label.");
     }
     
-    // 3. OPTIMISASI: Ambil nama item dalam satu query untuk efisiensi
-    // (ExpiryCalculator akan menangani query expiry secara internal)
-    $itemNames = [];
-    $instrumentIds = array_column(array_filter($itemsToProcess, fn($i) => $i['item_type'] === 'instrument'), 'item_id');
-    $setIds = array_column(array_filter($itemsToProcess, fn($i) => $i['item_type'] === 'set'), 'item_id');
+    // Pastikan ID unik
+    $instrumentIds = array_unique(array_filter($instrumentIds));
+    $setIds = array_unique(array_filter($setIds));
 
+    // 3. (OPTIMISASI) Ambil semua data master yang relevan dalam beberapa query saja
+    $masterData = [
+        'instrument' => [], // Kunci diubah agar cocok dengan item_type
+        'set' => []
+    ];
+
+    // Ambil detail instrumen (nama dan masa kedaluwarsa)
     if (!empty($instrumentIds)) {
         $placeholders = implode(',', array_fill(0, count($instrumentIds), '?'));
-        $stmt = $conn->prepare("SELECT instrument_id, instrument_name FROM instruments WHERE instrument_id IN ($placeholders)");
-        $stmt->bind_param(str_repeat('i', count($instrumentIds)), ...$instrumentIds);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        while ($row = $res->fetch_assoc()) {
-            $itemNames['instrument'][$row['instrument_id']] = $row['instrument_name'];
+        $stmtInst = $conn->prepare("SELECT instrument_id, instrument_name, expiry_in_days FROM instruments WHERE instrument_id IN ($placeholders)");
+        $stmtInst->bind_param(str_repeat('i', count($instrumentIds)), ...$instrumentIds);
+        $stmtInst->execute();
+        $resInst = $stmtInst->get_result();
+        while ($row = $resInst->fetch_assoc()) {
+            $masterData['instrument'][$row['instrument_id']] = $row;
         }
-        $stmt->close();
-    }
-    if (!empty($setIds)) {
-        $placeholders = implode(',', array_fill(0, count($setIds), '?'));
-        $stmt = $conn->prepare("SELECT set_id, set_name FROM instrument_sets WHERE set_id IN ($placeholders)");
-        $stmt->bind_param(str_repeat('i', count($setIds)), ...$setIds);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        while ($row = $res->fetch_assoc()) {
-            $itemNames['set'][$row['set_id']] = $row['set_name'];
-        }
-        $stmt->close();
+        $stmtInst->close();
     }
 
+    // Ambil detail set (nama dan masa kedaluwarsa)
+    if (!empty($setIds)) {
+        $placeholders = implode(',', array_fill(0, count($setIds), '?'));
+        $stmtSet = $conn->prepare("SELECT set_id, set_name, expiry_in_days FROM instrument_sets WHERE set_id IN ($placeholders)");
+        $stmtSet->bind_param(str_repeat('i', count($setIds)), ...$setIds);
+        $stmtSet->execute();
+        $resSet = $stmtSet->get_result();
+        while ($row = $resSet->fetch_assoc()) {
+            $masterData['set'][$row['set_id']] = $row;
+        }
+        $stmtSet->close();
+    }
 
     // 4. Siapkan statement SQL untuk loop
     $sqlInsertLabel = "INSERT INTO sterilization_records 
@@ -135,16 +143,49 @@ try {
 
     $createdCount = 0;
 
-    // 5. Loop untuk membuat label dengan LOGIKA BARU
+    // 5. Loop untuk membuat label dengan LOGIKA KEDALUWARSA CERDAS
     foreach ($itemsToProcess as $item) {
         $itemId = (int)$item['item_id'];
         $itemType = $item['item_type'];
         $itemSnapshotJson = $item['item_snapshot'] ?? null;
         
-        $labelTitle = $itemNames[$itemType][$itemId] ?? 'Item tidak dikenal';
+        $itemMaster = $masterData[$itemType][$itemId] ?? null;
+        if (!$itemMaster) continue; // Lewati jika data master tidak ditemukan
+
+        // === PERBAIKAN BUG DI SINI ===
+        $labelTitle = $itemMaster[$itemType . '_name'] ?? 'Item tidak dikenal';
+        // === AKHIR PERBAIKAN ===
         
-        // PERUBAHAN UTAMA: Gunakan ExpiryCalculator
-        $expiryDate = $expiryCalculator->getExpiryDate($itemId, $itemType, $packagingTypeId, $itemSnapshotJson);
+        $daysUntilExpiry = $globalDefaultExpiryDays; // Mulai dengan default global
+
+        if ($itemType === 'instrument') {
+            // Jika ini instrumen, gunakan masa kedaluwarsa spesifiknya jika ada
+            $daysUntilExpiry = (int)($itemMaster['expiry_in_days'] ?? $globalDefaultExpiryDays);
+        } elseif ($itemType === 'set') {
+            // Jika ini set, periksa dulu apakah set itu sendiri punya override
+            if (isset($itemMaster['expiry_in_days']) && (int)$itemMaster['expiry_in_days'] > 0) {
+                $daysUntilExpiry = (int)$itemMaster['expiry_in_days'];
+            } else {
+                // Jika tidak, cari masa terpendek dari semua instrumen di dalamnya
+                if (!empty($itemSnapshotJson)) {
+                    $snapshot = json_decode($itemSnapshotJson, true);
+                    if (is_array($snapshot) && !empty($snapshot)) {
+                        $expiryValues = [];
+                        foreach ($snapshot as $snapItem) {
+                            $instrumentInSet = $masterData['instrument'][(int)$snapItem['instrument_id']] ?? null;
+                            // Tambahkan masa kedaluwarsa instrumen, atau default global jika tidak diatur
+                            $expiryValues[] = (int)($instrumentInSet['expiry_in_days'] ?? $globalDefaultExpiryDays);
+                        }
+                        // Ambil nilai terendah
+                        if (!empty($expiryValues)) {
+                            $daysUntilExpiry = min($expiryValues);
+                        }
+                    }
+                }
+            }
+        }
+        
+        $expiryDate = (new DateTime())->modify("+" . $daysUntilExpiry . " days")->format('Y-m-d H:i:s');
         
         // Coba buat label dengan ID unik
         $maxAttempts = 5;
