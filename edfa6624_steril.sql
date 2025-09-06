@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 06, 2025 at 07:39 PM
+-- Generation Time: Sep 06, 2025 at 08:26 PM
 -- Server version: 10.11.13-MariaDB-cll-lve
 -- PHP Version: 8.4.10
 
@@ -612,7 +612,21 @@ INSERT INTO `activity_log` (`log_id`, `user_id`, `action_type`, `target_type`, `
 (576, 1, 'CREATE_LOAD', 'load', 105, 'Muatan baru dibuat: MUATAN-060925-08', '114.10.152.202', '2025-09-05 23:57:09'),
 (577, 1, 'UPDATE_SET', 'set', 67, 'Data set diperbarui untuk: \'BPH\' (ID: 67).', '114.10.152.202', '2025-09-05 23:57:44'),
 (578, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 74, No: SIKLUS-STEAM-070925-01) dibuat dan langsung diselesaikan untuk Muatan ID: 105.', '210.211.17.122', '2025-09-06 19:17:32'),
-(579, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 105.', '210.211.17.122', '2025-09-06 19:17:35');
+(579, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 105.', '210.211.17.122', '2025-09-06 19:17:35'),
+(580, 1, 'CREATE_LOAD', 'load', 106, 'Muatan baru dibuat: MUATAN-070925-01', '210.211.17.122', '2025-09-06 19:41:41'),
+(581, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 75, No: SIKLUS-STEAM-070925-02) dibuat dan langsung diselesaikan untuk Muatan ID: 106.', '210.211.17.122', '2025-09-06 19:42:12'),
+(582, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 106.', '210.211.17.122', '2025-09-06 19:42:13'),
+(583, 1, 'UPDATE_SET', 'set', 67, 'Data set diperbarui untuk: \'KEMASAN\' (ID: 67).', '210.211.17.122', '2025-09-06 19:55:36'),
+(584, 1, 'CREATE_LOAD', 'load', 107, 'Muatan baru dibuat: MUATAN-070925-02', '210.211.17.122', '2025-09-06 19:56:19'),
+(585, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 76, No: SIKLUS-STEAM-070925-03) dibuat dan langsung diselesaikan untuk Muatan ID: 107.', '210.211.17.122', '2025-09-06 19:56:27'),
+(586, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 107.', '210.211.17.122', '2025-09-06 19:56:29'),
+(587, 1, 'CREATE_LOAD', 'load', 108, 'Muatan baru dibuat: MUATAN-070925-03', '210.211.17.122', '2025-09-06 20:04:54'),
+(588, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 77, No: SIKLUS-STEAM-070925-04) dibuat dan langsung diselesaikan untuk Muatan ID: 108.', '210.211.17.122', '2025-09-06 20:05:06'),
+(589, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 108.', '210.211.17.122', '2025-09-06 20:05:08'),
+(590, 1, 'CREATE_PACKAGING_TYPE', NULL, NULL, 'Master data Jenis Kemasan baru ditambahkan: Linen 2 (Masa Kedaluwarsa: 7 hari)', '210.211.17.122', '2025-09-06 20:05:58'),
+(591, 1, 'CREATE_LOAD', 'load', 109, 'Muatan baru dibuat: MUATAN-070925-04', '210.211.17.122', '2025-09-06 20:17:18'),
+(592, 1, 'CREATE_CYCLE_FROM_LOAD', NULL, NULL, 'Siklus baru (ID: 78, No: SIKLUS-STEAM-070925-05) dibuat dan langsung diselesaikan untuk Muatan ID: 109.', '210.211.17.122', '2025-09-06 20:17:26'),
+(593, 1, 'GENERATE_LABELS', NULL, NULL, 'Membuat 1 label baru untuk Muatan ID: 109.', '210.211.17.122', '2025-09-06 20:17:27');
 
 -- --------------------------------------------------------
 
@@ -2828,7 +2842,7 @@ INSERT INTO `instrument_sets` (`set_id`, `set_name`, `set_code`, `special_instru
 (64, 'Set Exclusive', 'SET-69031134', NULL, 30, 1, '2025-07-03 18:57:17', '2025-07-03 18:57:17'),
 (65, 'Ffff', 'SET-39567335', NULL, 365, 1, '2025-07-04 14:32:58', '2025-07-04 14:32:58'),
 (66, 'Shshs', 'SET-39600869', NULL, 365, 1, '2025-07-04 14:33:25', '2025-07-04 14:34:06'),
-(67, 'BPH', 'SET-33558925', NULL, 360, 1, '2025-07-09 04:00:13', '2025-09-05 23:57:44'),
+(67, 'KEMASAN', 'SET-33558925', NULL, NULL, 1, '2025-07-09 04:00:13', '2025-09-06 19:55:36'),
 (68, 'Bph', 'SET-33606034', NULL, NULL, 1, '2025-07-09 04:00:14', '2025-07-09 04:00:14'),
 (69, 'BPH', 'SET-33559988', NULL, NULL, 1, '2025-07-09 04:00:14', '2025-07-09 04:00:14'),
 (70, 'BPH', 'SET-33559598', NULL, NULL, 1, '2025-07-09 04:00:19', '2025-07-09 04:00:19'),
@@ -3538,9 +3552,9 @@ INSERT INTO `instrument_set_items` (`set_item_id`, `set_id`, `instrument_id`, `q
 (1454, 17, 35, 1),
 (1455, 80, 70, 1),
 (1456, 80, 71, 1),
-(1457, 67, 70, 1),
-(1458, 67, 71, 1),
-(1459, 67, 72, 1);
+(1460, 67, 70, 1),
+(1461, 67, 71, 1),
+(1462, 67, 72, 1);
 
 -- --------------------------------------------------------
 
@@ -3606,16 +3620,18 @@ CREATE TABLE `packaging_types` (
   `packaging_name` varchar(100) NOT NULL,
   `shelf_life_days` int(11) NOT NULL COMMENT 'Masa kedaluwarsa standar dalam hari',
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expiry_in_days` int(11) DEFAULT NULL COMMENT 'Masa kedaluwarsa dalam hari untuk jenis kemasan ini'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `packaging_types`
 --
 
-INSERT INTO `packaging_types` (`packaging_type_id`, `packaging_name`, `shelf_life_days`, `is_active`, `created_at`) VALUES
-(1, 'Linen', 7, 1, '2025-09-05 16:26:45'),
-(2, 'Pouches', 30, 1, '2025-09-05 16:27:07');
+INSERT INTO `packaging_types` (`packaging_type_id`, `packaging_name`, `shelf_life_days`, `is_active`, `created_at`, `expiry_in_days`) VALUES
+(1, 'Linen', 7, 1, '2025-09-05 16:26:45', NULL),
+(2, 'Pouches', 30, 1, '2025-09-05 16:27:07', NULL),
+(3, 'Linen 2', 7, 1, '2025-09-06 20:05:58', 7);
 
 -- --------------------------------------------------------
 
@@ -3737,7 +3753,11 @@ INSERT INTO `sterilization_cycles` (`cycle_id`, `machine_name`, `cycle_number`, 
 (71, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-04', '2025-09-06 00:19:54', 1, 'completed', NULL, '2025-09-05 17:19:54'),
 (72, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-05', '2025-09-06 00:53:28', 1, 'completed', NULL, '2025-09-05 17:53:28'),
 (73, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-060925-06', '2025-09-06 01:26:49', 1, 'completed', NULL, '2025-09-05 18:26:49'),
-(74, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-01', '2025-09-07 02:17:32', 1, 'completed', NULL, '2025-09-06 19:17:32');
+(74, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-01', '2025-09-07 02:17:32', 1, 'completed', NULL, '2025-09-06 19:17:32'),
+(75, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-02', '2025-09-07 02:42:12', 1, 'completed', NULL, '2025-09-06 19:42:12'),
+(76, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-03', '2025-09-07 02:56:27', 1, 'completed', NULL, '2025-09-06 19:56:27'),
+(77, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-04', '2025-09-07 03:05:06', 1, 'completed', NULL, '2025-09-06 20:05:06'),
+(78, 'Autoclave (Steam Sterilizer)', 'SIKLUS-STEAM-070925-05', '2025-09-07 03:17:26', 1, 'completed', NULL, '2025-09-06 20:17:26');
 
 -- --------------------------------------------------------
 
@@ -3834,7 +3854,11 @@ INSERT INTO `sterilization_loads` (`load_id`, `load_name`, `notes`, `created_by_
 (101, 'MUATAN-060925-05', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 73, 'selesai', '2025-09-05 18:26:06', '2025-09-05 18:26:49'),
 (103, 'MUATAN-060925-06', NULL, 1, 3, 'Rutin', 'Normal', 4, 2, 73, 'selesai', '2025-09-05 18:31:45', '2025-09-05 18:37:18'),
 (104, 'MUATAN-060925-07', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, NULL, 'persiapan', '2025-09-05 18:37:54', '2025-09-05 18:40:47'),
-(105, 'MUATAN-060925-08', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 74, 'selesai', '2025-09-05 23:57:09', '2025-09-06 19:17:32');
+(105, 'MUATAN-060925-08', NULL, 1, 3, 'Rutin', 'Normal', 4, 1, 74, 'selesai', '2025-09-05 23:57:09', '2025-09-06 19:17:32'),
+(106, 'MUATAN-070925-01', NULL, 1, 3, 'Rutin', 'Normal', 8, 1, 75, 'selesai', '2025-09-06 19:41:41', '2025-09-06 19:42:12'),
+(107, 'MUATAN-070925-02', NULL, 1, 3, 'Rutin', 'Normal', 8, 1, 76, 'selesai', '2025-09-06 19:56:19', '2025-09-06 19:56:27'),
+(108, 'MUATAN-070925-03', NULL, 1, 3, 'Rutin', 'Normal', 8, 1, 77, 'selesai', '2025-09-06 20:04:54', '2025-09-06 20:05:06'),
+(109, 'MUATAN-070925-04', NULL, 1, 3, 'Rutin', 'Normal', 8, 3, 78, 'selesai', '2025-09-06 20:17:18', '2025-09-06 20:17:26');
 
 -- --------------------------------------------------------
 
@@ -4024,7 +4048,11 @@ INSERT INTO `sterilization_load_items` (`load_item_id`, `load_id`, `item_id`, `i
 (278, 101, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
 (279, 103, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
 (280, 104, 80, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]'),
-(281, 105, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]');
+(281, 105, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]'),
+(282, 106, 69, 'set', 1, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]'),
+(283, 107, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]'),
+(284, 108, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]'),
+(285, 109, 67, 'set', 1, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]');
 
 -- --------------------------------------------------------
 
@@ -4203,7 +4231,11 @@ INSERT INTO `sterilization_records` (`record_id`, `label_unique_id`, `item_id`, 
 (326, '9939E8F9', 80, 70, 98, 4, 275, 'set', 'Abortus', 1, '2025-09-05 17:13:37', '2025-10-05 17:13:37', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
 (327, '920DED55', 80, 71, 99, 4, 276, 'set', 'Abortus', 1, '2025-09-05 17:19:56', '2025-10-05 17:19:56', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
 (328, '63F34B14', 80, 73, 101, 4, 278, 'set', 'Abortus', 1, '2025-09-05 18:26:52', '2025-10-05 18:26:52', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
-(329, 'D84E2F37', 67, 74, 105, 4, 281, 'set', 'BPH', 1, '2025-09-06 19:17:35', '2026-09-01 19:17:35', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 3);
+(329, 'D84E2F37', 67, 74, 105, 4, 281, 'set', 'BPH', 1, '2025-09-06 19:17:35', '2026-09-01 19:17:35', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 3),
+(330, '4F0D8B80', 69, 75, 106, 8, 282, 'set', 'BPH', 1, '2025-09-06 19:42:13', '2025-10-06 19:42:13', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":72,\"quantity\":1},{\"instrument_id\":73,\"quantity\":1},{\"instrument_id\":74,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 1),
+(331, '887971F8', 67, 76, 107, 8, 283, 'set', 'KEMASAN', 1, '2025-09-06 19:56:29', '2025-10-06 19:56:29', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
+(332, '442D3144', 67, 77, 108, 8, 284, 'set', 'KEMASAN', 1, '2025-09-06 20:05:08', '2025-10-06 20:05:08', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2),
+(333, '442FE0BE', 67, 78, 109, 8, 285, 'set', 'KEMASAN', 1, '2025-09-06 20:17:27', '2025-10-06 20:17:27', 'active', NULL, NULL, NULL, NULL, '[{\"instrument_id\":70,\"quantity\":1},{\"instrument_id\":71,\"quantity\":1},{\"instrument_id\":72,\"quantity\":1}]', 'printed', NULL, NULL, NULL, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -4411,7 +4443,7 @@ ALTER TABLE `user_notifications`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=580;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=594;
 
 --
 -- AUTO_INCREMENT for table `api_keys`
@@ -4447,7 +4479,7 @@ ALTER TABLE `instrument_sets`
 -- AUTO_INCREMENT for table `instrument_set_items`
 --
 ALTER TABLE `instrument_set_items`
-  MODIFY `set_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1460;
+  MODIFY `set_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1463;
 
 --
 -- AUTO_INCREMENT for table `instrument_types`
@@ -4465,37 +4497,37 @@ ALTER TABLE `machines`
 -- AUTO_INCREMENT for table `packaging_types`
 --
 ALTER TABLE `packaging_types`
-  MODIFY `packaging_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `packaging_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `print_queue`
 --
 ALTER TABLE `print_queue`
-  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
+  MODIFY `queue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=360;
 
 --
 -- AUTO_INCREMENT for table `sterilization_cycles`
 --
 ALTER TABLE `sterilization_cycles`
-  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `cycle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `sterilization_loads`
 --
 ALTER TABLE `sterilization_loads`
-  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `load_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT for table `sterilization_load_items`
 --
 ALTER TABLE `sterilization_load_items`
-  MODIFY `load_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
+  MODIFY `load_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=286;
 
 --
 -- AUTO_INCREMENT for table `sterilization_records`
 --
 ALTER TABLE `sterilization_records`
-  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
+  MODIFY `record_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=334;
 
 --
 -- AUTO_INCREMENT for table `users`
