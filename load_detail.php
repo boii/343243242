@@ -150,7 +150,23 @@ $page_specific_js = 'assets/js/load_detail.js';
                  <hr class="my-6">
             </div>
 
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Isi Muatan (<span id="itemCount">0</span>)</h3>
+            <div class="flex items-center gap-2 mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Isi Muatan (<span id="itemCount">0</span>)</h3>
+
+                <div class="relative legend-container">
+                    <span class="material-icons text-gray-400 hover:text-gray-600 cursor-pointer" style="font-size: 1.25rem;" title="Lihat Keterangan Status">help_outline</span>
+                    <div class="legend-popover">
+                        <h4 class="legend-title">Keterangan Status Item</h4>
+                        <ul>
+                            <li class="legend-item"><span class="legend-color-dot" style="background-color: #4ade80;"></span>Tersedia / Selesai</li>
+                            <li class="legend-item"><span class="legend-color-dot" style="background-color: #facc15;"></span>Perbaikan / Menunggu Validasi</li>
+                            <li class="legend-item"><span class="legend-color-dot" style="background-color: #60a5fa;"></span>Sterilisasi / Digunakan</li>
+                            <li class="legend-item"><span class="legend-color-dot" style="background-color: #f87171;"></span>Rusak / Gagal / Kedaluwarsa</li>
+                            <li class="legend-item"><span class="legend-color-dot" style="background-color: #e5e7eb;"></span>Status Default / Lainnya</li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
             <div class="overflow-x-auto">
                 <table class="w-full table-auto">
                     <thead>

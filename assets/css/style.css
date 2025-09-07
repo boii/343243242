@@ -2,7 +2,7 @@
    STERILABEL - Lembar Gaya Terpusat (v1.7 Dirapikan)
    ========================================================================== */
 
-/* Catatan: File ini telah dirapikan untuk menghilangkan duplikasi dan 
+/* Catatan: File ini telah dirapikan untuk menghilangkan duplikasi dan
    dikelompokkan berdasarkan fungsi untuk kemudahan pemeliharaan. */
 
 /* ==========================================================================
@@ -99,55 +99,55 @@ body {
 }
 
 .navigation-bar {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
-    gap: 1rem; 
-    background-color: transparent; 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    background-color: transparent;
     padding: 0;
     box-shadow: none;
 }
 
 .navigation-bar a,
 .navigation-bar a.nav-action-button {
-    padding: 1.25rem 1rem; 
-    font-size: 0.875rem; 
-    font-weight: 700; 
-    color: #374151; 
+    padding: 1.25rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #374151;
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 0.75rem; 
+    border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
     text-align: center;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem; 
-    flex-grow: 0; 
+    gap: 0.5rem;
+    flex-grow: 0;
     transition: all 0.2s ease-in-out;
 }
 
 .navigation-bar a:hover,
 .navigation-bar a.nav-action-button:hover {
-    color: #374151; 
-    transform: translateY(-5px); 
+    color: #374151;
+    transform: translateY(-5px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
 }
 
 .navigation-bar a .material-icons,
 .navigation-bar a.nav-action-button .material-icons {
     margin-right: 0;
-    font-size: 2.5rem; 
+    font-size: 2.5rem;
     transition: all 0.2s ease-in-out;
 }
 
-.nav-color-loads .material-icons { color: #3b82f6; } 
+.nav-color-loads .material-icons { color: #3b82f6; }
 .nav-color-cycles .material-icons { color: #f59e0b; }
-.nav-color-history .material-icons { color: #6366f1; } 
-.nav-color-instruments .material-icons { color: #84cc16; } 
+.nav-color-history .material-icons { color: #6366f1; }
+.nav-color-instruments .material-icons { color: #84cc16; }
 .nav-color-sets .material-icons { color: #a855f7; }
 
-.navigation-bar a:hover { border-color: #bfdbfe; } 
+.navigation-bar a:hover { border-color: #bfdbfe; }
 .nav-color-loads:hover { border-color: #60a5fa; }
 .nav-color-cycles:hover { border-color: #fca5a5; }
 .nav-color-history:hover { border-color: #a5b4fc; }
@@ -166,7 +166,7 @@ body {
 .navigation-bar a.nav-primary .material-icons,
 .navigation-bar a.nav-action-button.nav-primary .material-icons {
     color: white;
-    font-size: 3rem; 
+    font-size: 3rem;
 }
 
 .navigation-bar a.nav-primary:hover,
@@ -174,7 +174,7 @@ body {
     background-image: linear-gradient(to top right, #2563eb, #3b82f6);
     border-color: #1d4ed8;
     box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
-    transform: scale(1.1) translateY(-5px); 
+    transform: scale(1.1) translateY(-5px);
 }
 
 .breadcrumbs {
@@ -628,21 +628,21 @@ body {
 
 tr.clickable-row:hover {
     cursor: pointer;
-    transform: none; 
+    transform: none;
     background-color: #f0f9ff !important;
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); 
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
     outline: 1px solid #93c5fd;
     z-index: 10;
     position: relative;
 }
 
 .clickable-row .btn-icon {
-    opacity: 0.4; 
+    opacity: 0.4;
     transition: opacity 0.2s ease-in-out;
 }
 
 .clickable-row:hover .btn-icon {
-    opacity: 1; 
+    opacity: 1;
 }
 
 /* ==========================================================================
@@ -680,16 +680,16 @@ tr.clickable-row:hover {
 }
 
 .stat-card {
-    background-color: white; 
-    padding: 0.75rem 1rem; 
+    background-color: white;
+    padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     border: 1px solid #f3f4f6;
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     justify-content: flex-start;
-    align-items: center; 
-    height: auto; 
+    align-items: center;
+    height: auto;
     transition: all 0.2s ease-in-out;
 }
 
@@ -697,29 +697,29 @@ tr.clickable-row:hover {
     display: flex;
     align-items: center;
     width: 100%;
-    gap: 0.75rem; 
+    gap: 0.75rem;
 }
 
 .stat-card .icon-container {
-    padding: 0.5rem; 
+    padding: 0.5rem;
     border-radius: 9999px;
-    margin-right: 0; 
+    margin-right: 0;
 }
 
 .stat-card .icon-container .material-icons {
-    font-size: 1.25rem; 
+    font-size: 1.25rem;
 }
 
 .stat-card .stat-title {
-    font-size: 0.75rem; 
+    font-size: 0.75rem;
     color: #6b7280;
     font-weight: 500;
     white-space: nowrap;
 }
 
 .stat-card .stat-number {
-    font-size: 1.5rem; 
-    font-weight: 800; 
+    font-size: 1.5rem;
+    font-weight: 800;
     color: #111827;
     line-height: 1.2;
 }
@@ -727,7 +727,7 @@ tr.clickable-row:hover {
 .stat-loading {
     display: inline-block;
     width: 20px;
-    height: 1.5rem; 
+    height: 1.5rem;
     background-color: #e5e7eb;
     border-radius: 4px;
     animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -767,12 +767,12 @@ tr.clickable-row:hover {
 
 .stat-trend {
     margin-top: 0;
-    margin-left: auto; 
+    margin-left: auto;
     font-size: 0.75rem;
     font-weight: 500;
     display: flex;
     align-items: center;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .stat-trend .material-icons {
@@ -915,7 +915,7 @@ tr.clickable-row:hover {
 }
 
 .security-card {
-    background-color: #fffbeb; 
+    background-color: #fffbeb;
     border: 1px solid #fef3c7;
 }
 
@@ -1442,4 +1442,86 @@ tr.clickable-row:hover {
 .instrument-list-thumbnail .material-icons {
     color: #9ca3af; /* gray-400 */
     font-size: 20px;
+}
+
+/* ==========================================================================
+   20. Legend Indikator Status (Baru)
+   ========================================================================== */
+
+.legend-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.legend-popover {
+    display: none; /* Sembunyikan secara default */
+    position: absolute;
+    bottom: 100%; /* Posisi di atas ikon */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px; /* Jarak dari ikon */
+    background-color: #374151; /* Warna abu-abu gelap */
+    color: #f9fafb; /* Teks terang */
+    border-radius: 8px;
+    padding: 12px 16px;
+    width: max-content; /* Lebar sesuai konten */
+    z-index: 50;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    transform-origin: bottom center;
+}
+
+/* Tampilkan popover saat container di-hover */
+.legend-container:hover .legend-popover {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px); /* Efek sedikit naik */
+}
+
+/* Panah kecil di bawah popover */
+.legend-popover::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #374151 transparent transparent transparent;
+}
+
+.legend-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #4b5563;
+    padding-bottom: 6px;
+}
+
+.legend-popover ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* Jarak antar item */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.legend-color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Border halus */
 }
