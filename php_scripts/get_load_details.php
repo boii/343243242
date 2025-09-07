@@ -4,6 +4,7 @@
  *
  * This version is corrected to align with the simplified database schema
  * by removing session and method logic.
+ * It now also includes expiry date prediction for each item.
  * Adheres to PSR-12.
  *
  * PHP version 7.4 or higher
@@ -38,29 +39,29 @@ $conn = connectToDatabase();
 
 if ($conn) {
     try {
-        // PERUBAHAN: Menghapus `sess.session_name` dari query
-        $sqlLoad = "SELECT 
+        global $app_settings;
+        $globalDefaultExpiryDays = (int)($app_settings['default_expiry_days'] ?? 30);
+
+        $sqlLoad = "SELECT
                         sl.*, u.full_name as creator_name, sc.cycle_number,
                         m.machine_name,
                         dept.department_name as destination_department_name
-                    FROM sterilization_loads sl 
-                    LEFT JOIN users u ON sl.created_by_user_id = u.user_id 
+                    FROM sterilization_loads sl
+                    LEFT JOIN users u ON sl.created_by_user_id = u.user_id
                     LEFT JOIN sterilization_cycles sc ON sl.cycle_id = sc.cycle_id
                     LEFT JOIN machines m ON sl.machine_id = m.machine_id
                     LEFT JOIN departments dept ON sl.destination_department_id = dept.department_id
                     WHERE sl.load_id = ?";
-        
+
         $stmtLoad = $conn->prepare($sqlLoad);
         if ($stmtLoad === false) throw new Exception("Gagal mempersiapkan query muatan: " . $conn->error);
-        
+
         $stmtLoad->bind_param("i", $loadId);
         $stmtLoad->execute();
         $resultLoad = $stmtLoad->get_result();
-        
-        if ($loadData = $resultLoad->fetch_assoc()) {
-            $loadData['items'] = [];
 
-            $sqlItems = "SELECT 
+        if ($loadData = $resultLoad->fetch_assoc()) {
+            $sqlItems = "SELECT
                             li.load_item_id, li.item_id, li.item_type, li.item_snapshot,
                             CASE li.item_type WHEN 'instrument' THEN i.instrument_name ELSE s.set_name END as item_name,
                             CASE li.item_type WHEN 'instrument' THEN i.instrument_code ELSE s.set_code END as item_code
@@ -71,65 +72,74 @@ if ($conn) {
 
             $stmtItems = $conn->prepare($sqlItems);
             if ($stmtItems === false) throw new Exception("Gagal mempersiapkan query item muatan: " . $conn->error);
-            
+
             $stmtItems->bind_param("i", $loadId);
             $stmtItems->execute();
-            $resultItems = $stmtItems->get_result();
-            $itemsFromDb = $resultItems->fetch_all(MYSQLI_ASSOC);
+            $itemsFromDb = $stmtItems->get_result()->fetch_all(MYSQLI_ASSOC);
             $stmtItems->close();
 
-            $allInstrumentIdsToCheck = [];
+            // --- Logika Prediksi Kedaluwarsa Dimulai Di Sini ---
+            $setIds = []; $instrumentIds = [];
             foreach ($itemsFromDb as $item) {
-                if ($item['item_type'] === 'instrument') {
-                    $allInstrumentIdsToCheck[] = $item['item_id'];
-                } elseif ($item['item_type'] === 'set' && !empty($item['item_snapshot'])) {
-                    $snapshot = json_decode($item['item_snapshot'], true);
-                    if (is_array($snapshot)) {
-                        $allInstrumentIdsToCheck = array_merge($allInstrumentIdsToCheck, array_column($snapshot, 'instrument_id'));
-                    }
-                }
-            }
-            $allInstrumentIdsToCheck = array_unique(array_filter($allInstrumentIdsToCheck));
-
-            $instrumentStatuses = [];
-            if (!empty($allInstrumentIdsToCheck)) {
-                $placeholders = implode(',', array_fill(0, count($allInstrumentIdsToCheck), '?'));
-                $stmtStatuses = $conn->prepare("SELECT instrument_id, status FROM instruments WHERE instrument_id IN ($placeholders)");
-                if ($stmtStatuses === false) throw new Exception("Gagal mempersiapkan query status instrumen: " . $conn->error);
-                
-                $stmtStatuses->bind_param(str_repeat('i', count($allInstrumentIdsToCheck)), ...$allInstrumentIdsToCheck);
-                $stmtStatuses->execute();
-                $resultStatuses = $stmtStatuses->get_result();
-                while($row = $resultStatuses->fetch_assoc()) {
-                    $instrumentStatuses[$row['instrument_id']] = $row['status'];
-                }
-                $stmtStatuses->close();
-            }
-
-            foreach ($itemsFromDb as $item) {
-                if ($item['item_type'] === 'instrument') {
-                    $item['status'] = $instrumentStatuses[$item['item_id']] ?? 'rusak';
-                } elseif ($item['item_type'] === 'set') {
-                    $statusHierarchy = ['rusak' => 3, 'perbaikan' => 2, 'tersedia' => 1, 'default' => 0];
-                    $worstStatus = 'default';
-                    
+                if ($item['item_type'] === 'set') {
+                    $setIds[] = $item['item_id'];
                     if (!empty($item['item_snapshot'])) {
                         $snapshot = json_decode($item['item_snapshot'], true);
-                        if (is_array($snapshot)) {
-                            foreach ($snapshot as $instrumentInSet) {
-                                $instrumentId = $instrumentInSet['instrument_id'];
-                                $currentInstrumentStatus = $instrumentStatuses[$instrumentId] ?? 'rusak';
-                                if (($statusHierarchy[$currentInstrumentStatus] ?? 0) > ($statusHierarchy[$worstStatus] ?? 0)) {
-                                    $worstStatus = $currentInstrumentStatus;
-                                }
+                        if (is_array($snapshot)) $instrumentIds = array_merge($instrumentIds, array_column($snapshot, 'instrument_id'));
+                    }
+                } else {
+                    $instrumentIds[] = $item['item_id'];
+                }
+            }
+            $instrumentIds = array_unique(array_filter($instrumentIds)); $setIds = array_unique(array_filter($setIds));
+
+            $masterData = ['instrument' => [], 'set' => []];
+            if (!empty($instrumentIds)) {
+                $placeholders = implode(',', array_fill(0, count($instrumentIds), '?'));
+                $stmtMasterInst = $conn->prepare("SELECT instrument_id, expiry_in_days FROM instruments WHERE instrument_id IN ($placeholders)");
+                $stmtMasterInst->bind_param(str_repeat('i', count($instrumentIds)), ...$instrumentIds);
+                $stmtMasterInst->execute();
+                $resInst = $stmtMasterInst->get_result();
+                while ($row = $resInst->fetch_assoc()) $masterData['instrument'][$row['instrument_id']] = $row;
+                $stmtMasterInst->close();
+            }
+            if (!empty($setIds)) {
+                $placeholders = implode(',', array_fill(0, count($setIds), '?'));
+                $stmtMasterSet = $conn->prepare("SELECT set_id, expiry_in_days FROM instrument_sets WHERE set_id IN ($placeholders)");
+                $stmtMasterSet->bind_param(str_repeat('i', count($setIds)), ...$setIds);
+                $stmtMasterSet->execute();
+                $resSet = $stmtMasterSet->get_result();
+                while ($row = $resSet->fetch_assoc()) $masterData['set'][$row['set_id']] = $row;
+                $stmtMasterSet->close();
+            }
+
+            foreach($itemsFromDb as &$item) {
+                $daysUntilExpiry = $globalDefaultExpiryDays;
+                if ($item['item_type'] === 'instrument') {
+                    $daysUntilExpiry = (int)($masterData['instrument'][$item['item_id']]['expiry_in_days'] ?? $globalDefaultExpiryDays);
+                } elseif ($item['item_type'] === 'set') {
+                    $setSpecificExpiry = (int)($masterData['set'][$item['item_id']]['expiry_in_days'] ?? 0);
+                    $instrumentMinExpiry = null;
+                    if (!empty($item['item_snapshot'])) {
+                        $snapshot = json_decode($item['item_snapshot'], true);
+                        if (is_array($snapshot) && !empty($snapshot)) {
+                            $expiryValues = [];
+                            foreach ($snapshot as $snapItem) {
+                                $expiryValues[] = (int)($masterData['instrument'][(int)$snapItem['instrument_id']]['expiry_in_days'] ?? $globalDefaultExpiryDays);
                             }
+                            if (!empty($expiryValues)) $instrumentMinExpiry = min($expiryValues);
                         }
                     }
-                    $item['status'] = $worstStatus;
+                    if ($setSpecificExpiry > 0) $daysUntilExpiry = $setSpecificExpiry;
+                    elseif ($instrumentMinExpiry !== null) $daysUntilExpiry = $instrumentMinExpiry;
                 }
-                $loadData['items'][] = $item;
+                $item['predicted_expiry_days'] = $daysUntilExpiry;
             }
-            
+            unset($item);
+            // --- Logika Prediksi Selesai ---
+
+            $loadData['items'] = $itemsFromDb;
+
             $stmtQueueCheck = $conn->prepare("SELECT COUNT(queue_id) as count FROM print_queue WHERE load_id = ?");
             $stmtQueueCheck->bind_param("i", $loadId);
             $stmtQueueCheck->execute();

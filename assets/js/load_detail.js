@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemSearchResults = document.getElementById('itemSearchResults');
     const itemCountSpan = document.getElementById('itemCount');
     const loadItemsTableBody = document.getElementById('loadItemsTableBody');
-    
+
     // Referensi elemen untuk Item Picker
     const itemPickerModal = document.getElementById('itemPickerModal');
     const openItemPickerBtn = document.getElementById('openItemPickerBtn');
@@ -65,15 +65,15 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`php_scripts/get_load_details.php?load_id=${loadId}`)
             .then(response => { if (!response.ok) throw new Error('Network response was not ok'); return response.json(); })
             .then(data => {
-                if (data.success && data.load) { currentLoadData = data.load; renderAllComponents(data.load); } 
+                if (data.success && data.load) { currentLoadData = data.load; renderAllComponents(data.load); }
                 else { showToast(data.error || 'Gagal memuat detail muatan.', 'error'); }
             })
             .catch(error => { showToast('Terjadi kesalahan jaringan saat memuat data.', 'error'); })
             .finally(() => { loadingOverlay.style.display = 'none'; });
     }
-    
+
     // --- Bagian Rendering ---
-    
+
     function renderAllComponents(load) {
         renderHeader(load);
         renderInfoPanel(load);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ${load.notes ? `<dt><span class="material-icons">notes</span>Catatan:</dt><dd class="whitespace-pre-wrap">${escapeHtml(load.notes)}</dd>` : ''}
         `;
     }
-    
+
     function renderActionContainer(load) {
         const actionContainer = document.getElementById('actionContainer');
         actionContainer.innerHTML = '';
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         switch(load.status) {
             case 'persiapan':
                 content = `<h3 class="text-xl font-semibold text-gray-800 mb-4">Aksi</h3>`;
-                if (load.items && load.items.length > 0) { content += `<button id="processLoadBtn" class="btn btn-primary w-full"><span class="material-icons mr-2">play_circle_filled</span>Jalankan Siklus & Proses Muatan</button>`; } 
+                if (load.items && load.items.length > 0) { content += `<button id="processLoadBtn" class="btn btn-primary w-full"><span class="material-icons mr-2">play_circle_filled</span>Jalankan Siklus & Proses Muatan</button>`; }
                 else { content += `<div class="bg-blue-50 border border-blue-200 text-blue-800 text-sm rounded-md p-3 text-center">Silakan tambahkan minimal satu item ke dalam muatan untuk dapat memprosesnya.</div>`; }
                 break;
             case 'menunggu_validasi':
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadItemsTableBody.innerHTML = '';
         itemCountSpan.textContent = items.length;
         if (items.length === 0) {
-            loadItemsTableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">Belum ada item ditambahkan.</td></tr>';
+            loadItemsTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">Belum ada item ditambahkan.</td></tr>';
             return;
         }
         items.forEach(item => {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'rusak': 'tr-status-rusak', 'sterilisasi': 'tr-status-sterilisasi', 'default': 'tr-status-default'
             };
             const rowStatusClass = statusMap[item.status] || statusMap['default'];
-            
+
             let dataHref = '#_';
             if (item.item_type === 'set') {
                 expander = `<button class="btn-icon btn-icon-action expand-set-btn" data-load-item-id="${item.load_item_id}" title="Lihat/Sembunyikan Isi Set"><span class="material-icons">expand_more</span></button>`;
@@ -151,20 +151,23 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (item.item_type === 'instrument') {
                 dataHref = `instrument_detail.php?instrument_id=${item.item_id}`;
             }
-            
+
             if (currentLoadData.status === 'persiapan') {
                 if(item.item_type === 'set'){ actionButtons += `<button class="btn-icon btn-icon-edit edit-set-contents-btn" data-item-id="${item.item_id}" data-load-item-id="${item.load_item_id}" data-set-name="${escapeHtml(item.item_name)}" title="Edit Isi Set"><span class="material-icons">edit_note</span></button>`; }
                 actionButtons += `<button class="btn-icon btn-icon-delete remove-item-btn" data-load-item-id="${item.load_item_id}" title="Hapus Item"><span class="material-icons">delete</span></button>`;
             } else { actionButtons = '-'; }
 
+            const expiryText = `${item.predicted_expiry_days} hari`;
+
             const row = `
                 <tr class="border-b hover:bg-gray-100 table-status-indicator clickable-row ${rowStatusClass}" data-href="${dataHref}">
                     <td class="py-2 px-4">${expander} ${escapeHtml(item.item_name)} ${customIcon}</td>
                     <td class="py-2 px-4 capitalize">${escapeHtml(item.item_type)}</td>
+                    <td class="py-2 px-4 text-center font-medium">${expiryText}</td>
                     <td class="py-2 px-4 text-center space-x-1">${actionButtons}</td>
                 </tr>
                 <tr class="set-contents-details" data-details-for="${item.load_item_id}">
-                    <td colspan="3" class="p-4"><div class="instrument-list-in-set">Memuat...</div></td>
+                    <td colspan="4" class="p-4"><div class="instrument-list-in-set">Memuat...</div></td>
                 </tr>`;
             loadItemsTableBody.innerHTML += row;
         });
@@ -194,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderPickerItems(categoryKey) {
         pickerItemsContainer.innerHTML = '';
         let itemsHtml = '';
-        
+
         if (categoryKey === 'all_sets') {
             allMasterSetsInfo.forEach(set => {
                 itemsHtml += createPickerItemHtml('set', set.set_id, set.set_name, set.set_code);
@@ -210,8 +213,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         pickerItemsContainer.innerHTML = itemsHtml || '<div class="text-center p-4 text-gray-500">Tidak ada item dalam kategori ini.</div>';
-        pickerSelectAllCheckbox.checked = false; 
-        filterPickerItems(); 
+        pickerSelectAllCheckbox.checked = false;
+        filterPickerItems();
     }
 
     function createPickerItemHtml(type, id, name, code) {
@@ -232,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const filter = pickerSearchInput.value.toLowerCase().trim();
         let allVisibleChecked = true;
         let visibleItemsExist = false;
-        
+
         pickerItemsContainer.querySelectorAll('.picker-item').forEach(item => {
             const searchTerm = item.dataset.searchTerm || '';
             const isVisible = searchTerm.includes(filter);
@@ -246,19 +249,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         pickerSelectAllCheckbox.checked = visibleItemsExist && allVisibleChecked;
     }
-    
+
     function updatePickerFooter() {
         const selectedCount = pickerItemsContainer.querySelectorAll('.picker-item-checkbox:checked').length;
         pickerSelectedItemCount.textContent = `${selectedCount} item terpilih`;
         addSelectedItemsBtn.disabled = selectedCount === 0;
     }
-    
+
     mainContainer.addEventListener('click', function(e) {
         const target = e.target;
         const button = target.closest('button');
 
         if (button) {
-            if (button.id === 'processLoadBtn') { processLoadModal.classList.add('active'); } 
+            if (button.id === 'processLoadBtn') { processLoadModal.classList.add('active'); }
             else if (button.id === 'openEditModalBtn') {
                 if (currentLoadData) {
                     document.getElementById('editLoadId').value = loadId;
@@ -287,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 removeItemModal.classList.add('active');
             }
         }
-        
+
         if (!button) {
             const row = target.closest('tr.clickable-row');
             if (row && row.dataset.href !== '#_') { window.location.href = row.dataset.href; }
@@ -322,11 +325,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemElement = e.target.closest('.search-result-item');
         if (itemElement && itemElement.dataset.id) { addItemToLoad([{ id: itemElement.dataset.id, type: itemElement.dataset.type }]); itemSearchInput.value = ''; itemSearchResults.classList.add('hidden'); }
     });
-    
+
     document.addEventListener('click', e => {
         if (document.getElementById('addItemContainer') && !document.getElementById('addItemContainer').contains(e.target)) { itemSearchResults.classList.add('hidden'); }
     });
-    
+
     openItemPickerBtn.addEventListener('click', () => {
         renderPicker();
         itemPickerModal.classList.add('active');
@@ -362,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePickerFooter();
         }
     });
-    
+
     pickerSelectAllCheckbox.addEventListener('change', () => {
         pickerItemsContainer.querySelectorAll('.picker-item').forEach(item => {
             if (item.style.display !== 'none') {
@@ -383,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
             itemsToAdd.push({ id: cb.dataset.id, type: cb.dataset.type });
         });
         if (itemsToAdd.length > 0) {
-            addItemToLoad(itemsToAdd); 
+            addItemToLoad(itemsToAdd);
             itemPickerModal.classList.remove('active');
         }
     });
@@ -417,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('php_scripts/load_update.php', { method: 'POST', body: new FormData(this) })
             .then(response => response.json())
             .then(data => {
-                if (data.success) { showToast(data.message || 'Perubahan berhasil disimpan.', 'success'); editLoadModal.classList.remove('active'); fetchLoadDetails(); } 
+                if (data.success) { showToast(data.message || 'Perubahan berhasil disimpan.', 'success'); editLoadModal.classList.remove('active'); fetchLoadDetails(); }
                 else { showToast(data.error || 'Gagal menyimpan perubahan.', 'error'); }
             })
             .catch(() => showToast('Kesalahan jaringan.', 'error'))
@@ -435,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (itemToRemoveId) { removeItemFromLoad(itemToRemoveId); itemToRemoveId = null; }
         removeItemModal.classList.remove('active');
     });
-    
+
     async function addItemToLoad(items) {
         loadingOverlay.style.display = 'flex';
         const itemsArray = Array.isArray(items) ? items : [items];
@@ -453,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!data.success) {
                     showToast(`Gagal menambahkan item: ${data.error}`, 'error');
                     loadingOverlay.style.display = 'none';
-                    return; 
+                    return;
                 }
             } catch (error) {
                  showToast('Kesalahan jaringan saat menambahkan item.', 'error');
@@ -461,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  return;
             }
         }
-        
+
         if (itemsArray.length > 0) {
             showToast(`${itemsArray.length} item berhasil ditambahkan.`, 'success');
         }
@@ -494,7 +497,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // --- PERUBAHAN UTAMA: FUNGSI BARU UNTUK MENAMPILKAN PERBANDINGAN ---
     function loadSetContentsIntoRow(loadItemId, targetElement) {
         const itemData = currentLoadData.items.find(i => i.load_item_id == loadItemId);
         if (!itemData || !itemData.item_snapshot) {
@@ -504,10 +506,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const snapshot = JSON.parse(itemData.item_snapshot);
         const masterSet = allMasterSetsData[itemData.item_id] || [];
-        
+
         const snapshotMap = new Map(snapshot.map(item => [String(item.instrument_id), item.quantity]));
         const masterMap = new Map(masterSet.map(item => [String(item.instrument_id), item.quantity]));
-        
+
         const allInstrumentIds = new Set([...snapshotMap.keys(), ...masterMap.keys()]);
 
         if (allInstrumentIds.size === 0) {
@@ -516,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let html = '<ul class="snapshot-comparison-list">';
-        
+
         allInstrumentIds.forEach(id => {
             const instrumentDetail = allInstrumentsData.find(inst => String(inst.instrument_id) === id);
             const name = instrumentDetail ? escapeHtml(instrumentDetail.instrument_name) : `ID Instrumen ${id} (telah dihapus)`;
@@ -572,11 +574,11 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ csrf_token: csrfToken, load_item_id: loadItemId, snapshot: snapshot })
         }).then(r => r.json()).then(data => {
-            if (data.success) { showToast(data.message, 'success'); setEditorPanel.style.display = 'none'; fetchLoadDetails(); } 
+            if (data.success) { showToast(data.message, 'success'); setEditorPanel.style.display = 'none'; fetchLoadDetails(); }
             else { showToast(data.error, 'error'); }
         }).catch(() => showToast('Kesalahan jaringan.', 'error')).finally(() => loadingOverlay.style.display = 'none');
     }
-    
+
     function getUniversalStatusBadge(status) {
         const map = {
             'persiapan': {text: 'Persiapan', class: 'bg-gray-200 text-gray-800'},
@@ -587,8 +589,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return map[status] || {text: status, class: 'bg-gray-200 text-gray-800'};
     }
 
-    function escapeHtml(str) { 
-        return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); 
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
     }
 
     fetchLoadDetails();

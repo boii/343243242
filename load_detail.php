@@ -153,7 +153,14 @@ $page_specific_js = 'assets/js/load_detail.js';
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Isi Muatan (<span id="itemCount">0</span>)</h3>
             <div class="overflow-x-auto">
                 <table class="w-full table-auto">
-                    <thead><tr class="bg-gray-100 text-gray-600 uppercase text-sm"><th class="py-2 px-4 text-left">Nama Item</th><th class="py-2 px-4 text-left">Tipe</th><th class="py-2 px-4 text-center">Aksi</th></tr></thead>
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 uppercase text-sm">
+                            <th class="py-2 px-4 text-left">Nama Item</th>
+                            <th class="py-2 px-4 text-left">Tipe</th>
+                            <th class="py-2 px-4 text-center">Prediksi Kedaluwarsa</th>
+                            <th class="py-2 px-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
                     <tbody id="loadItemsTableBody"></tbody>
                 </table>
             </div>
