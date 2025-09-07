@@ -31,7 +31,7 @@ if (!$loadId) {
 // --- Menyiapkan data untuk dikirim ke JavaScript ---
 $allInstrumentsGrouped = [];
 $allInstrumentsFlat = [];
-$allMasterSetsInfo = []; 
+$allMasterSetsInfo = [];
 $activeMachines = [];
 $activeDepartments = [];
 $allMasterSetsData = [];
@@ -40,7 +40,7 @@ $dbErrorMessage = '';
 $conn = connectToDatabase();
 if ($conn) {
     // Fetch all instruments for the set editor
-    $sqlAllInstruments = "SELECT i.instrument_id, i.instrument_name, i.instrument_code, it.type_name 
+    $sqlAllInstruments = "SELECT i.instrument_id, i.instrument_name, i.instrument_code, it.type_name
                           FROM instruments i
                           LEFT JOIN instrument_types it ON i.instrument_type_id = it.type_id
                           ORDER BY it.type_name, i.instrument_name ASC";
@@ -53,7 +53,7 @@ if ($conn) {
     } else {
         $dbErrorMessage .= ' Gagal memuat daftar instrumen. ';
     }
-    
+
     // Mengambil informasi dasar semua master set untuk Item Picker
     $sqlAllSets = "SELECT set_id, set_name, set_code FROM instrument_sets ORDER BY set_name ASC";
     if($resultAllSets = $conn->query($sqlAllSets)) {
@@ -82,7 +82,7 @@ if ($conn) {
     $stmtMachines->execute();
     if ($result = $stmtMachines->get_result()) while($row = $result->fetch_assoc()) $activeMachines[] = $row;
     $stmtMachines->close();
-    
+
     // Fetch active departments for the edit modal
     $sqlDepts = "SELECT department_id, department_name FROM departments WHERE is_active = 1 UNION (SELECT d.department_id, d.department_name FROM departments d JOIN sterilization_loads sl ON d.department_id = sl.destination_department_id WHERE sl.load_id = ?)";
     $stmtDepts = $conn->prepare($sqlDepts);
@@ -114,7 +114,7 @@ $page_specific_js = 'assets/js/load_detail.js';
     <div id="loading-overlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50" style="display: none;">
         <div class="text-white text-xl">Memproses...</div>
     </div>
-    
+
     <div class="flex flex-wrap justify-between items-center mb-6 gap-2">
         <div class="flex items-center gap-4">
             <h2 class="text-2xl font-semibold text-gray-700">Detail Muatan: <span id="loadNameDisplay">Memuat...</span></h2>
@@ -122,7 +122,7 @@ $page_specific_js = 'assets/js/load_detail.js';
         </div>
         <a href="manage_loads.php" class="btn btn-secondary"><span class="material-icons mr-2">arrow_back</span>Kembali ke Daftar Muatan</a>
     </div>
-    
+
     <div id="ajax-message-container"></div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -149,7 +149,7 @@ $page_specific_js = 'assets/js/load_detail.js';
                 </div>
                  <hr class="my-6">
             </div>
-           
+
             <h3 class="text-xl font-semibold text-gray-800 mb-4">Isi Muatan (<span id="itemCount">0</span>)</h3>
             <div class="overflow-x-auto">
                 <table class="w-full table-auto">
@@ -232,7 +232,7 @@ $page_specific_js = 'assets/js/load_detail.js';
                 <label class="block p-3 border rounded-lg has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400"><input type="radio" name="process_type" value="create_new" class="mr-2" checked> Buat Siklus Baru</label>
                 <label class="block p-3 border rounded-lg has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400"><input type="radio" name="process_type" value="merge_existing" class="mr-2"> Gabungkan ke Siklus yang Ada</label>
             </div>
-            
+
             <div id="mergeCycleDropdownContainer" class="hidden mt-4">
                 <label for="target_cycle_id" class="form-label">Pilih Siklus Target</label>
                 <select id="target_cycle_id" name="target_cycle_id" class="form-select" disabled><option>Memuat siklus...</option></select>
