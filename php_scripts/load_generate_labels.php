@@ -94,7 +94,7 @@ try {
     if (empty($itemsToProcess)) {
         throw new Exception("Tidak ada item di dalam muatan ini untuk dibuatkan label.");
     }
-    
+
     // Pastikan ID unik
     $instrumentIds = array_unique(array_filter($instrumentIds));
     $setIds = array_unique(array_filter($setIds));
@@ -132,12 +132,12 @@ try {
     }
 
     // 4. Siapkan statement SQL untuk loop
-    $sqlInsertLabel = "INSERT INTO sterilization_records 
-                        (label_unique_id, load_id, cycle_id, item_id, item_type, label_title, 
-                         created_by_user_id, expiry_date, status, label_items_snapshot, print_status, destination_department_id) 
+    $sqlInsertLabel = "INSERT INTO sterilization_records
+                        (label_unique_id, load_id, cycle_id, item_id, item_type, label_title,
+                         created_by_user_id, expiry_date, status, label_items_snapshot, print_status, destination_department_id)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, 'pending', ?)";
     $stmtInsert = $conn->prepare($sqlInsertLabel);
-    
+
     $sqlInsertQueue = "INSERT INTO print_queue (record_id, load_id) VALUES (?, ?)";
     $stmtQueue = $conn->prepare($sqlInsertQueue);
 
@@ -148,66 +148,71 @@ try {
         $itemId = (int)$item['item_id'];
         $itemType = $item['item_type'];
         $itemSnapshotJson = $item['item_snapshot'] ?? null;
-        
-        $itemMaster = $masterData[$itemType][$itemId] ?? null;
-        if (!$itemMaster) continue; // Lewati jika data master tidak ditemukan
 
-        // === PERBAIKAN BUG DI SINI ===
+        $itemMaster = $masterData[$itemType][$itemId] ?? null;
+        if (!$itemMaster) continue;
+
         $labelTitle = $itemMaster[$itemType . '_name'] ?? 'Item tidak dikenal';
-        // === AKHIR PERBAIKAN ===
-        
-        $daysUntilExpiry = $globalDefaultExpiryDays; // Mulai dengan default global
+
+        // === PERBAIKAN LOGIKA KEDALUWARSA DIMULAI DI SINI ===
+        $daysUntilExpiry = $globalDefaultExpiryDays; // Selalu mulai dengan default global untuk setiap item.
 
         if ($itemType === 'instrument') {
-            // Jika ini instrumen, gunakan masa kedaluwarsa spesifiknya jika ada
+            // Jika instrumen, gunakan masa kedaluwarsanya jika ada, jika tidak, tetap gunakan default global.
             $daysUntilExpiry = (int)($itemMaster['expiry_in_days'] ?? $globalDefaultExpiryDays);
         } elseif ($itemType === 'set') {
-            // Jika ini set, periksa dulu apakah set itu sendiri punya override
-            if (isset($itemMaster['expiry_in_days']) && (int)$itemMaster['expiry_in_days'] > 0) {
-                $daysUntilExpiry = (int)$itemMaster['expiry_in_days'];
-            } else {
-                // Jika tidak, cari masa terpendek dari semua instrumen di dalamnya
-                if (!empty($itemSnapshotJson)) {
-                    $snapshot = json_decode($itemSnapshotJson, true);
-                    if (is_array($snapshot) && !empty($snapshot)) {
-                        $expiryValues = [];
-                        foreach ($snapshot as $snapItem) {
-                            $instrumentInSet = $masterData['instrument'][(int)$snapItem['instrument_id']] ?? null;
-                            // Tambahkan masa kedaluwarsa instrumen, atau default global jika tidak diatur
-                            $expiryValues[] = (int)($instrumentInSet['expiry_in_days'] ?? $globalDefaultExpiryDays);
-                        }
-                        // Ambil nilai terendah
-                        if (!empty($expiryValues)) {
-                            $daysUntilExpiry = min($expiryValues);
-                        }
+            $setSpecificExpiry = (int)($itemMaster['expiry_in_days'] ?? 0);
+            $instrumentMinExpiry = null;
+
+            // Periksa masa kedaluwarsa terpendek dari instrumen di dalamnya
+            if (!empty($itemSnapshotJson)) {
+                $snapshot = json_decode($itemSnapshotJson, true);
+                if (is_array($snapshot) && !empty($snapshot)) {
+                    $expiryValues = [];
+                    foreach ($snapshot as $snapItem) {
+                        $instrumentInSet = $masterData['instrument'][(int)$snapItem['instrument_id']] ?? null;
+                        $expiryValues[] = (int)($instrumentInSet['expiry_in_days'] ?? $globalDefaultExpiryDays);
+                    }
+                    if (!empty($expiryValues)) {
+                        $instrumentMinExpiry = min($expiryValues);
                     }
                 }
             }
+
+            // Terapkan aturan prioritas dengan benar
+            if ($setSpecificExpiry > 0) {
+                // Prioritas 1: Gunakan pengaturan spesifik set jika ada.
+                $daysUntilExpiry = $setSpecificExpiry;
+            } elseif ($instrumentMinExpiry !== null) {
+                // Prioritas 2: Gunakan masa terpendek dari instrumen di dalamnya.
+                $daysUntilExpiry = $instrumentMinExpiry;
+            }
+            // Prioritas 3: Jika tidak ada keduanya, nilai akan tetap menjadi default global yang sudah diatur di awal loop.
         }
-        
+        // === AKHIR PERBAIKAN ===
+
         $expiryDate = (new DateTime())->modify("+" . $daysUntilExpiry . " days")->format('Y-m-d H:i:s');
-        
-        // Coba buat label dengan ID unik
+
         $maxAttempts = 5;
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
             $labelUniqueId = strtoupper(bin2hex(random_bytes(4)));
-            
+
             $stmtInsert->bind_param("siiississi", $labelUniqueId, $loadId, $cycleId, $itemId, $itemType, $labelTitle, $loggedInUserId, $expiryDate, $itemSnapshotJson, $destinationDepartmentId);
-            
+
             if ($stmtInsert->execute()) {
                 $newRecordId = $stmtInsert->insert_id;
-                
+
                 $stmtQueue->bind_param("ii", $newRecordId, $loadId);
                 if (!$stmtQueue->execute()) {
                     throw new Exception("Gagal menambahkan label (ID: $newRecordId) ke antrean cetak: " . $stmtQueue->error);
                 }
-                
+
                 $createdCount++;
-                break; // Berhasil, keluar dari loop percobaan
+                break;
             } else {
-                if ($conn->errno === 1062) { // Error duplikat kunci
+                if ($conn->errno === 1062) {
                     if ($attempt === $maxAttempts - 1) throw new Exception("Gagal menghasilkan ID label unik setelah $maxAttempts percobaan.");
-                    continue; // Coba lagi dengan ID baru
+                    continue;
                 } else {
                     throw new Exception("Gagal membuat label untuk item ID $itemId: " . $stmtInsert->error);
                 }
@@ -218,7 +223,7 @@ try {
     $stmtInsert->close();
     $stmtQueue->close();
     $conn->commit();
-    
+
     $_SESSION['flash_message'] = ['type' => 'success', 'text' => "$createdCount label berhasil dibuat untuk muatan '" . htmlspecialchars($loadInfo['load_name']) . "' dan ditambahkan ke antrean cetak."];
     log_activity('GENERATE_LABELS', $loggedInUserId, "Membuat $createdCount label untuk Muatan ID: $loadId.");
 
@@ -233,6 +238,5 @@ try {
     }
 }
 
-// Arahkan ke halaman antrean cetak setelah berhasil
 header("Location: ../print_queue.php?load_id=" . $loadId);
 exit;
