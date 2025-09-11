@@ -192,7 +192,7 @@ if (empty($labelUniqueIdFromGet)) {
                         </div>
                         <?php if ($showStatusBlock): ?>
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
-                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', default => 'hourglass_top' }; ?></span>
+                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', 'used_accepted' => 'thumb_up_alt', default => 'hourglass_top' }; ?></span>
                             <span>Status: <?php echo htmlspecialchars($labelDetails['status_display']); ?></span>
                         </div>
                         <?php endif; ?>
@@ -235,6 +235,31 @@ if (empty($labelUniqueIdFromGet)) {
                                         <img src="uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>" alt="Bukti Penggunaan" class="proof-thumbnail" onclick="showImageModal('uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>', 'instrument')">
                                     </div>
                                 <?php endif; ?>
+                                <div class="label-action-container !justify-start !text-left !p-0 !border-0 mt-4">
+                                    <button id="acceptItemBtn" class="btn bg-green-500 text-white hover:bg-green-600"><span class="material-icons">thumb_up</span>Terima Barang</button>
+                                </div>
+                            <?php elseif($labelDetails['status'] === 'used_accepted'): ?>
+                                <p class="text-sm text-green-700 bg-green-50 p-3 rounded-md">
+                                    Barang telah diterima kembali dan siklus hidupnya telah selesai.
+                                    <?php if(!empty($labelDetails['return_condition'])): ?>
+                                        <br><strong>Kondisi saat diterima:</strong>
+                                        <?php if($labelDetails['return_condition'] === 'good'): ?>
+                                            <span class="font-medium text-green-800">Baik</span>
+                                        <?php else: ?>
+                                            <span class="font-medium text-red-800">Ada Masalah</span>
+                                        <?php endif; ?>
+
+                                        <?php if($labelDetails['return_condition'] === 'damaged' && !empty($labelDetails['return_notes'])): ?>
+                                            <br><strong>Catatan:</strong> <?php echo htmlspecialchars($labelDetails['return_notes']); ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </p>
+                                <?php if (!empty($labelDetails['return_proof_filename']) && file_exists('uploads/return_proof/' . $labelDetails['return_proof_filename'])): ?>
+                                    <div class="proof-thumbnail-container">
+                                        <p class="text-xs text-gray-500 mb-1">Bukti Foto Masalah:</p>
+                                        <img src="uploads/return_proof/<?php echo htmlspecialchars($labelDetails['return_proof_filename']); ?>" alt="Bukti Masalah Saat Diterima" class="proof-thumbnail" onclick="showImageModal('uploads/return_proof/<?php echo htmlspecialchars($labelDetails['return_proof_filename']); ?>', 'instrument')">
+                                    </div>
+                                <?php endif; ?>
                             <?php elseif($labelDetails['status'] === 'expired'): ?>
                                 <p class="text-sm text-gray-600">Kedaluwarsa pada <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php elseif($labelDetails['status'] === 'recalled'): ?>
@@ -267,7 +292,7 @@ if (empty($labelUniqueIdFromGet)) {
                         </div>
                     </div>
                 </div>
-                <?php 
+                <?php
                 $notesToParse = $labelDetails['notes'] ?? '';
                 $hasPublicNotes = false;
                 if (!empty($notesToParse)) {
@@ -279,7 +304,7 @@ if (empty($labelUniqueIdFromGet)) {
                         }
                     }
                 }
-                
+
                 if ($hasPublicNotes):
                 ?>
                 <div class="p-6 border-t">
@@ -387,6 +412,56 @@ if (empty($labelUniqueIdFromGet)) {
         </div>
     </div>
 
+    <div id="acceptItemModal" class="modal-overlay">
+        <div class="modal-content max-w-lg">
+            <h3 class="text-lg font-bold mb-2">Konfirmasi Penerimaan Barang</h3>
+            <p class="text-sm text-gray-600 mb-4">Pilih kondisi barang saat diterima. Tindakan ini akan menyelesaikan siklus hidup item.</p>
+            <form id="acceptItemForm">
+                <div class="mb-4 text-left space-y-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kondisi Barang <span class="text-red-500">*</span></label>
+                    <div class="flex items-center">
+                        <input id="condition_good" type="radio" name="return_condition" value="good" class="form-radio" checked>
+                        <label for="condition_good" class="ml-2 text-sm text-gray-700">Kondisi Baik (Siap untuk siklus berikutnya)</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="condition_damaged" type="radio" name="return_condition" value="damaged" class="form-radio">
+                        <label for="condition_damaged" class="ml-2 text-sm text-gray-700">Ada Masalah / Rusak (Perlu perbaikan)</label>
+                    </div>
+                </div>
+
+                <div id="damagedInfoContainer" class="hidden space-y-4">
+                    <div class="text-left">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Bukti Foto Masalah (Wajib jika rusak)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" name="return_proof_image" accept="image/jpeg, image/png, image/webp">
+                            <span class="material-icons upload-icon">add_a_photo</span>
+                            <p class="upload-text">Klik atau seret gambar ke sini</p>
+                            <p class="upload-hint">JPG, PNG, atau WEBP (Maks 2MB)</p>
+                        </div>
+                        <div class="image-preview-container">
+                            <img src="#" alt="Pratinjau Gambar"/>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <label for="return_notes" class="block text-sm font-medium text-gray-700 mb-1">Jelaskan Masalahnya <span class="text-red-500">*</span></label>
+                        <textarea name="return_notes" class="form-input form-textarea w-full" placeholder="Contoh: Instrumen tumpul, ada noda, dll."></textarea>
+                    </div>
+                </div>
+
+                <div class="my-4 text-left">
+                    <label for="acceptNote" class="block text-sm font-medium text-gray-700 mb-1">Catatan Tambahan (Opsional)</label>
+                    <textarea name="note" class="form-input form-textarea w-full" placeholder="Contoh: Diterima oleh tim CSSD"></textarea>
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button type="button" class="btn-cancel-modal btn bg-gray-200 text-gray-800 hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="btn bg-green-500 text-white hover:bg-green-600">
+                        <span class="material-icons mr-2">check_circle</span>Ya, Konfirmasi Penerimaan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="imageModal" class="modal-overlay">
         <div class="modal-content">
             <img id="modalImage" src="" alt="Gambar Instrumen Diperbesar" class="hidden">
@@ -421,10 +496,16 @@ if (empty($labelUniqueIdFromGet)) {
     document.addEventListener('DOMContentLoaded', function() {
         const markUsedBtn = document.getElementById('markUsedBtn');
         const reportIssueBtn = document.getElementById('reportIssueBtn');
+        const acceptItemBtn = document.getElementById('acceptItemBtn');
+
         const confirmUsedModal = document.getElementById('confirmUsedModal');
         const issueModal = document.getElementById('issueModal');
+        const acceptItemModal = document.getElementById('acceptItemModal');
+
         const confirmUsedForm = document.getElementById('confirmUsedForm');
         const issueForm = document.getElementById('issueForm');
+        const acceptItemForm = document.getElementById('acceptItemForm');
+
         const messageContainer = document.getElementById('ajax-message-container');
         const statusBlock = document.querySelector('.label-status-banner');
         const actionContainer = document.querySelector('.label-action-container');
@@ -446,6 +527,29 @@ if (empty($labelUniqueIdFromGet)) {
 
         if (markUsedBtn) { markUsedBtn.addEventListener('click', () => confirmUsedModal.classList.add('active')); }
         if (reportIssueBtn) { reportIssueBtn.addEventListener('click', () => issueModal.classList.add('active')); }
+        if (acceptItemBtn) { acceptItemBtn.addEventListener('click', () => acceptItemModal.classList.add('active')); }
+
+        // LOGIKA BARU UNTUK MODAL PENERIMAAN
+        if (acceptItemForm) {
+            const damagedInfoContainer = document.getElementById('damagedInfoContainer');
+            const returnNotesTextarea = damagedInfoContainer.querySelector('textarea[name="return_notes"]');
+            const returnProofImage = damagedInfoContainer.querySelector('input[name="return_proof_image"]');
+            const conditionRadios = acceptItemForm.querySelectorAll('input[name="return_condition"]');
+
+            conditionRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'damaged') {
+                        damagedInfoContainer.classList.remove('hidden');
+                        returnNotesTextarea.required = true;
+                        returnProofImage.required = true;
+                    } else {
+                        damagedInfoContainer.classList.add('hidden');
+                        returnNotesTextarea.required = false;
+                        returnProofImage.required = false;
+                    }
+                });
+            });
+        }
 
         function compressImage(file, options) {
             return new Promise((resolve, reject) => {
@@ -495,29 +599,45 @@ if (empty($labelUniqueIdFromGet)) {
 
             formElement.addEventListener('submit', async function(e) {
                 e.preventDefault();
+                const originalBtnHtml = submitBtn.innerHTML;
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = `<span class="material-icons animate-spin mr-2">sync</span>Memproses...`;
+
                 const formData = new FormData(this);
                 formData.append('label_uid', '<?php echo htmlspecialchars($labelUniqueIdFromGet ?? ""); ?>');
-                if (imageInput && imageInput.files.length > 0) {
-                    const originalFile = imageInput.files[0];
-                    try {
-                        const compressedFile = await compressImage(originalFile, { maxWidth: 1024, maxHeight: 1024, quality: 0.8, mimeType: 'image/jpeg' });
-                        formData.set(imageInput.name, compressedFile);
-                    } catch (error) {
-                        console.error("Image compression failed:", error);
+
+                const fileInputs = formElement.querySelectorAll('input[type="file"]');
+
+                for (const fileInput of fileInputs) {
+                    if (fileInput.files.length > 0) {
+                        const originalFile = fileInput.files[0];
+                        try {
+                            const compressedFile = await compressImage(originalFile, { maxWidth: 1024, maxHeight: 1024, quality: 0.8, mimeType: 'image/jpeg' });
+                            formData.set(fileInput.name, compressedFile);
+                        } catch (error) {
+                            console.error("Image compression failed:", error);
+                        }
                     }
                 }
+
                 fetch(endpoint, { method: 'POST', body: formData })
                     .then(response => response.json())
                     .then(data => {
                         successCallback(data, formElement.closest('.modal-overlay'));
                         formElement.reset();
                         if(previewContainer) previewContainer.style.display = 'none';
+                        // Sembunyikan lagi field catatan kerusakan setelah submit
+                        if(formElement.id === 'acceptItemForm') {
+                            document.getElementById('damagedInfoContainer').classList.add('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        displayMessage('Tidak dapat terhubung ke server. Periksa koneksi Anda.', 'danger');
                     })
                     .finally(() => {
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = formElement === confirmUsedForm ? '<span class="material-icons mr-2">check_circle</span>Ya, Konfirmasi' : '<span class="material-icons mr-2">send</span>Kirim Laporan';
+                        submitBtn.innerHTML = originalBtnHtml;
                     });
             });
         }
@@ -530,6 +650,11 @@ if (empty($labelUniqueIdFromGet)) {
             handleResponse(data, modal, 'Ditarik Kembali', 'bg-purple-100 text-purple-800', 'report_problem');
         });
 
+        setupForm(acceptItemForm, 'php_scripts/public_accept_used.php', (data, modal) => {
+            handleResponse(data, modal, 'Diterima', 'bg-green-100 text-green-800', 'thumb_up_alt');
+        });
+
+
         function handleResponse(data, modal, newStatusText, newStatusClass, newIcon) {
             if (data.success) {
                 modal.classList.remove('active');
@@ -537,19 +662,24 @@ if (empty($labelUniqueIdFromGet)) {
                 if (statusBlock) {
                     const iconEl = statusBlock.querySelector('.material-icons');
                     const textEl = statusBlock.querySelector('span:last-child');
-                    statusBlock.className = `label-status-banner ${newStatusClass}`;
+                    statusBlock.className = `label-status-banner ${newStatusClass} w-full md:w-auto mt-2 md:mt-0`;
                     if(textEl) textEl.textContent = `Status: ${newStatusText}`;
                     if(iconEl) iconEl.textContent = newIcon;
                 }
                 if(actionContainer) { actionContainer.innerHTML = `<p class="text-sm text-gray-600">Aksi untuk label ini telah selesai.</p>`; }
-                setTimeout(() => location.reload(), 1500);
+                setTimeout(() => location.reload(), 2000);
             } else {
                 displayMessage(data.message || 'Terjadi kesalahan.', 'danger');
                 modal.classList.remove('active');
             }
         }
 
-        function displayMessage(message, type) { const alertClass = type === 'success' ? 'alert-success' : 'alert-danger'; const icon = type === 'success' ? 'check_circle' : 'error'; messageContainer.innerHTML = `<div class="alert ${alertClass} mb-4" role="alert"><span class="material-icons">${icon}</span><span>${message}</span></div>`; window.scrollTo(0, 0); }
+        function displayMessage(message, type) {
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+            const icon = type === 'success' ? 'check_circle' : 'error';
+            messageContainer.innerHTML = `<div class="alert ${alertClass} mb-4" role="alert"><span class="material-icons">${icon}</span><span>${message}</span></div>`;
+            window.scrollTo(0, 0);
+        }
     });
     </script>
 </body>
