@@ -263,7 +263,7 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                         </div>
 
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
-                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', default => 'hourglass_top' }; ?></span>
+                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', 'used_accepted' => 'thumb_up_alt', default => 'hourglass_top' }; ?></span>
                             <span>Status: <?php echo htmlspecialchars($labelDetails['status_display']); ?></span>
                         </div>
                     </div>
@@ -278,14 +278,14 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                             <button type="button" id="openRevertUsageModalBtn" class="btn bg-yellow-500 text-white hover:bg-yellow-600"><span class="material-icons">undo</span>Batalkan Penggunaan</button>
                         <?php endif; ?>
                         <button type="button" id="showQrBtn" class="btn btn-secondary"><span class="material-icons">qr_code_2</span>Tampilkan QR</button>
-                        <?php 
+                        <?php
                             $isPrintable = in_array($labelDetails['status'], ['active', 'used']);
                             $printBtnClass = $isPrintable ? 'bg-gray-600 text-white hover:bg-gray-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed';
                             $printBtnTitle = $isPrintable ? 'Cetak Ulang Label' : 'Label dengan status ini tidak dapat dicetak';
                         ?>
-                        <a href="<?php echo $isPrintable ? 'print_router.php?label_uid=' . htmlspecialchars($labelDetails['label_unique_id']) : '#'; ?>" 
-                           target="<?php echo $isPrintable ? '_blank' : '_self'; ?>" 
-                           class="btn <?php echo $printBtnClass; ?>" 
+                        <a href="<?php echo $isPrintable ? 'print_router.php?label_uid=' . htmlspecialchars($labelDetails['label_unique_id']) : '#'; ?>"
+                           target="<?php echo $isPrintable ? '_blank' : '_self'; ?>"
+                           class="btn <?php echo $printBtnClass; ?>"
                            title="<?php echo $printBtnTitle; ?>"
                            <?php if (!$isPrintable) echo 'onclick="event.preventDefault();"'; ?>>
                            <span class="material-icons">print</span>Cetak Label
@@ -320,17 +320,54 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                                         <img src="uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>" alt="Bukti Penggunaan" class="proof-thumbnail" onclick="showImageModal('uploads/usage_proof/<?php echo htmlspecialchars($labelDetails['usage_proof_filename']); ?>', 'instrument')">
                                     </div>
                                 <?php endif; ?>
+                            <?php elseif($labelDetails['status'] === 'used_accepted'): ?>
+                                <p class="text-sm text-green-700 bg-green-50 p-3 rounded-md">
+                                    Barang telah diterima kembali dan siklus hidupnya telah selesai.
+                                    <?php if(!empty($labelDetails['return_condition'])): ?>
+                                        <br><strong>Kondisi saat diterima:</strong>
+                                        <?php if($labelDetails['return_condition'] === 'good'): ?>
+                                            <span class="font-medium text-green-800">Baik</span>
+                                        <?php else: ?>
+                                            <span class="font-medium text-red-800">Ada Masalah</span>
+                                        <?php endif; ?>
+
+                                        <?php if($labelDetails['return_condition'] === 'damaged' && !empty($labelDetails['return_notes'])): ?>
+                                            <br><strong>Catatan:</strong> <?php echo htmlspecialchars($labelDetails['return_notes']); ?>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </p>
+                                <?php if (!empty($labelDetails['return_proof_filename']) && file_exists('uploads/return_proof/' . $labelDetails['return_proof_filename'])): ?>
+                                    <div class="proof-thumbnail-container">
+                                        <p class="text-xs text-gray-500 mb-1">Bukti Foto Masalah:</p>
+                                        <img src="uploads/return_proof/<?php echo htmlspecialchars($labelDetails['return_proof_filename']); ?>" alt="Bukti Masalah Saat Diterima" class="proof-thumbnail" onclick="showImageModal('uploads/return_proof/<?php echo htmlspecialchars($labelDetails['return_proof_filename']); ?>', 'instrument')">
+                                    </div>
+                                <?php endif; ?>
                             <?php elseif($labelDetails['status'] === 'expired'): ?>
                                 <p class="text-sm text-gray-600">Kedaluwarsa pada <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php elseif($labelDetails['status'] === 'recalled'): ?>
                                 <p class="text-sm text-red-600 font-medium">Ditarik Kembali (Recalled)</p>
+                                <?php
+                                $publicNotes = '';
+                                if (!empty($labelDetails['notes'])) {
+                                    $notesArray = explode("\n", $labelDetails['notes']);
+                                    foreach ($notesArray as $note) {
+                                        if (strpos($note, 'CATATAN INTERNAL') === false && strpos($note, '-----------------') === false) {
+                                            $publicNotes .= $note . "\n";
+                                        }
+                                    }
+                                    $publicNotes = trim($publicNotes);
+                                }
+                                if (!empty($publicNotes)):
+                                ?>
+                                <p class="text-xs text-gray-500 bg-red-50 p-2 rounded-md mt-1">Catatan: <?php echo nl2br(htmlspecialchars($publicNotes)); ?></p>
+                                <?php endif; ?>
                                 <?php if (!empty($labelDetails['issue_proof_filename']) && file_exists('uploads/issue_proof/' . $labelDetails['issue_proof_filename'])): ?>
                                     <div class="proof-thumbnail-container">
                                         <img src="uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>" alt="Bukti Masalah" class="proof-thumbnail" onclick="showImageModal('uploads/issue_proof/<?php echo htmlspecialchars($labelDetails['issue_proof_filename']); ?>', 'instrument')">
                                     </div>
                                 <?php endif; ?>
                             <?php elseif($labelDetails['status'] === 'voided'): ?>
-                                <p class="text-sm text-gray-600 font-medium">Dibatalkan secara administratif.</p>
+                                <p class="text-sm text-gray-600 font-medium">Dibatalkan secara administratif dan tidak valid untuk digunakan.</p>
                             <?php else: ?>
                                 <p class="text-sm text-gray-600">Label masih aktif dan siap digunakan hingga <?php echo (new DateTime($labelDetails['expiry_date']))->format('d M Y, H:i:s'); ?>.</p>
                             <?php endif; ?>
@@ -405,7 +442,7 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
         <input type="hidden" name="label_unique_id_for_redirect" value="<?php echo $labelDetails['label_unique_id'] ?? ''; ?>">
         <input type="hidden" name="action_type" value="mark_as_used">
     </form>
-    
+
     <div id="revertUsageModal" class="modal-overlay">
         <div class="modal-content text-left">
             <h3 class="text-lg font-bold mb-2">Batalkan Status Penggunaan</h3>
@@ -515,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const voidLabelModal = document.getElementById('voidLabelModal');
 
     const imageModal = document.getElementById('imageModal');
-    
+
     const itemThumbnail = document.getElementById('itemThumbnail');
     if (itemThumbnail) {
         itemThumbnail.addEventListener('click', () => {
