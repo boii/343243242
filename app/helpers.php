@@ -37,9 +37,9 @@ if (!function_exists('log_activity')) {
 
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
 
-        $sql = "INSERT INTO activity_log (user_id, action_type, details, target_type, target_id, ip_address) 
+        $sql = "INSERT INTO activity_log (user_id, action_type, details, target_type, target_id, ip_address)
                 VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         if ($stmt = $conn->prepare($sql)) {
             $stmt->bind_param("isssis", $userId, $actionType, $details, $targetType, $targetId, $ip_address);
             if (!$stmt->execute()) {
@@ -71,6 +71,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             // Label & General Statuses
             'active' => ['text' => 'Aktif', 'class' => 'bg-green-100 text-green-800'],
             'used' => ['text' => 'Telah Digunakan', 'class' => 'bg-blue-100 text-blue-800'],
+            'used_accepted' => ['text' => 'Penggunaan Diterima', 'class' => 'bg-teal-100 text-teal-800'],
             'expired' => ['text' => 'Kedaluwarsa', 'class' => 'bg-red-100 text-red-800'],
             'pending_validation' => ['text' => 'Pending Validasi', 'class' => 'bg-yellow-100 text-yellow-800'],
             'recalled' => ['text' => 'Ditarik Kembali', 'class' => 'bg-purple-100 text-purple-700'],
@@ -82,7 +83,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             'selesai' => ['text' => 'Selesai (Lulus)', 'class' => 'bg-green-100 text-green-800'],
             'failed' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],
             'gagal' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],
-            
+
             // Instrument Statuses
             'tersedia' => ['text' => 'Tersedia', 'class' => 'bg-green-100 text-green-800'],
             'sterilisasi' => ['text' => 'Sterilisasi', 'class' => 'bg-blue-100 text-blue-800'],
@@ -157,38 +158,38 @@ if (!function_exists('formatActivityMessage')) {
                     );
                 }
                 break;
-            
+
             case 'CREATE_LOAD': case 'PROCESS_LOAD': case 'VALIDATE_CYCLE': case 'GENERATE_LABELS': case 'RECALL_LOAD':
                 $icon = 'inventory'; $iconColor = 'text-blue-700'; break;
             case 'DELETE_LOAD':
                 $icon = 'delete_forever'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_CYCLE': case 'UPDATE_CYCLE': 
+            case 'CREATE_CYCLE': case 'UPDATE_CYCLE':
                 $icon = 'cyclone'; $iconColor = 'text-orange-500'; break;
-            case 'DELETE_CYCLE': 
+            case 'DELETE_CYCLE':
                 $icon = 'delete'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_USER': 
+            case 'CREATE_USER':
                 $icon = 'person_add'; $iconColor = 'text-purple-500'; break;
-            case 'UPDATE_USER': 
+            case 'UPDATE_USER':
                 $icon = 'manage_accounts'; $iconColor = 'text-purple-500'; break;
-            case 'DELETE_USER': 
+            case 'DELETE_USER':
                 $icon = 'person_remove'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_INSTRUMENT': 
+            case 'CREATE_INSTRUMENT':
                 $icon = 'add'; $iconColor = 'text-indigo-500'; break;
             case 'UPDATE_INSTRUMENT': case 'UPDATE_INSTRUMENT_STATUS':
                  $icon = 'edit'; $iconColor = 'text-indigo-500'; break;
-            case 'DELETE_INSTRUMENT': 
+            case 'DELETE_INSTRUMENT':
                 $icon = 'delete'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_SET': 
+            case 'CREATE_SET':
                 $icon = 'inventory_2'; $iconColor = 'text-teal-500'; break;
-            case 'UPDATE_SET': 
+            case 'UPDATE_SET':
                 $icon = 'edit_note'; $iconColor = 'text-teal-500'; break;
-            case 'DELETE_SET': 
+            case 'DELETE_SET':
                 $icon = 'delete_sweep'; $iconColor = 'text-red-500'; break;
-            case 'VALIDATE_LABEL': 
+            case 'VALIDATE_LABEL':
                 $icon = 'task_alt'; $iconColor = 'text-green-600'; break;
-            case 'MARK_LABEL_USED': 
+            case 'MARK_LABEL_USED':
                 $icon = 'check_circle_outline'; $iconColor = 'text-blue-500'; break;
-            case 'RECALL_LABEL': 
+            case 'RECALL_LABEL':
                 $icon = 'report_problem'; $iconColor = 'text-orange-500'; break;
         }
 
@@ -202,12 +203,12 @@ if (!function_exists('formatActivityMessage')) {
             if ($targetType === 'cycle') $link = "cycle_detail.php?cycle_id={$targetId}";
             if ($targetType === 'load') $link = "load_detail.php?load_id={$targetId}";
             if ($targetType === 'user') $link = "user_edit.php?user_id={$targetId}";
-            
+
             if ($link) {
                 $message = "<a href='{$link}' class='text-blue-600 hover:underline'>{$message}</a>";
             }
         }
-        
+
         return ['message' => $message, 'icon' => $icon, 'iconColor' => $iconColor];
     }
 }

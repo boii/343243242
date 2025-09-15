@@ -89,6 +89,7 @@ $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT
                         <option value="">Semua Status</option>
                         <option value="active" <?php echo ($statusFilter === 'active') ? 'selected' : ''; ?>>Aktif</option>
                         <option value="used" <?php echo ($statusFilter === 'used') ? 'selected' : ''; ?>>Digunakan</option>
+                        <option value="used_accepted" <?php echo ($statusFilter === 'used_accepted') ? 'selected' : ''; ?>>Penggunaan Diterima</option>
                         <option value="expired" <?php echo ($statusFilter === 'expired') ? 'selected' : ''; ?>>Kedaluwarsa</option>
                         <option value="pending_validation" <?php echo ($statusFilter === 'pending_validation') ? 'selected' : ''; ?>>Pending Validasi</option>
                         <option value="recalled" <?php echo ($statusFilter === 'recalled') ? 'selected' : ''; ?>>Ditarik Kembali</option>
@@ -136,7 +137,7 @@ $departmentFilter = filter_input(INPUT_GET, 'department_id', FILTER_VALIDATE_INT
         <div id="paginationContainer" class="mt-4 flex justify-center items-center space-x-1 pagination"></div>
     </section>
 </main>
-    
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let debounceTimer;
@@ -183,14 +184,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const statusBadge = `<span class="status-badge ${escapeHtml(label.status_class)}">${escapeHtml(label.status_text)}</span>`;
             const createdDate = new Date(label.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             const expiryDate = new Date(label.expiry_date).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-            
+
             const statusToClassMap = {
                 'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi',
                 'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal', 'voided': 'tr-status-gagal',
                 'pending_validation': 'tr-status-menunggu_validasi'
             };
             const rowStatusClass = statusToClassMap[label.status] || 'tr-status-default';
-            
+
             let modifiedIcon = '';
             if (label.item_type === 'set' && label.is_modified) {
                 modifiedIcon = `<span class="material-icons text-indigo-500 text-base ml-1" title="Definisi set ini telah berubah sejak label dicetak. Klik untuk melihat detail perubahan.">drive_file_rename_outline</span>`;
@@ -237,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderPagination(pagination) {
         paginationContainer.innerHTML = '';
         if (pagination.totalPages <= 1) return;
-        
+
         const filterParams = getFilterValues();
         for (let i = 1; i <= pagination.totalPages; i++) {
             const pageLink = document.createElement('a');
@@ -254,8 +255,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function escapeHtml(str) { 
-        return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); 
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
     }
 
     const inputs = filterForm.querySelectorAll('input, select');
