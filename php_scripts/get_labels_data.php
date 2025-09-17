@@ -46,7 +46,7 @@ if ($conn) {
     $conn->query("UPDATE sterilization_records SET status = 'expired' WHERE (status = 'active' OR status = 'pending_validation') AND expiry_date <= NOW()");
 
     $baseJoins = "FROM sterilization_records sr
-                  LEFT JOIN users u ON sr.created_by_user_id = u.user_id 
+                  LEFT JOIN users u ON sr.created_by_user_id = u.user_id
                   LEFT JOIN sterilization_loads sl ON sr.load_id = sl.load_id
                   LEFT JOIN departments d ON sr.destination_department_id = d.department_id";
 
@@ -65,7 +65,7 @@ if ($conn) {
     if (!empty($itemTypeFilter)) { $whereClause .= " AND sr.item_type = ?"; $params[] = $itemTypeFilter; $types .= "s"; }
     if (!empty($statusFilter)) { $whereClause .= " AND sr.status = ?"; $params[] = $statusFilter; $types .= "s"; }
     if ($departmentFilter) { $whereClause .= " AND sr.destination_department_id = ?"; $params[] = $departmentFilter; $types .= "i"; } // Filter baru ditambahkan
-    
+
     // Count total records
     $sqlCount = "SELECT COUNT(sr.record_id) as total " . $baseJoins . $whereClause;
     $totalRecords = 0;
@@ -81,14 +81,14 @@ if ($conn) {
     $labels = [];
     $setIdsToCheck = [];
     if ($totalRecords > 0) {
-        // --- PERUBAHAN: Menambahkan item_id dan label_items_snapshot ke SELECT ---
-        $sqlData = "SELECT sr.record_id, sr.label_unique_id, sr.item_type, sr.item_id, sr.label_items_snapshot, sr.label_title, sr.created_at, sr.expiry_date, sr.status, 
+        // --- PERUBAHAN: Menambahkan sr.return_condition ke SELECT ---
+        $sqlData = "SELECT sr.record_id, sr.label_unique_id, sr.item_type, sr.item_id, sr.label_items_snapshot, sr.label_title, sr.created_at, sr.expiry_date, sr.status, sr.return_condition,
                            u.full_name as creator_name, sl.load_name, d.department_name as destination_department_name
                     {$baseJoins}
                     {$whereClause}
                     ORDER BY sr.created_at DESC
                     LIMIT ? OFFSET ?";
-        
+
         array_push($params, $recordsPerPage, $offset);
         $types .= "ii";
 
@@ -110,13 +110,13 @@ if ($conn) {
         }
     }
 
-    // --- PERUBAHAN: Logika untuk membandingkan snapshot dengan master set ---
+    // --- Logika untuk membandingkan snapshot dengan master set ---
     $masterSetsData = [];
     if (!empty($setIdsToCheck)) {
         $uniqueSetIds = array_unique($setIdsToCheck);
         $setPlaceholders = implode(',', array_fill(0, count($uniqueSetIds), '?'));
         $setTypes = str_repeat('i', count($uniqueSetIds));
-        
+
         $sqlMaster = "SELECT set_id, instrument_id, quantity FROM instrument_set_items WHERE set_id IN ($setPlaceholders)";
         if ($stmtMaster = $conn->prepare($sqlMaster)) {
             $stmtMaster->bind_param($setTypes, ...$uniqueSetIds);
@@ -138,7 +138,7 @@ if ($conn) {
             // Normalisasi: urutkan berdasarkan instrument_id untuk perbandingan yang konsisten
             usort($snapshot, fn($a, $b) => $a['instrument_id'] <=> $b['instrument_id']);
             usort($master, fn($a, $b) => $a['instrument_id'] <=> $b['instrument_id']);
-            
+
             // Konversi ke int untuk konsistensi tipe data dari JSON
             $snapshotNormalized = array_map(function($item) {
                 return ['instrument_id' => (int)$item['instrument_id'], 'quantity' => (int)$item['quantity']];
@@ -150,7 +150,6 @@ if ($conn) {
         }
     }
     unset($label); // Hapus referensi terakhir
-    // --- AKHIR PERUBAHAN ---
 
     $response = [
         'success' => true,

@@ -181,12 +181,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         labels.forEach(label => {
-            const statusBadge = `<span class="status-badge ${escapeHtml(label.status_class)}">${escapeHtml(label.status_text)}</span>`;
+            let statusBadge = `<span class="status-badge ${escapeHtml(label.status_class)}">${escapeHtml(label.status_text)}</span>`;
+
+            // --- PERUBAHAN BARU DIMULAI DI SINI ---
+            if (label.status === 'used_accepted') {
+                if (label.return_condition === 'damaged') {
+                    statusBadge += `<span class="material-icons text-yellow-600 ml-1 text-base" title="Diterima dengan catatan masalah/kerusakan">warning</span>`;
+                } else if (label.return_condition === 'good') {
+                    statusBadge += `<span class="material-icons text-green-600 ml-1 text-base" title="Diterima dalam kondisi baik">check_circle</span>`;
+                }
+            }
+            // --- PERUBAHAN BARU SELESAI ---
+
             const createdDate = new Date(label.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             const expiryDate = new Date(label.expiry_date).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
 
             const statusToClassMap = {
-                'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi',
+                'active': 'tr-status-tersedia', 'used': 'tr-status-sterilisasi', 'used_accepted': 'tr-status-selesai',
                 'expired': 'tr-status-gagal', 'recalled': 'tr-status-gagal', 'voided': 'tr-status-gagal',
                 'pending_validation': 'tr-status-menunggu_validasi'
             };
@@ -224,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="text-xs text-gray-500">Kedaluwarsa: ${expiryDate}</div>
                     </td>
                     <td class="py-3 px-6 text-left">${escapeHtml(label.destination_department_name || 'Stok Umum')}</td>
-                    <td class="py-3 px-6 text-center">${statusBadge}</td>
+                    <td class="py-3 px-6 text-center"><div class="flex items-center justify-center">${statusBadge}</div></td>
                     <td class="py-3 px-6 text-center">
                         <div class="flex item-center justify-center space-x-1">
                             ${actionButton}

@@ -217,7 +217,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             // Label & General Statuses
             'active' => ['text' => 'Aktif', 'class' => 'bg-green-100 text-green-800'],
             'used' => ['text' => 'Telah Digunakan', 'class' => 'bg-blue-100 text-blue-800'],
-            'used_accepted' => ['text' => 'Penggunaan Diterima', 'class' => 'bg-gray-600 text-white'],
+            'used_accepted' => ['text' => 'Selesai', 'class' => 'bg-gray-600 text-white'],
             'expired' => ['text' => 'Kedaluwarsa', 'class' => 'bg-red-100 text-red-800'],
             'pending_validation' => ['text' => 'Pending Validasi', 'class' => 'bg-yellow-100 text-yellow-800'],
             'recalled' => ['text' => 'Ditarik Kembali', 'class' => 'bg-purple-100 text-purple-700'],
@@ -226,7 +226,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             // Load & Cycle Statuses
             'persiapan' => ['text' => 'Persiapan', 'class' => 'bg-gray-200 text-gray-800'],
             'menunggu_validasi' => ['text' => 'Menunggu Validasi', 'class' => 'bg-yellow-100 text-yellow-800'],
-            'completed' => ['text' => 'Selesai (Lulus)', 'class' => 'bg-green-100 text-green-800'],
+            'completed' => ['text' => 'Lulus', 'class' => 'bg-green-100 text-green-800'],
             'selesai' => ['text' => 'Selesai (Lulus)', 'class' => 'bg-green-100 text-green-800'],
             'failed' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],
             'gagal' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],

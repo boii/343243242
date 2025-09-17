@@ -263,8 +263,33 @@ render_breadcrumbs($labelDetails['label_unique_id'] ?? 'Detail');
                         </div>
 
                         <div class="label-status-banner <?php echo $labelStatusClass; ?> w-full md:w-auto mt-2 md:mt-0">
-                            <span class="material-icons"><?php echo match($labelDetails['status']) { 'active' => 'check_circle', 'used' => 'task_alt', 'expired' => 'history_toggle_off', 'recalled' => 'report_problem', 'voided' => 'do_not_disturb_on', 'used_accepted' => 'thumb_up_alt', default => 'hourglass_top' }; ?></span>
-                            <span>Status: <?php echo htmlspecialchars($labelDetails['status_display']); ?></span>
+                            <?php
+                            // --- PERUBAHAN DIMULAI DI SINI ---
+                            $statusIcon = 'help_outline'; // Ikon default
+                            $statusText = htmlspecialchars($labelDetails['status_display']);
+
+                            switch ($labelDetails['status']) {
+                                case 'active': $statusIcon = 'check_circle'; break;
+                                case 'used': $statusIcon = 'task_alt'; break;
+                                case 'expired': $statusIcon = 'history_toggle_off'; break;
+                                case 'recalled': $statusIcon = 'report_problem'; break;
+                                case 'voided': $statusIcon = 'do_not_disturb_on'; break;
+                                case 'used_accepted':
+                                    if ($labelDetails['return_condition'] === 'damaged') {
+                                        $statusIcon = 'warning';
+                                        $statusText .= ' (Ada Masalah)';
+                                        // Ganti kelas warna jika rusak
+                                        $labelStatusClass = 'bg-yellow-100 text-yellow-800';
+                                    } else {
+                                        $statusIcon = 'thumb_up_alt';
+                                    }
+                                    break;
+                                default: $statusIcon = 'hourglass_top'; break;
+                            }
+                            ?>
+                            <span class="material-icons"><?php echo $statusIcon; ?></span>
+                            <span>Status: <?php echo $statusText; ?></span>
+                            <?php // --- PERUBAHAN SELESAI --- ?>
                         </div>
                     </div>
                     <div class="label-action-container !justify-start !text-left !p-0 !border-0 mt-4">
