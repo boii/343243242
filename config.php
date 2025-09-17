@@ -28,10 +28,10 @@ declare(strict_types=1);
 date_default_timezone_set('Asia/Jakarta');
 
 // Database credentials - Ganti dengan kredensial database Anda
-define('DB_SERVER', 'localhost'); 
-define('DB_USERNAME', 'edfa6624_steril'); 
-define('DB_PASSWORD', 's6Bv8A0FQt0GET4s'); 
-define('DB_NAME', 'edfa6624_steril'); 
+define('DB_SERVER', 'localhost');
+define('DB_USERNAME', 'edfa6624_steril');
+define('DB_PASSWORD', 's6Bv8A0FQt0GET4s');
+define('DB_NAME', 'edfa6624_steril');
 
 /**
  * Attempt to connect to MariaDB database.
@@ -47,7 +47,7 @@ function connectToDatabase(): mysqli|false
 
     if ($connection->connect_error) {
         error_log("Database Connection failed: " . $connection->connect_error);
-        return false; 
+        return false;
     }
 
     // Atur zona waktu untuk koneksi ini ke Waktu Indonesia Barat (GMT+7)
@@ -60,32 +60,32 @@ function connectToDatabase(): mysqli|false
 }
 
 // --- Load Application Settings ---
-global $app_settings; 
-$app_settings_from_db = []; 
+global $app_settings;
+$app_settings_from_db = [];
 
 $default_settings = [
-    'app_instance_name'              => 'Sterilabel', 
-    'default_expiry_days'            => '30',         
-    'enable_pending_validation'      => '0', 
+    'app_instance_name'              => 'Sterilabel',
+    'default_expiry_days'            => '30',
+    'enable_pending_validation'      => '0',
     'show_status_block_on_detail_page' => '1',
-    'app_logo_filename'              => '', 
+    'app_logo_filename'              => '',
     'show_app_name_beside_logo'      => '1',
-    'print_template'                 => 'thermal',    
-    'thermal_fields_config'          => '{}', 
+    'print_template'                 => 'thermal',
+    'thermal_fields_config'          => '{}',
     'thermal_qr_position'            => 'bottom_center',
     'thermal_qr_size'                => 'medium',
-    'staff_can_manage_instruments'   => '0', 
+    'staff_can_manage_instruments'   => '0',
     'staff_can_manage_sets'          => '0',
     'staff_can_validate_cycles'      => '0',
     'staff_can_view_activity_log'    => '0',
     'public_usage_pin'               => '', // PIN untuk menandai digunakan dari halaman publik
-    'thermal_custom_text_1'          => '', 
+    'thermal_custom_text_1'          => '',
     'thermal_custom_text_2'          => '',
     'thermal_paper_width_mm'         => '70',
-    'thermal_paper_height_mm'        => '40' 
+    'thermal_paper_height_mm'        => '40'
 ];
 
-$conn_settings = connectToDatabase(); 
+$conn_settings = connectToDatabase();
 
 if ($conn_settings) {
     $sql = "SELECT setting_name, setting_value FROM app_settings";
@@ -110,7 +110,7 @@ $app_settings = array_merge($default_settings, $app_settings_from_db);
 
 // Ensure thermal_fields_config is an array and structured correctly
 // --- PERBAIKAN: Memperbarui struktur default agar mencakup semua field ---
-$completeDefaultFieldStructure = [ 
+$completeDefaultFieldStructure = [
     'item_name'         => ['visible' => true,  'order' => 1, 'label' => 'Nama Item', 'hide_label' => false, 'custom_label' => ''],
     'label_title'       => ['visible' => true,  'order' => 2, 'label' => 'Judul Label', 'hide_label' => false, 'custom_label' => ''],
     'label_unique_id'   => ['visible' => false, 'order' => 3, 'label' => 'ID Label Unik', 'hide_label' => false, 'custom_label' => ''],
@@ -135,21 +135,21 @@ if (isset($app_settings['thermal_fields_config']) && is_string($app_settings['th
     $decodedFieldsConfig = json_decode($app_settings['thermal_fields_config'], true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         error_log("Failed to decode thermal_fields_config JSON from database: " . json_last_error_msg() . ". JSON string was: " . $app_settings['thermal_fields_config']);
-        $decodedFieldsConfig = []; 
+        $decodedFieldsConfig = [];
     }
 } elseif (isset($app_settings['thermal_fields_config']) && is_array($app_settings['thermal_fields_config'])) {
     $decodedFieldsConfig = $app_settings['thermal_fields_config'];
 } else {
-    $decodedFieldsConfig = []; 
+    $decodedFieldsConfig = [];
 }
 
 $finalThermalFieldsConfig = [];
 foreach ($completeDefaultFieldStructure as $key => $defaultValues) {
-    $dbValue = $decodedFieldsConfig[$key] ?? []; 
+    $dbValue = $decodedFieldsConfig[$key] ?? [];
     $finalThermalFieldsConfig[$key] = [
         'visible'      => (bool)($dbValue['visible'] ?? $defaultValues['visible']),
         'order'        => (int)($dbValue['order'] ?? $defaultValues['order']),
-        'label'        => $defaultValues['label'], 
+        'label'        => $defaultValues['label'],
         'hide_label'   => (bool)($dbValue['hide_label'] ?? $defaultValues['hide_label']),
         'custom_label' => (string)($dbValue['custom_label'] ?? $defaultValues['custom_label'])
     ];
@@ -182,9 +182,9 @@ function log_activity(string $actionType, ?int $userId, string $details, ?string
 
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
 
-    $sql = "INSERT INTO activity_log (user_id, action_type, details, target_type, target_id, ip_address) 
+    $sql = "INSERT INTO activity_log (user_id, action_type, details, target_type, target_id, ip_address)
             VALUES (?, ?, ?, ?, ?, ?)";
-    
+
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("isssis", $userId, $actionType, $details, $targetType, $targetId, $ip_address);
         if (!$stmt->execute()) {
@@ -217,6 +217,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             // Label & General Statuses
             'active' => ['text' => 'Aktif', 'class' => 'bg-green-100 text-green-800'],
             'used' => ['text' => 'Telah Digunakan', 'class' => 'bg-blue-100 text-blue-800'],
+            'used_accepted' => ['text' => 'Penggunaan Diterima', 'class' => 'bg-gray-600 text-white'],
             'expired' => ['text' => 'Kedaluwarsa', 'class' => 'bg-red-100 text-red-800'],
             'pending_validation' => ['text' => 'Pending Validasi', 'class' => 'bg-yellow-100 text-yellow-800'],
             'recalled' => ['text' => 'Ditarik Kembali', 'class' => 'bg-purple-100 text-purple-700'],
@@ -229,7 +230,7 @@ if (!function_exists('getUniversalStatusBadge')) {
             'selesai' => ['text' => 'Selesai (Lulus)', 'class' => 'bg-green-100 text-green-800'],
             'failed' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],
             'gagal' => ['text' => 'Gagal', 'class' => 'bg-red-100 text-red-800'],
-            
+
             // Instrument Statuses
             'tersedia' => ['text' => 'Tersedia', 'class' => 'bg-green-100 text-green-800'],
             'sterilisasi' => ['text' => 'Sterilisasi', 'class' => 'bg-blue-100 text-blue-800'],
@@ -304,38 +305,38 @@ if (!function_exists('formatActivityMessage')) {
                     );
                 }
                 break;
-            
+
             case 'CREATE_LOAD': case 'PROCESS_LOAD': case 'VALIDATE_CYCLE': case 'GENERATE_LABELS': case 'RECALL_LOAD':
                 $icon = 'inventory'; $iconColor = 'text-blue-700'; break;
             case 'DELETE_LOAD':
                 $icon = 'delete_forever'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_CYCLE': case 'UPDATE_CYCLE': 
+            case 'CREATE_CYCLE': case 'UPDATE_CYCLE':
                 $icon = 'cyclone'; $iconColor = 'text-orange-500'; break;
-            case 'DELETE_CYCLE': 
+            case 'DELETE_CYCLE':
                 $icon = 'delete'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_USER': 
+            case 'CREATE_USER':
                 $icon = 'person_add'; $iconColor = 'text-purple-500'; break;
-            case 'UPDATE_USER': 
+            case 'UPDATE_USER':
                 $icon = 'manage_accounts'; $iconColor = 'text-purple-500'; break;
-            case 'DELETE_USER': 
+            case 'DELETE_USER':
                 $icon = 'person_remove'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_INSTRUMENT': 
+            case 'CREATE_INSTRUMENT':
                 $icon = 'add'; $iconColor = 'text-indigo-500'; break;
             case 'UPDATE_INSTRUMENT': case 'UPDATE_INSTRUMENT_STATUS':
                  $icon = 'edit'; $iconColor = 'text-indigo-500'; break;
-            case 'DELETE_INSTRUMENT': 
+            case 'DELETE_INSTRUMENT':
                 $icon = 'delete'; $iconColor = 'text-red-500'; break;
-            case 'CREATE_SET': 
+            case 'CREATE_SET':
                 $icon = 'inventory_2'; $iconColor = 'text-teal-500'; break;
-            case 'UPDATE_SET': 
+            case 'UPDATE_SET':
                 $icon = 'edit_note'; $iconColor = 'text-teal-500'; break;
-            case 'DELETE_SET': 
+            case 'DELETE_SET':
                 $icon = 'delete_sweep'; $iconColor = 'text-red-500'; break;
-            case 'VALIDATE_LABEL': 
+            case 'VALIDATE_LABEL':
                 $icon = 'task_alt'; $iconColor = 'text-green-600'; break;
-            case 'MARK_LABEL_USED': 
+            case 'MARK_LABEL_USED':
                 $icon = 'check_circle_outline'; $iconColor = 'text-blue-500'; break;
-            case 'RECALL_LABEL': 
+            case 'RECALL_LABEL':
                 $icon = 'report_problem'; $iconColor = 'text-orange-500'; break;
         }
 
@@ -349,12 +350,12 @@ if (!function_exists('formatActivityMessage')) {
             if ($targetType === 'cycle') $link = "cycle_detail.php?cycle_id={$targetId}";
             if ($targetType === 'load') $link = "load_detail.php?load_id={$targetId}";
             if ($targetType === 'user') $link = "user_edit.php?user_id={$targetId}";
-            
+
             if ($link) {
                 $message = "<a href='{$link}' class='text-blue-600 hover:underline'>{$message}</a>";
             }
         }
-        
+
         return ['message' => $message, 'icon' => $icon, 'iconColor' => $iconColor];
     }
 }
@@ -439,7 +440,7 @@ if (!function_exists('parseAndDisplayNotes')) {
                  // Fallback for older, unstructured notes
                 $details = nl2br(htmlspecialchars($entry));
             }
-            
+
             echo <<<HTML
             <li class="flex items-start space-x-3">
                 <div class="flex-shrink-0">
